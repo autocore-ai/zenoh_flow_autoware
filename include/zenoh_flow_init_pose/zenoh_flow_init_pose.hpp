@@ -1,6 +1,5 @@
 #pragma once
 #include <autoware_auto.hpp>
-#include <memory>
 
 namespace zenoh_flow
 {
@@ -14,7 +13,6 @@ namespace zenoh_flow
             GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<InitPose> &);
             bool is_new_init_pose(std::unique_ptr<InitPose> &);
             std::unique_ptr<InitPose> init_init_pose();
-
-        } // namespace ffi
+        }
     }
 }
