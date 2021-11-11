@@ -68,7 +68,7 @@ set_target_properties(CxxWrapper_${ARGV0}
 
 include_directories(${CMAKE_BINARY_DIR})
 
-ament_auto_add_library(${ARGV0} SHARED ${cxxbridge_source_out} src/${ARGV0}.cpp ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4})
+ament_auto_add_library(${ARGV0} SHARED ${cxxbridge_source_out} src/zenoh_flow_msg_convert.cpp src/${ARGV0}.cpp ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4})
 add_dependencies(${ARGV0} CxxBridge)
 target_link_libraries(${ARGV0} "-Wl,--whole-archive" CxxWrapper_${ARGV0} "-Wl,--no-whole-archive")
 
