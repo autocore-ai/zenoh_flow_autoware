@@ -1,0 +1,13 @@
+[package]
+edition = "2021"
+name = "zenoh_flow_goal_pose"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ffi = {path = "../ffi"}
+zenoh-flow = {git = "https://github.com/autocore-ai/zenoh-flow.git", branch = "autocore-dev"}
+
+[lib]
+crate-type = ["staticlib"]

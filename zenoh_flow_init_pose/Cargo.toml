@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "zenoh_flow_init_pose"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.51"
+cxx = {git = "https://github.com/autocore-ai/cxx.git", branch = "autocore-dev"}
+env_logger = "0.9.0"
+ffi = {path = "../ffi"}
+log = "0.4.14"
+zenoh-flow = {git = "https://github.com/autocore-ai/zenoh-flow.git", branch = "autocore-dev"}
+
+[lib]
+crate-type = ["staticlib"]
