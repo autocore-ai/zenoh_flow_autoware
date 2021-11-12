@@ -14,12 +14,9 @@ namespace zenoh_flow
                 }
                 rclcpp::NodeOptions options;
                 std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
-                paramters.push_back(
-                    rclcpp::Parameter("map_pcd_file", static_cast<std::string>(cfg.map_pcd_file)));
-                paramters.push_back(
-                    rclcpp::Parameter("map_yaml_file", static_cast<std::string>(cfg.map_yaml_file)));
-                paramters.push_back(
-                    rclcpp::Parameter("map_frame", static_cast<std::string>(cfg.map_frame)));
+                paramters.push_back(rclcpp::Parameter("map_pcd_file", static_cast<std::string>(cfg.map_pcd_file)));
+                paramters.push_back(rclcpp::Parameter("map_yaml_file", static_cast<std::string>(cfg.map_yaml_file)));
+                paramters.push_back(rclcpp::Parameter("map_frame", static_cast<std::string>(cfg.map_frame)));
                 paramters.push_back(rclcpp::Parameter("map_config.capacity", cfg.map_config.capacity));
                 paramters.push_back(rclcpp::Parameter("map_config.min_point.x", cfg.map_config.min_point.x));
                 paramters.push_back(rclcpp::Parameter("map_config.min_point.y", cfg.map_config.min_point.y));
