@@ -1,6 +1,8 @@
 use async_trait::async_trait;
 use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{get_init_pose, init_init_pose, is_new_init_pose, InitPose};
+use ffi::autoware_auto::ffi::{
+    init_pose_get_init_pose, init_pose_init, init_pose_is_new_init_pose, InitPose,
+};
 use std::sync::Arc;
 use zenoh_flow::{
     export_source, zenoh_flow_derive::ZFState, Configuration, Context, Data, Node, Source, State,
@@ -19,7 +21,7 @@ pub struct Instance {
 
 impl Node for InitPoseSource {
     fn initialize(&self, _configuration: &Option<Configuration>) -> ZFResult<State> {
-        let ptr = init_init_pose();
+        let ptr = init_pose_init();
         Ok(State::from(Instance { ptr }))
     }
 
@@ -38,8 +40,8 @@ impl Source for InitPoseSource {
         let flag = true;
         while flag {
             log::info!("Waiting init pose message ...");
-            if is_new_init_pose(node) {
-                let init_pose = get_init_pose(node);
+            if init_pose_is_new_init_pose(node) {
+                let init_pose = init_pose_get_init_pose(node);
                 log::info!("Receiver init pose: {:?}", init_pose);
                 return Ok(Data::from(init_pose));
             }

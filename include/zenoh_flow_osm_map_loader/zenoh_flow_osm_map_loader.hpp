@@ -10,7 +10,7 @@ namespace zenoh_flow
             class OsmMapLoader
             {
             };
-            std::unique_ptr<OsmMapLoader> init_osm_map_loader(const CfgOsmMapLoader &);
+            std::unique_ptr<OsmMapLoader> osm_map_loader_init(const CfgOsmMapLoader &);
         }
     }
 }

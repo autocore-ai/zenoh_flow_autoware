@@ -10,9 +10,9 @@ namespace zenoh_flow
             class InitPose
             {
             };
-            GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<InitPose> &);
-            bool is_new_init_pose(std::unique_ptr<InitPose> &);
-            std::unique_ptr<InitPose> init_init_pose();
+            GeometryMsgsPoseWithCovarianceStamped init_pose_get_init_pose(std::unique_ptr<InitPose> &);
+            bool init_pose_is_new_init_pose(std::unique_ptr<InitPose> &);
+            std::unique_ptr<InitPose> init_pose_init();
         }
     }
 }

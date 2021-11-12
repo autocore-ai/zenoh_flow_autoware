@@ -10,9 +10,9 @@ namespace zenoh_flow
             class GoalPose
             {
             };
-            GeometryMsgsPoseStamped get_goal_pose(std::unique_ptr<GoalPose> &);
-            bool is_new_goal_pose(std::unique_ptr<GoalPose> &);
-            std::unique_ptr<GoalPose> init_goal_pose();
+            GeometryMsgsPoseStamped goal_pose_get_goal_pose(std::unique_ptr<GoalPose> &);
+            bool goal_pose_is_new_goal_pose(std::unique_ptr<GoalPose> &);
+            std::unique_ptr<GoalPose> goal_pose_init();
         }
     }
 }

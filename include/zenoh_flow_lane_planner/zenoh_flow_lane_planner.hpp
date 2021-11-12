@@ -10,6 +10,7 @@ namespace zenoh_flow
             class LanePlanner
             {
             };
+            std::unique_ptr<LanePlanner> lane_planner_init(const CfgLanePlanner &);
         }
     }
 }

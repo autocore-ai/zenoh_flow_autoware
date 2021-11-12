@@ -10,6 +10,7 @@ namespace zenoh_flow
             class ParkingPlanner
             {
             };
+            std::unique_ptr<ParkingPlanner> parking_planner_init(const CfgParkingPlanner &);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace zenoh_flow
             class GlobalPlanner
             {
             };
-            AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<GlobalPlanner> &);
-            std::unique_ptr<GlobalPlanner> init_global_planner();
-            void set_current_pose(std::unique_ptr<GlobalPlanner> &, const AutowareAutoMsgsVehicleKinematicState &);
-            void set_goal_pose(std::unique_ptr<GlobalPlanner> &, const GeometryMsgsPoseStamped &);
+            AutowareAutoMsgsHadmapRoute global_planner_get_route(std::unique_ptr<GlobalPlanner> &);
+            std::unique_ptr<GlobalPlanner> global_planner_init();
+            void global_planner_set_current_pose(std::unique_ptr<GlobalPlanner> &, const AutowareAutoMsgsVehicleKinematicState &);
+            void global_planner_set_goal_pose(std::unique_ptr<GlobalPlanner> &, const GeometryMsgsPoseStamped &);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace zenoh_flow
             class PcdMapLoader
             {
             };
-            std::unique_ptr<PcdMapLoader> init_pcd_map_loader(const CfgPcdMapLoader &);
+            std::unique_ptr<PcdMapLoader> pcd_map_loader_init(const CfgPcdMapLoader &);
         }
     }
 }
