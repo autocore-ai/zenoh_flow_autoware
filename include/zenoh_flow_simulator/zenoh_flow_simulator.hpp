@@ -10,7 +10,7 @@ namespace zenoh_flow
             class Simulator
             {
             public:
-                Simulator(const Configuration &);
+                Simulator(const CfgSimulator &);
                 AutowareAutoMsgsVehicleKinematicState GetKinematicState();
                 AutowareAutoMsgsVehicleStateReport GetStateReport();
                 GeometryMsgsPoseStamped GetCurrentPose();

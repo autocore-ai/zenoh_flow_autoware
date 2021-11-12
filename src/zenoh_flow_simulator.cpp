@@ -23,7 +23,7 @@ namespace autoware_auto
 {
 namespace ffi
 {
-Simulator::Simulator(const Configuration & cfg)
+Simulator::Simulator(const CfgSimulator & cfg)
 {
   if(!rclcpp::ok())
   {
@@ -56,6 +56,8 @@ Simulator::Simulator(const Configuration & cfg)
     options, ::autocore::NodeType::ZenohFlow);
   signal(SIGINT, shutdown);
 }
+
+
 void simulator_shutdown(int sig)
 {
   (void)sig;
@@ -85,7 +87,7 @@ void Simulator::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand & msg)
 }
 void Simulator::Update() { ptr->Update(); }
 
-std::unique_ptr<Simulator> initialize(const Configuration & cfg)
+std::unique_ptr<Simulator> initialize(const CfgSimulator & cfg)
 {
   return std::make_unique<Simulator>(cfg);
 }
