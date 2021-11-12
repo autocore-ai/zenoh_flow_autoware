@@ -147,6 +147,7 @@ pub mod ffi {
 
     //Config types
 
+    #[derive(Debug)]
     pub struct CfgOsmMapLoader {
         pub map_osm_file: String,
         pub origin_offset_lat: f64,
@@ -155,17 +156,20 @@ pub mod ffi {
         pub longitude: f64,
         pub elevation: f64,
     }
+    #[derive(Debug)]
     pub struct Vector3 {
         pub x: f64,
         pub y: f64,
         pub z: f64,
     }
+    #[derive(Debug)]
     pub struct MapConfig {
         pub capacity: i64,
         pub min_point: Vector3,
         pub max_point: Vector3,
         pub voxel_size: Vector3,
     }
+    #[derive(Debug)]
     pub struct CfgPcdMapLoader {
         pub map_pcd_file: String,
         pub map_yaml_file: String,
@@ -271,14 +275,14 @@ pub mod ffi {
         fn init_pose_get_init_pose(
             node: &mut UniquePtr<InitPose>,
         ) -> GeometryMsgsPoseWithCovarianceStamped;
-        fn init_pose_is_new_init_pose(node: &mut UniquePtr<InitPose>) -> bool;
+        fn init_pose_is_new(node: &mut UniquePtr<InitPose>) -> bool;
     }
 
     unsafe extern "C++" {
         type GoalPose;
         fn goal_pose_init() -> UniquePtr<GoalPose>;
         fn goal_pose_get_goal_pose(node: &mut UniquePtr<GoalPose>) -> GeometryMsgsPoseStamped;
-        fn goal_pose_is_new_goal_pose(node: &mut UniquePtr<GoalPose>) -> bool;
+        fn goal_pose_is_new(node: &mut UniquePtr<GoalPose>) -> bool;
     }
     unsafe extern "C++" {
         type OsmMapLoader;

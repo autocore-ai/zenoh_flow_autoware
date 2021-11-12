@@ -1,6 +1,8 @@
 use async_trait::async_trait;
 use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{init_pose_get, init_pose_init, init_pose_is_new, InitPose};
+use ffi::autoware_auto::ffi::{
+    init_pose_get_init_pose, init_pose_init, init_pose_is_new, InitPose,
+};
 use std::sync::Arc;
 use zenoh_flow::{
     export_source, zenoh_flow_derive::ZFState, Configuration, Context, Data, Node, Source, State,
@@ -39,7 +41,7 @@ impl Source for InitPoseSource {
         while flag {
             log::info!("Waiting init pose message ...");
             if init_pose_is_new(node) {
-                let init_pose = init_pose_get(node);
+                let init_pose = init_pose_get_init_pose(node);
                 log::info!("Receiver init pose: {:?}", init_pose);
                 return Ok(Data::from(init_pose));
             }

@@ -70,8 +70,8 @@ target_link_libraries(${ARGV0} "-Wl,--whole-archive" CxxWrapper_${ARGV0} "-Wl,--
 endmacro(GenLib)
 
 GenLib(zenoh_flow_global_planner)
-GenLib(zenoh_flow_goal_pose)
-GenLib(zenoh_flow_init_pose)
+GenLib(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
+GenLib(zenoh_flow_init_pose src/init_pose_receiver.cpp)
 GenLib(zenoh_flow_lane_planner)
 GenLib(zenoh_flow_local_planner)
 GenLib(zenoh_flow_osm_map_loader)
