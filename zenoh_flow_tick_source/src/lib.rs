@@ -26,6 +26,7 @@ impl Source for TickSource {
         let sleep_time = 1000 / state.0 as u64;
         let d = ZFUsize(COUNTER.fetch_add(1, Ordering::AcqRel));
         zenoh_flow::async_std::task::sleep(std::time::Duration::from_millis(sleep_time)).await;
+        log::debug!("tick source output: {:?}", d);
         Ok(Data::from::<ZFUsize>(d))
     }
 }
@@ -34,6 +35,7 @@ impl Node for TickSource {
     fn initialize(&self, configuration: &Option<Configuration>) -> ZFResult<State> {
         if let Some(conf) = configuration {
             let hz = conf["hz"].as_u64().unwrap();
+            log::debug!("HZ of Tick Source is {:?}", hz);
             Ok(State::from(HZState(hz)))
         } else {
             Err(ZFError::MissingConfiguration)
