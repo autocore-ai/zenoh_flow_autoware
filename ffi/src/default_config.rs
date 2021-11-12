@@ -1,5 +1,20 @@
 use crate::autoware_auto::ffi::*;
 
+impl Default for CfgOsmMapLoader {
+    fn default() -> Self {
+        CfgOsmMapLoader {
+            map_osm_file: String::from(
+                "/opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot.osm",
+            ),
+            origin_offset_lat: -5.239983224214484e-06,
+            origin_offset_lon: 4.5845488187978845e-06,
+            latitude: 37.380811523812845,
+            longitude: -121.90840595108715,
+            elevation: 16.0,
+        }
+    }
+}
+
 impl Default for CfgPcdMapLoader {
     fn default() -> Self {
         CfgPcdMapLoader {

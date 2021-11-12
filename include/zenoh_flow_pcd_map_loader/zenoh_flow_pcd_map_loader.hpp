@@ -17,8 +17,8 @@ namespace zenoh_flow
                 std::shared_ptr<autoware::localization::ndt_nodes::NDTMapPublisherNode> ptr;
                 void spin();
             };
-            void shutdown(int sig);
             std::unique_ptr<PcdMapLoader> pcd_map_loader_init(const CfgPcdMapLoader &);
+            void shutdown(int sig);
         }
     }
 }
