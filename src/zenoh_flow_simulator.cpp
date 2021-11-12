@@ -16,109 +16,102 @@
 #include <cstdint>
 #include <memory>
 #include <zenoh_flow_simulator/zenoh_flow_simulator.hpp>
+#include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
 
 namespace zenoh_flow
 {
-namespace autoware_auto
-{
-namespace ffi
-{
-Simulator::Simulator(const CfgSimulator & cfg)
-{
-  if(!rclcpp::ok())
+  namespace autoware_auto
   {
-    rclcpp::init(0, nullptr);
-  }
-  rclcpp::NodeOptions options;
-  std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
+    namespace ffi
+    {
+      Simulator::Simulator(const CfgSimulator &cfg)
+      {
+        if (!rclcpp::ok())
+        {
+          rclcpp::init(0, nullptr);
+        }
+        rclcpp::NodeOptions options;
+        std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
+        paramters.push_back(rclcpp::Parameter("simulated_frame_id", static_cast<std::string>(cfg.simulated_frame_id)));
+        paramters.push_back(rclcpp::Parameter("origin_frame_id", static_cast<std::string>(cfg.origin_frame_id)));
+        paramters.push_back(rclcpp::Parameter("vehicle_model_type", static_cast<std::string>(cfg.vehicle_model_type)));
+        paramters.push_back(rclcpp::Parameter("initialize_source", static_cast<std::string>(cfg.initialize_source)));
+        paramters.push_back(rclcpp::Parameter("timer_sampling_time_ms", cfg.timer_sampling_time_ms));
+        paramters.push_back(rclcpp::Parameter("add_measurement_noise", cfg.add_measurement_noise));
+        paramters.push_back(rclcpp::Parameter("vel_lim", cfg.vel_lim));
+        paramters.push_back(rclcpp::Parameter("vel_rate_lim", cfg.vel_rate_lim));
+        paramters.push_back(rclcpp::Parameter("steer_lim", cfg.steer_lim));
+        paramters.push_back(rclcpp::Parameter("steer_rate_lim", cfg.steer_rate_lim));
+        paramters.push_back(rclcpp::Parameter("acc_time_delay", cfg.acc_time_delay));
+        paramters.push_back(rclcpp::Parameter("acc_time_constant", cfg.acc_time_constant));
+        paramters.push_back(rclcpp::Parameter("steer_time_delay", cfg.steer_time_delay));
+        paramters.push_back(rclcpp::Parameter("steer_time_constant", cfg.steer_time_constant));
+        options.parameter_overrides(paramters);
+        ptr = std::make_shared<simulation::simple_planning_simulator::SimplePlanningSimulator>(options, ::autocore::NodeType::ZenohFlow);
+        signal(SIGINT, shutdown);
+      }
 
-  paramters.push_back(
-    rclcpp::Parameter("simulated_frame_id", static_cast<std::string>(cfg.simulated_frame_id)));
-  paramters.push_back(
-    rclcpp::Parameter("origin_frame_id", static_cast<std::string>(cfg.origin_frame_id)));
-  paramters.push_back(
-    rclcpp::Parameter("vehicle_model_type", static_cast<std::string>(cfg.vehicle_model_type)));
-  paramters.push_back(
-    rclcpp::Parameter("initialize_source", static_cast<std::string>(cfg.initialize_source)));
-  paramters.push_back(rclcpp::Parameter("timer_sampling_time_ms", cfg.timer_sampling_time_ms));
-  paramters.push_back(rclcpp::Parameter("add_measurement_noise", cfg.add_measurement_noise));
-  paramters.push_back(rclcpp::Parameter("vel_lim", cfg.vel_lim));
-  paramters.push_back(rclcpp::Parameter("vel_rate_lim", cfg.vel_rate_lim));
-  paramters.push_back(rclcpp::Parameter("steer_lim", cfg.steer_lim));
-  paramters.push_back(rclcpp::Parameter("steer_rate_lim", cfg.steer_rate_lim));
-  paramters.push_back(rclcpp::Parameter("acc_time_delay", cfg.acc_time_delay));
-  paramters.push_back(rclcpp::Parameter("acc_time_constant", cfg.acc_time_constant));
-  paramters.push_back(rclcpp::Parameter("steer_time_delay", cfg.steer_time_delay));
-  paramters.push_back(rclcpp::Parameter("steer_time_constant", cfg.steer_time_constant));
+      void shutdown(int sig)
+      {
+        (void)sig;
+        exit(0);
+      }
+      AutowareAutoMsgsVehicleKinematicState Simulator::GetKinematicState()
+      {
+        return Convert(ptr->GetKinematicState());
+      }
+      AutowareAutoMsgsVehicleStateReport Simulator::GetStateReport()
+      {
+        return Convert(ptr->GetStateReport());
+      }
+      GeometryMsgsPoseStamped Simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
 
-  options.parameter_overrides(paramters);
-  ptr = std::make_shared<simulation::simple_planning_simulator::SimplePlanningSimulator>(
-    options, ::autocore::NodeType::ZenohFlow);
-  signal(SIGINT, shutdown);
-}
+      void Simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
+      {
+        ptr->SetInitPose(Convert(msg));
+      }
+      void Simulator::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &msg)
+      {
+        ptr->SetStateCmd(Convert(msg));
+      }
+      void Simulator::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &msg)
+      {
+        ptr->SetVehicleCmd(Convert(msg));
+      }
+      void Simulator::Update() { ptr->Update(); }
 
-
-void simulator_shutdown(int sig)
-{
-  (void)sig;
-  exit(0);
-}
-AutowareAutoMsgsVehicleKinematicState Simulator::GetKinematicState()
-{
-  return Convert(ptr->GetKinematicState());
-}
-AutowareAutoMsgsVehicleStateReport Simulator::GetStateReport()
-{
-  return Convert(ptr->GetStateReport());
-}
-GeometryMsgsPoseStamped Simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
-
-void Simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped & msg)
-{
-  ptr->SetInitPose(Convert(msg));
-}
-void Simulator::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand & msg)
-{
-  ptr->SetStateCmd(Convert(msg));
-}
-void Simulator::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand & msg)
-{
-  ptr->SetVehicleCmd(Convert(msg));
-}
-void Simulator::Update() { ptr->Update(); }
-
-std::unique_ptr<Simulator> initialize(const CfgSimulator & cfg)
-{
-  return std::make_unique<Simulator>(cfg);
-}
-AutowareAutoMsgsVehicleStateCommand getKinematicState(std::unique_ptr<Simulator> & node)
-{
-  return node->GetKinematicState();
-}
-AutowareAutoMsgsVehicleStateReport getStateReport(std::unique_ptr<Simulator> & node)
-{
-  return node->GetStateReport();
-}
-GeometryMsgsPoseStamped getCurrentPose(std::unique_ptr<Simulator> & node)
-{
-  return node->GetCurrentPose();
-}
-void setInitPose(
-  std::unique_ptr<Simulator> & node, const GeometryMsgsPoseWithCovarianceStamped & msg)
-{
-  node->SetInitPose(msg);
-}
-void setStateCmd(
-  std::unique_ptr<Simulator> & node, const AutowareAutoMsgsVehicleStateCommand & msg)
-{
-  node->SetStateCmd(msg);
-}
-void setVehicleCmd(
-  std::unique_ptr<Simulator> & node, const AutowareAutoMsgsVehicleControlCommand & msg)
-{
-  node->SetVehicleCmd(msg);
-}
-void update(std::unique_ptr<Simulator> & node) { node->Update(); }   
-}
-}  // namespace autoware_auto
-}  // namespace rust_cxx
+      std::unique_ptr<Simulator> initialize(const CfgSimulator &cfg)
+      {
+        return std::make_unique<Simulator>(cfg);
+      }
+      AutowareAutoMsgsVehicleKinematicState getKinematicState(std::unique_ptr<Simulator> &node)
+      {
+        return node->GetKinematicState();
+      }
+      AutowareAutoMsgsVehicleStateReport getStateReport(std::unique_ptr<Simulator> &node)
+      {
+        return node->GetStateReport();
+      }
+      GeometryMsgsPoseStamped getCurrentPose(std::unique_ptr<Simulator> &node)
+      {
+        return node->GetCurrentPose();
+      }
+      void setInitPose(
+          std::unique_ptr<Simulator> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
+      {
+        node->SetInitPose(msg);
+      }
+      void setStateCmd(
+          std::unique_ptr<Simulator> &node, const AutowareAutoMsgsVehicleStateCommand &msg)
+      {
+        node->SetStateCmd(msg);
+      }
+      void setVehicleCmd(
+          std::unique_ptr<Simulator> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
+      {
+        node->SetVehicleCmd(msg);
+      }
+      void update(std::unique_ptr<Simulator> &node) { node->Update(); }
+    }
+  } // namespace autoware_auto
+} // namespace rust_cxx
