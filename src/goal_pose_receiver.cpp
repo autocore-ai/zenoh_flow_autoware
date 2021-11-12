@@ -1,4 +1,4 @@
-#include <zenoh_flow_goal_pose/zenoh_flow_goal_pose.hpp>
+#include <zenoh_flow_goal_pose/goal_pose_receiver.hpp>
 
 namespace zenoh_flow
 {
