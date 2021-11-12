@@ -11,8 +11,14 @@
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
-  <depend>std_msgs</depend>
   <depend>autoware_auto_msgs</depend>
+  <depend>lane_planner_nodes</depend>
+  <depend>lanelet2_map_provider</depend>
+  <depend>ndt_nodes</depend>
+  <depend>pure_pursuit_nodes</depend>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

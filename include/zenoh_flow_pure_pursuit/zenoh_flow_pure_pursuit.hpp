@@ -1,4 +1,5 @@
 #pragma once
+#include <pure_pursuit_nodes/pure_pursuit_node.hpp>
 #include <autoware_auto.hpp>
 
 namespace zenoh_flow
@@ -11,10 +12,10 @@ namespace zenoh_flow
             {
             public:
                 PurePursuit(const CfgPurePursuit &);
-                AutowareAutoMsgsVehicleControlCommand GetVehicleCmd();
+                AutowareAutoMsgsVehicleControlCommand GetControlCmd();
                 void SetTrajectory(const AutowareAutoMsgsTrajectory &);
                 void SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &);
-            
+
             private:
                 std::shared_ptr<autoware::motion::control::pure_pursuit_nodes::PurePursuitNode> ptr;
             };
