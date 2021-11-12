@@ -14,8 +14,9 @@
 
 #pragma once
 #include <zenoh_flow_local_planner/zenoh_flow_local_planner.hpp>
+#include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
 
-namespace rust_cxx
+namespace zenoh_flow
 {
     namespace autoware_auto
     {
@@ -28,29 +29,22 @@ namespace rust_cxx
                     rclcpp::init(0, nullptr);
                 }
                 rclcpp::NodeOptions options;
-
                 std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
-
-                paramters.push_back(
-                    rclcpp::Parameter("enable_object_collision_estimator", cfg.enable_object_collision_estimator));
+                paramters.push_back(rclcpp::Parameter("enable_object_collision_estimator", cfg.enable_object_collision_estimator));
                 paramters.push_back(rclcpp::Parameter("heading_weight", cfg.heading_weight));
                 paramters.push_back(rclcpp::Parameter("goal_distance_thresh", cfg.goal_distance_thresh));
                 paramters.push_back(rclcpp::Parameter("stop_velocity_thresh", cfg.stop_velocity_thresh));
-                paramters.push_back(
-                    rclcpp::Parameter("subroute_goal_offset_lane2parking", cfg.subroute_goal_offset_lane2parking));
-                paramters.push_back(
-                    rclcpp::Parameter("subroute_goal_offset_parking2lane", cfg.subroute_goal_offset_parking2lane));
+                paramters.push_back(rclcpp::Parameter("subroute_goal_offset_lane2parking", cfg.subroute_goal_offset_lane2parking));
+                paramters.push_back(rclcpp::Parameter("subroute_goal_offset_parking2lane", cfg.subroute_goal_offset_parking2lane));
                 paramters.push_back(rclcpp::Parameter("vehicle.cg_to_front_m", cfg.vehicle.cg_to_front_m));
                 paramters.push_back(rclcpp::Parameter("vehicle.cg_to_rear_m", cfg.vehicle.cg_to_rear_m));
                 paramters.push_back(rclcpp::Parameter("vehicle.front_overhang_m", cfg.vehicle.front_overhang_m));
                 paramters.push_back(rclcpp::Parameter("vehicle.rear_overhang_m", cfg.vehicle.rear_overhang_m));
-
                 options.parameter_overrides(paramters);
-
                 ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(
                     options, autocore::NodeType::ZenohFlow);
             }
-            void LocalPlanner::SetRoute(const autoware_auto_msgs_HADMapRoute &msg)
+            void LocalPlanner::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
             {
                 if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
                 {
@@ -71,8 +65,8 @@ namespace rust_cxx
                     ptr->SetStateReport(Convert(msg));
                 }
             }
-            AutowareAutoMsgsTrajectory NativeNode::local_planner_get_trajectory() { return Convert(ptr->GetTrajectory()); }
-            AutowareAutoMsgsVehicleStateCommand NativeNode::GetStateCmd()
+            AutowareAutoMsgsTrajectory LocalPlanner::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
+            AutowareAutoMsgsVehicleStateCommand LocalPlanner::GetStateCmd()
             {
                 return Convert(ptr->GetStateCmd());
             }
@@ -103,5 +97,5 @@ namespace rust_cxx
                 node->SetStateReport(msg);
             }
         }
-    } // namespace autoware_auto
-} // namespace rust_cxx
+    }
+}

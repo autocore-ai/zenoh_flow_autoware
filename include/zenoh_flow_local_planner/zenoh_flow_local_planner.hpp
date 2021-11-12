@@ -1,5 +1,6 @@
 #pragma once
 #include <autoware_auto.hpp>
+#include <behavior_planner_nodes/behavior_planner_node.hpp>
 
 namespace zenoh_flow
 {
