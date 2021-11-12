@@ -36,15 +36,10 @@ add_custom_command(
   COMMAND find ${CMAKE_BINARY_DIR} -name "${rust_code_file}.*" |xargs rm -rf
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --output ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
-  COMMAND ${CMAKE_COMMAND} -DHEADER=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/Patcher.cmake
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/HppPatcher.cmake
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_source_out} -P ${CMAKE_SOURCE_DIR}/cmake/CppPatcher.cmake
   COMMENT "Generating CXX bridge:"
 )
-
-get_cmake_property(_variableNames VARIABLES)
-list (SORT _variableNames)
-foreach (_variableName ${_variableNames})
-    message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
 
 macro(GenLib)
 
@@ -68,13 +63,21 @@ set_target_properties(CxxWrapper_${ARGV0}
 
 include_directories(${CMAKE_BINARY_DIR})
 
-ament_auto_add_library(${ARGV0} SHARED ${cxxbridge_source_out} src/${ARGV0}.cpp ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4})
+ament_auto_add_library(${ARGV0} SHARED ${cxxbridge_source_out} src/zenoh_flow_msg_convert.cpp src/${ARGV0}.cpp ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4})
 add_dependencies(${ARGV0} CxxBridge)
 target_link_libraries(${ARGV0} "-Wl,--whole-archive" CxxWrapper_${ARGV0} "-Wl,--no-whole-archive")
 
 endmacro(GenLib)
 
-GenLib(zenoh_flow_init_pose)
+GenLib(zenoh_flow_global_planner)
 GenLib(zenoh_flow_goal_pose)
+GenLib(zenoh_flow_init_pose)
+GenLib(zenoh_flow_lane_planner)
+GenLib(zenoh_flow_local_planner)
+GenLib(zenoh_flow_osm_map_loader)
+GenLib(zenoh_flow_parking_planner)
+GenLib(zenoh_flow_pcd_map_loader)
+GenLib(zenoh_flow_pure_pursuit)
+GenLib(zenoh_flow_simulator)
 
 ament_auto_package()
