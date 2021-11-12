@@ -82,12 +82,12 @@ impl Default for Vehicle {
 impl Default for CfgLocalPlanner {
     fn default() -> Self {
         CfgLocalPlanner {
-            enable_object_collision_estimator: true,
+            enable_object_collision_estimator: false,
             heading_weight: 0.1,
             goal_distance_thresh: 3.0,
             stop_velocity_thresh: 2.0,
-            subroute_goal_offset_lane2parking: 7.6669,
-            subroute_goal_offset_parking2lane: 7.6669,
+            subroute_goal_offset_lane2parking: 7.5,
+            subroute_goal_offset_parking2lane: 7.5,
             vehicle: Vehicle::default(),
         }
     }

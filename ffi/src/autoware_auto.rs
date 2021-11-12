@@ -177,6 +177,7 @@ pub mod ffi {
         pub map_config: MapConfig,
         pub viz_map: bool,
     }
+    #[derive(Debug)]
     pub struct Vehicle {
         pub cg_to_front_m: f64,
         pub cg_to_rear_m: f64,
@@ -188,6 +189,7 @@ pub mod ffi {
         pub front_overhang_m: f64,
         pub rear_overhang_m: f64,
     }
+    #[derive(Debug)]
     pub struct CfgLocalPlanner {
         pub enable_object_collision_estimator: bool,
         pub heading_weight: f64,
@@ -197,24 +199,29 @@ pub mod ffi {
         pub subroute_goal_offset_parking2lane: f64,
         pub vehicle: Vehicle,
     }
+    #[derive(Debug)]
     pub struct LanePlannerConfig {
         pub trajectory_resolution: f64,
     }
+    #[derive(Debug)]
     pub struct GaussianSmoother {
         pub standard_deviation: f64,
         pub kernel_size: i64,
     }
+    #[derive(Debug)]
     pub struct CfgLanePlanner {
         pub heading_weight: f64,
         pub lane_planner: LanePlannerConfig,
         pub vehicle: Vehicle,
         pub gaussian_smoother: GaussianSmoother,
     }
+    #[derive(Debug)]
     pub struct OptimizationWeights {
         pub steering: f64,
         pub throttle: f64,
         pub goal: f64,
     }
+    #[derive(Debug)]
     pub struct StateBound {
         pub x_m: f64,
         pub y_m: f64,
@@ -222,24 +229,29 @@ pub mod ffi {
         pub heading_rad: f64,
         pub steering_rad: f64,
     }
+    #[derive(Debug)]
     pub struct StateBounds {
         pub lower: StateBound,
         pub upper: StateBound,
     }
+    #[derive(Debug)]
     pub struct CommandBound {
         pub steering_rate_rps: f64,
         pub throttle_mps2: f64,
     }
+    #[derive(Debug)]
     pub struct CommandBounds {
         pub lower: CommandBound,
         pub upper: CommandBound,
     }
+    #[derive(Debug)]
     pub struct CfgParkingPlanner {
         pub vehicle: Vehicle,
         pub optimization_weights: OptimizationWeights,
         pub state_bounds: StateBounds,
         pub command_bounds: CommandBounds,
     }
+    #[derive(Debug)]
     pub struct CfgPurePursuit {
         pub minimum_lookahead_distance: f64,
         pub maximum_lookahead_distance: f64,
@@ -250,6 +262,7 @@ pub mod ffi {
         pub speed_thres_traveling_direction: f64,
         pub distance_front_rear_wheel: f64,
     }
+    #[derive(Debug)]
     pub struct CfgSimulator {
         pub simulated_frame_id: String,
         pub origin_frame_id: String,
