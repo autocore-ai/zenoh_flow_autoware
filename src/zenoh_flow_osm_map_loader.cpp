@@ -14,8 +14,7 @@ namespace zenoh_flow
                 }
                 rclcpp::NodeOptions options;
                 std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
-                paramters.push_back(
-                    rclcpp::Parameter("map_osm_file", static_cast<std::string>(cfg.map_osm_file)));
+                paramters.push_back(rclcpp::Parameter("map_osm_file", static_cast<std::string>(cfg.map_osm_file)));
                 paramters.push_back(rclcpp::Parameter("origin_offset_lat", cfg.origin_offset_lat));
                 paramters.push_back(rclcpp::Parameter("origin_offset_lon", cfg.origin_offset_lon));
                 paramters.push_back(rclcpp::Parameter("latitude", cfg.latitude));

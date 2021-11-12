@@ -12,6 +12,7 @@
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <depend>autoware_auto_msgs</depend>
+  <depend>lane_planner_nodes</depend>
   <depend>lanelet2_map_provider</depend>
   <depend>ndt_nodes</depend>
   <depend>pure_pursuit_nodes</depend>
