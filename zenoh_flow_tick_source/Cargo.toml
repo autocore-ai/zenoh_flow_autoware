@@ -14,4 +14,4 @@ log = "0.4.14"
 zenoh-flow = {git = "https://github.com/autocore-ai/zenoh-flow.git", branch = "autocore-dev"}
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["dylib"]
