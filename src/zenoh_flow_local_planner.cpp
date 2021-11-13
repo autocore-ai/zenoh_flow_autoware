@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
 #include <zenoh_flow_local_planner/zenoh_flow_local_planner.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
 
