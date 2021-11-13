@@ -1,6 +1,7 @@
 mod ffi;
 use async_trait::async_trait;
-use common::autoware_auto::{ffi::init, NativeNodeInstance};
+use common::autoware_auto::{ffi::init, NativeNodeInstance, NativeNodeTrait};
+use derive::ZenohFlowNode;
 use ffi::ffi::{get_init_pose, is_new};
 use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
@@ -8,16 +9,10 @@ use zenoh_flow::{
     Data, Node, Source, State, ZFError, ZFResult,
 };
 
-#[derive(Debug, ZFState)]
+#[derive(ZenohFlowNode, Debug, ZFState)]
 pub struct CustomNode;
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
 
-impl Node for CustomNode {
-    fn initialize(&self, _configuration: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance { ptr: init() }))
-    }
-}
+impl NativeNodeTrait for CustomNode {}
 
 #[async_trait]
 impl Source for CustomNode {

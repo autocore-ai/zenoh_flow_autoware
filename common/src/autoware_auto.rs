@@ -8,25 +8,23 @@ use std::{
     any::type_name,
     fmt::{Debug, Formatter, Result},
 };
-use zenoh_flow::zenoh_flow_derive::ZFState;
+use zenoh_flow::{zenoh_flow_derive::ZFState, Configuration, ZFResult};
+
+pub trait NativeNodeTrait {
+    fn get_config(_cfg: &Option<Configuration>) -> ZFResult<ffi::NativeConfig> {
+        todo!()
+    }
+}
 
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     unsafe extern "C++" {
         type NativeNode;
-        fn init() -> UniquePtr<NativeNode>;
+        type NativeConfig;
+        fn native_config() -> UniquePtr<NativeConfig>;
+        fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
     }
 
-    // unsafe extern "C++" {
-    //     type GoalPose;
-    //     fn goal_pose_init() -> UniquePtr<GoalPose>;
-    //     fn goal_pose_get_goal_pose(node: &mut UniquePtr<GoalPose>) -> GeometryMsgsPoseStamped;
-    //     fn goal_pose_is_new(node: &mut UniquePtr<GoalPose>) -> bool;
-    // }
-    // unsafe extern "C++" {
-    //     type OsmMapLoader;
-    //     fn osm_map_loader_init(cfg: &CfgOsmMapLoader) -> UniquePtr<OsmMapLoader>;
-    // }
     // unsafe extern "C++" {
     //     type PcdMapLoader;
     //     fn pcd_map_loader_init(cfg: &CfgPcdMapLoader) -> UniquePtr<PcdMapLoader>;

@@ -23,6 +23,8 @@ use zenoh_flow::{
     Configuration, Data, Node, Source, State, ZFError,
 };
 
+#[derive(ZenohFlowNode, Debug, ZFState)]
+pub struct CustomNode;
 #[derive(Debug, ZFState)]
 pub struct OsmMapLoaderSource;
 unsafe impl Send for OsmMapLoaderSource {}
@@ -33,7 +35,7 @@ pub struct Instance {
 }
 impl Node for OsmMapLoaderSource {
     fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        let mut config = CfgOsmMapLoader::default();
+        let mut z = CfgOsmMapLoader::default();
 
         match cfg {
             Some(value) => {
