@@ -1,4 +1,4 @@
-use crate::autoware_auto::ffi::*;
+use crate::autoware_auto::configs::ffi::*;
 
 impl Default for CfgOsmMapLoader {
     fn default() -> Self {

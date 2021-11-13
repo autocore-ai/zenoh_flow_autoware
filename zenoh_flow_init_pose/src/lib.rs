@@ -1,51 +1,36 @@
+mod ffi;
 use async_trait::async_trait;
-use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{
-    init_pose_get_init_pose, init_pose_init, init_pose_is_new, InitPose,
-};
-use std::sync::Arc;
+use common::autoware_auto::{ffi::init, NativeNodeInstance};
+use ffi::ffi::{get_init_pose, is_new};
+use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
-    export_source, zenoh_flow_derive::ZFState, Configuration, Context, Data, Node, Source, State,
-    ZFError, ZFResult,
+    async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
+    Data, Node, Source, State, ZFError, ZFResult,
 };
 
 #[derive(Debug, ZFState)]
-pub struct InitPoseSource;
-unsafe impl Send for InitPoseSource {}
-unsafe impl Sync for InitPoseSource {}
+pub struct CustomNode;
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
 
-#[derive(Debug, ZFState)]
-pub struct Instance {
-    pub ptr: UniquePtr<InitPose>,
-}
-
-impl Node for InitPoseSource {
+impl Node for CustomNode {
     fn initialize(&self, _configuration: &Option<Configuration>) -> ZFResult<State> {
-        let ptr = init_pose_init();
-        Ok(State::from(Instance { ptr }))
-    }
-
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
+        Ok(State::from(NativeNodeInstance { ptr: init() }))
     }
 }
 
 #[async_trait]
-impl Source for InitPoseSource {
+impl Source for CustomNode {
     async fn run(&self, _context: &mut Context, dyn_state: &mut State) -> ZFResult<Data> {
         log::info!("zenoh flow init pose running ...");
-        let wrapper = dyn_state.try_get::<Instance>()?;
-        let node = &mut wrapper.ptr;
-
+        let node = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let flag = true;
         while flag {
             log::info!("Waiting init pose message ...");
-            if init_pose_is_new(node) {
-                let init_pose = init_pose_get_init_pose(node);
-                log::info!("Receiver init pose: {:?}", init_pose);
-                return Ok(Data::from(init_pose));
+            if is_new(node) {
+                return Ok(Data::from(get_init_pose(node)));
             }
-            zenoh_flow::async_std::task::sleep(std::time::Duration::from_secs(1)).await;
+            sleep(Duration::from_secs(1)).await;
         }
         Err(ZFError::GenericError)
     }
@@ -55,5 +40,5 @@ export_source!(register);
 
 fn register() -> ZFResult<Arc<dyn Source>> {
     env_logger::init();
-    Ok(Arc::new(InitPoseSource) as Arc<dyn Source>)
+    Ok(Arc::new(CustomNode) as Arc<dyn Source>)
 }
