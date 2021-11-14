@@ -120,6 +120,6 @@ GenNode(zenoh_flow_osm_map_loader)
 GenNode(zenoh_flow_parking_planner)
 GenNode(zenoh_flow_pcd_map_loader)
 GenNode(zenoh_flow_pure_pursuit)
-# GenLib(zenoh_flow_simulator)
+GenNode(zenoh_flow_simulator)
 
 ament_auto_package()

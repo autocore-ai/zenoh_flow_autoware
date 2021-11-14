@@ -1,4 +1,3 @@
-pub mod configs;
 pub mod default_msg;
 pub mod msgs;
 
@@ -15,29 +14,6 @@ pub mod ffi {
         type NativeNode;
         fn init_null_config() -> UniquePtr<NativeNode>;
     }
-    // unsafe extern "C++" {
-    //     type Simulator;
-    //     fn simulator_init(cfg: &CfgSimulator) -> UniquePtr<Simulator>;
-    //     fn simulator_set_init_pose(
-    //         node: &mut UniquePtr<Simulator>,
-    //         msg: &GeometryMsgsPoseWithCovarianceStamped,
-    //     );
-    //     fn simulator_set_control_cmd(
-    //         node: &mut UniquePtr<Simulator>,
-    //         msg: &AutowareAutoMsgsVehicleControlCommand,
-    //     );
-    //     fn simulator_set_state_cmd(
-    //         node: &mut UniquePtr<Simulator>,
-    //         msg: &AutowareAutoMsgsVehicleStateCommand,
-    //     );
-    //     fn simulator_get_kinematic_state(
-    //         node: &mut UniquePtr<Simulator>,
-    //     ) -> AutowareAutoMsgsVehicleKinematicState;
-    //     fn simulator_get_state_report(
-    //         node: &mut UniquePtr<Simulator>,
-    //     ) -> AutowareAutoMsgsVehicleStateReport;
-    //     fn simulator_update(node: &mut UniquePtr<Simulator>);
-    // }
 }
 
 unsafe impl Send for ffi::NativeNode {}

@@ -24,7 +24,8 @@ namespace zenoh_flow
   {
     namespace ffi
     {
-      Simulator::Simulator(const CfgSimulator &cfg)
+      NativeNode::NativeNode() {}
+      NativeNode::NativeNode(const NativeConfig &cfg)
       {
         if (!rclcpp::ok())
         {
@@ -56,62 +57,65 @@ namespace zenoh_flow
         (void)sig;
         exit(0);
       }
-      AutowareAutoMsgsVehicleKinematicState Simulator::GetKinematicState()
+      AutowareAutoMsgsVehicleKinematicState NativeNode::GetKinematicState()
       {
         return Convert(ptr->GetKinematicState());
       }
-      AutowareAutoMsgsVehicleStateReport Simulator::GetStateReport()
+      AutowareAutoMsgsVehicleStateReport NativeNode::GetStateReport()
       {
         return Convert(ptr->GetStateReport());
       }
-      GeometryMsgsPoseStamped Simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
+      GeometryMsgsPoseStamped NativeNode::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
 
-      void Simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
+      void NativeNode::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         ptr->SetInitPose(Convert(msg));
       }
-      void Simulator::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &msg)
+      void NativeNode::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &msg)
       {
         ptr->SetStateCmd(Convert(msg));
       }
-      void Simulator::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &msg)
+      void NativeNode::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &msg)
       {
         ptr->SetVehicleCmd(Convert(msg));
       }
-      void Simulator::Update() { ptr->Update(); }
-
-      std::unique_ptr<Simulator> initialize(const CfgSimulator &cfg)
+      void NativeNode::Update() { ptr->Update(); }
+      std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
       {
-        return std::make_unique<Simulator>(cfg);
+        return std::make_unique<NativeNode>(cfg);
       }
-      AutowareAutoMsgsVehicleKinematicState getKinematicState(std::unique_ptr<Simulator> &node)
+      std::unique_ptr<NativeNode> init_null_config()
+      {
+        return std::make_unique<NativeNode>();
+      }
+      AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode> &node)
       {
         return node->GetKinematicState();
       }
-      AutowareAutoMsgsVehicleStateReport getStateReport(std::unique_ptr<Simulator> &node)
+      AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode> &node)
       {
         return node->GetStateReport();
       }
-      GeometryMsgsPoseStamped getCurrentPose(std::unique_ptr<Simulator> &node)
+      GeometryMsgsPoseStamped get_current_pose(std::unique_ptr<NativeNode> &node)
       {
         return node->GetCurrentPose();
       }
-      void setInitPose(
-          std::unique_ptr<Simulator> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
+      void set_init_pose(
+          std::unique_ptr<NativeNode> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         node->SetInitPose(msg);
       }
-      void setStateCmd(
-          std::unique_ptr<Simulator> &node, const AutowareAutoMsgsVehicleStateCommand &msg)
+      void set_state_cmd(
+          std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleStateCommand &msg)
       {
         node->SetStateCmd(msg);
       }
-      void setVehicleCmd(
-          std::unique_ptr<Simulator> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
+      void set_vehicle_cmd(
+          std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
       {
         node->SetVehicleCmd(msg);
       }
-      void update(std::unique_ptr<Simulator> &node) { node->Update(); }
+      void update(std::unique_ptr<NativeNode> &node) { node->Update(); }
     }
-  } // namespace autoware_auto
-} // namespace rust_cxx
+  }
+}

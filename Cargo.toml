@@ -10,7 +10,8 @@ members = [
   "zenoh_flow_osm_map_loader",
   "zenoh_flow_parking_planner",
   "zenoh_flow_pcd_map_loader",
-  "zenoh_flow_pure_pursuit", # "zenoh_flow_simulator",
+  "zenoh_flow_pure_pursuit",
+  "zenoh_flow_simulator",
   "zenoh_flow_tick_source",
   "zenoh_flow_system_monitor",
 ]
