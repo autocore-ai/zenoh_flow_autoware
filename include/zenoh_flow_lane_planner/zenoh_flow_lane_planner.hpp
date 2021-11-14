@@ -1,5 +1,7 @@
 #pragma once
-#include <autoware_auto.hpp>
+#include <configs.hpp>
+#include <msgs.hpp>
+#include <zenoh_flow_lane_planner.hpp>
 #include <lane_planner_nodes/lane_planner_node.hpp>
 
 namespace zenoh_flow
@@ -8,16 +10,18 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class LanePlanner
+            class NativeNode
             {
             public:
-                LanePlanner(const CfgLanePlanner &);
+                NativeNode();
+                NativeNode(const NativeConfig &);
 
             private:
                 std::shared_ptr<autoware::lane_planner_nodes::LanePlannerNode> ptr;
                 void spin();
             };
-            std::unique_ptr<LanePlanner> lane_planner_init(const CfgLanePlanner &);
+            std::unique_ptr<NativeNode> init(const NativeConfig &);
+            std::unique_ptr<NativeNode> init_null_config();
             void shutdown(int sig);
         }
     }

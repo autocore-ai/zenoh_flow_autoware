@@ -1,6 +1,6 @@
 mod ffi;
 use async_trait::async_trait;
-use common::autoware_auto::NativeNodeInstance;
+use autoware_auto::NativeNodeInstance;
 use derive::ZenohFlowNode;
 use ffi::ffi::{get_init_pose, init, is_new, NativeConfig};
 use std::{sync::Arc, time::Duration};

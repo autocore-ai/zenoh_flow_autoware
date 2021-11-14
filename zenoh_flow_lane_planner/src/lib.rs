@@ -1,106 +1,134 @@
+mod ffi;
+
 use async_trait::async_trait;
-use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{
-    lane_planner_init, LanePlanner, LanePlannerConfig, CfgLanePlanner, Vehicle, GaussianSmoother
-};
-use ffi::common_type::{ ZFUsize };
-use std::sync::Arc;
+use autoware_auto::NativeNodeInstance;
+use common::built_in_types::ZFUsize;
+use derive::ZenohFlowNode;
+use ffi::ffi::{init, GaussianSmoother, LanePlannerConfig, NativeConfig, Vehicle};
+use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
-    export_source, zenoh_flow_derive::ZFState, Configuration, Context, Data, Node, Source, State,
-    ZFError, ZFResult, async_std
+    async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
+    Configuration, Context, Data, Node, Source, State,
 };
 
-#[derive(Debug, ZFState)]
-pub struct LanePlannerSource;
-unsafe impl Send for LanePlannerSource {}
-unsafe impl Sync for LanePlannerSource {}
+#[derive(ZenohFlowNode, Debug, ZFState)]
+pub struct CustomNode;
 
-#[derive(Debug, ZFState)]
-pub struct Instance {
-    pub ptr: UniquePtr<LanePlanner>,
+impl Default for NativeConfig {
+    fn default() -> Self {
+        NativeConfig {
+            heading_weight: 0.1,
+            lane_planner: LanePlannerConfig {
+                trajectory_resolution: 0.5,
+            },
+            vehicle: Vehicle {
+                cg_to_front_m: 1.228,
+                cg_to_rear_m: 1.5618,
+                front_corner_stiffness: 0.1,
+                rear_corner_stiffness: 0.1,
+                mass_kg: 1500.0,
+                yaw_inertia_kgm2: 12.0,
+                width_m: 2.0,
+                front_overhang_m: 1.05,
+                rear_overhang_m: 0.92,
+            },
+            gaussian_smoother: GaussianSmoother {
+                standard_deviation: 5.0,
+                kernel_size: 3,
+            },
+        }
+    }
 }
 
-impl Node for LanePlannerSource {
-    fn initialize(&self, configuration: &Option<Configuration>) -> ZFResult<State> {
-        let cfg = match configuration {
-            Some(config) => {
-                if let (
-                    Some(heading_weight),
-                    Some(trajectory_resolution),
-                    Some(standard_deviation),
-                    Some(kernel_size),
-                    Some(cg_to_front_m),
-                    Some(cg_to_rear_m),
-                    Some(front_corner_stiffness),
-                    Some(rear_corner_stiffness),
-                    Some(mass_kg),
-                    Some(yaw_inertia_kgm2),
-                    Some(width_m),
-                    Some(front_overhang_m),
-                    Some(rear_overhang_m),
-                ) = (
-                    config.get("heading_weight"),
-                    config.get("trajectory_resolution"),
-                    config.get("standard_deviation"),
-                    config.get("kernel_size"),
-                    config.get("cg_to_front_m"),
-                    config.get("cg_to_rear_m"),
-                    config.get("front_corner_stiffness"),
-                    config.get("rear_corner_stiffness"),
-                    config.get("mass_kg"),
-                    config.get("yaw_inertia_kgm2"),
-                    config.get("width_m"),
-                    config.get("front_overhang_m"),
-                    config.get("rear_overhang_m"),
-                ) {
-
-                    let lane_planner_cfg = LanePlannerConfig {
-                        trajectory_resolution: trajectory_resolution.as_f64().unwrap(),
-                    };
-                    let vehicle_cfg = Vehicle {
-                        cg_to_front_m: cg_to_front_m.as_f64().unwrap(),
-                        cg_to_rear_m: cg_to_rear_m.as_f64().unwrap(),
-                        front_corner_stiffness: front_corner_stiffness.as_f64().unwrap(),
-                        rear_corner_stiffness: rear_corner_stiffness.as_f64().unwrap(),
-                        mass_kg: mass_kg.as_f64().unwrap(),
-                        yaw_inertia_kgm2: yaw_inertia_kgm2.as_f64().unwrap(),
-                        width_m: width_m.as_f64().unwrap(),
-                        front_overhang_m: front_overhang_m.as_f64().unwrap(),
-                        rear_overhang_m: rear_overhang_m.as_f64().unwrap(),
-                    };
-                    let gaussian_smoother_cfg =  GaussianSmoother {
-                        standard_deviation: standard_deviation.as_f64().unwrap(),
-                        kernel_size: kernel_size.as_i64().unwrap(),
-                    };
-                    let cfg = CfgLanePlanner {
-                        heading_weight: heading_weight.as_f64().unwrap(),
-                        lane_planner: lane_planner_cfg,
-                        vehicle: vehicle_cfg,
-                        gaussian_smoother: gaussian_smoother_cfg,
-                    };
-                    log::debug!("Configuration of LanePlannerSource: {:?}", cfg);
-                    Ok(cfg)
-                } else {
-                    Err(ZFError::MissingConfiguration)
-                }
+fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
+    match configuration {
+        Some(config) => {
+            let heading_weight = match config["heading_weight"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().heading_weight,
+            };
+            let trajectory_resolution = match config["lane_planner.trajectory_resolution"].as_f64()
+            {
+                Some(v) => v,
+                None => NativeConfig::default().lane_planner.trajectory_resolution,
+            };
+            let lane_planner = LanePlannerConfig {
+                trajectory_resolution,
+            };
+            let cg_to_front_m = match config["vehicle.cg_to_front_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.cg_to_front_m,
+            };
+            let cg_to_rear_m = match config["vehicle.cg_to_rear_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.cg_to_rear_m,
+            };
+            let front_corner_stiffness = match config["vehicle.front_corner_stiffness"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.front_corner_stiffness,
+            };
+            let rear_corner_stiffness = match config["vehicle.rear_corner_stiffness"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.rear_corner_stiffness,
+            };
+            let mass_kg = match config["vehicle.mass_kg"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.mass_kg,
+            };
+            let yaw_inertia_kgm2 = match config["vehicle.yaw_inertia_kgm2"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.yaw_inertia_kgm2,
+            };
+            let width_m = match config["vehicle.width_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.width_m,
+            };
+            let front_overhang_m = match config["vehicle.front_overhang_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.front_overhang_m,
+            };
+            let rear_overhang_m = match config["vehicle.rear_overhang_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.rear_overhang_m,
+            };
+            let vehicle = Vehicle {
+                cg_to_front_m,
+                cg_to_rear_m,
+                front_corner_stiffness,
+                rear_corner_stiffness,
+                mass_kg,
+                yaw_inertia_kgm2,
+                width_m,
+                front_overhang_m,
+                rear_overhang_m,
+            };
+            let standard_deviation = match config["gaussian_smoother.standard_deviation"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().gaussian_smoother.standard_deviation,
+            };
+            let kernel_size = match config["gaussian_smoother.kernel_size"].as_i64() {
+                Some(v) => v,
+                None => NativeConfig::default().gaussian_smoother.kernel_size,
+            };
+            let gaussian_smoother = GaussianSmoother {
+                standard_deviation,
+                kernel_size,
+            };
+            NativeConfig {
+                heading_weight,
+                lane_planner,
+                vehicle,
+                gaussian_smoother,
             }
-            None => Err(ZFError::InvalidData(String::from("Configuration of LanePlannerSource is None")))
-        }?;
-
-        let ptr = lane_planner_init(&cfg);
-        Ok(State::from(Instance { ptr }))
-    }
-
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
+        }
+        None => NativeConfig::default(),
     }
 }
 
 #[async_trait]
-impl Source for LanePlannerSource {
+impl Source for CustomNode {
     async fn run(&self, _context: &mut Context, _dyn_state: &mut State) -> ZFResult<Data> {
-        log::debug!("zenoh flow lane planner running ...");
-        async_std::task::sleep(std::time::Duration::from_secs(1)).await;
+        sleep(Duration::from_secs(1)).await;
         Ok(Data::from::<ZFUsize>(ZFUsize(1)))
     }
 }
@@ -108,6 +136,5 @@ impl Source for LanePlannerSource {
 export_source!(register);
 
 fn register() -> ZFResult<Arc<dyn Source>> {
-    env_logger::init();
-    Ok(Arc::new(LanePlannerSource) as Arc<dyn Source>)
+    Ok(Arc::new(CustomNode) as Arc<dyn Source>)
 }

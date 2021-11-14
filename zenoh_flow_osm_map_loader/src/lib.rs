@@ -12,78 +12,80 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+mod ffi;
+
 use async_trait::async_trait;
-use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{osm_map_loader_init, CfgOsmMapLoader, OsmMapLoader};
-use ffi::common_type::ZFString;
-use std::time::Duration;
-use std::{fmt::Debug, sync::Arc};
+use autoware_auto::NativeNodeInstance;
+use common::built_in_types::ZFString;
+use derive::ZenohFlowNode;
+use ffi::ffi::{init, NativeConfig};
+use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
-    Configuration, Data, Node, Source, State, ZFError,
+    Configuration, Context, Data, Node, Source, State,
 };
 
 #[derive(ZenohFlowNode, Debug, ZFState)]
 pub struct CustomNode;
-#[derive(Debug, ZFState)]
-pub struct OsmMapLoaderSource;
-unsafe impl Send for OsmMapLoaderSource {}
-unsafe impl Sync for OsmMapLoaderSource {}
-#[derive(Debug, ZFState)]
-pub struct Instance {
-    pub ptr: UniquePtr<OsmMapLoader>,
-}
-impl Node for OsmMapLoaderSource {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        let mut z = CfgOsmMapLoader::default();
 
-        match cfg {
-            Some(value) => {
-                if let (
-                    Some(map_osm_file),
-                    Some(origin_offset_lat),
-                    Some(origin_offset_lon),
-                    Some(latitude),
-                    Some(longitude),
-                    Some(elevation),
-                ) = (
-                    value.get("map_osm_file"),
-                    value.get("origin_offset_lat"),
-                    value.get("origin_offset_lon"),
-                    value.get("latitude"),
-                    value.get("longitude"),
-                    value.get("elevation"),
-                ) {
-                    config.map_osm_file = serde_json::from_value(map_osm_file.clone()).unwrap();
-                    config.origin_offset_lat = origin_offset_lat.as_f64().unwrap();
-                    config.origin_offset_lon = origin_offset_lon.as_f64().unwrap();
-                    config.latitude = latitude.as_f64().unwrap();
-                    config.longitude = longitude.as_f64().unwrap();
-                    config.elevation = elevation.as_f64().unwrap();
-                    log::info!("{:?}", config);
-                } else {
-                    log::warn!("Missing configuration!");
-                    todo!("Use default config");
-                    return Err(ZFError::MissingConfiguration);
-                };
-            }
-            None => return Err(ZFError::MissingConfiguration),
-        };
-        let ptr = osm_map_loader_init(&config);
-        Ok(State::from(Instance { ptr }))
+impl Default for NativeConfig {
+    fn default() -> Self {
+        NativeConfig {
+            map_osm_file: String::from(
+                "/opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot.osm",
+            ),
+            origin_offset_lat: -5.239983224214484e-06,
+            origin_offset_lon: 4.5845488187978845e-06,
+            latitude: 37.380811523812845,
+            longitude: -121.90840595108715,
+            elevation: 16.0,
+        }
     }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
+}
+
+fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
+    match configuration {
+        Some(config) => {
+            let map_osm_file = match config["map_osm_file"].as_str() {
+                Some(v) => String::from(v),
+                None => NativeConfig::default().map_osm_file,
+            };
+            let origin_offset_lat = match config["origin_offset_lat"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().origin_offset_lat,
+            };
+            let origin_offset_lon = match config["origin_offset_lon"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().origin_offset_lon,
+            };
+            let latitude = match config["latitude"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().latitude,
+            };
+            let longitude = match config["longitude"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().longitude,
+            };
+            let elevation = match config["elevation"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().elevation,
+            };
+            NativeConfig {
+                map_osm_file,
+                origin_offset_lat,
+                origin_offset_lon,
+                latitude,
+                longitude,
+                elevation,
+            }
+        }
+        None => NativeConfig::default(),
     }
 }
 
 #[async_trait]
-impl Source for OsmMapLoaderSource {
-    async fn run(
-        &self,
-        _context: &mut zenoh_flow::Context,
-        _dyn_state: &mut State,
-    ) -> ZFResult<Data> {
+impl Source for CustomNode {
+    async fn run(&self, _context: &mut Context, _dyn_state: &mut State) -> ZFResult<Data> {
         sleep(Duration::from_secs(1)).await;
         Ok(Data::from::<ZFString>(ZFString(String::from("running"))))
     }
@@ -92,6 +94,5 @@ impl Source for OsmMapLoaderSource {
 export_source!(register);
 
 fn register() -> ZFResult<Arc<dyn Source>> {
-    env_logger::init();
-    Ok(Arc::new(OsmMapLoaderSource) as Arc<dyn Source>)
+    Ok(Arc::new(CustomNode) as Arc<dyn Source>)
 }

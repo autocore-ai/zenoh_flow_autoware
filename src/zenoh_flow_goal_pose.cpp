@@ -10,7 +10,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            GoalPose::GoalPose()
+            NativeNode::NativeNode()
             {
                 if (!rclcpp::ok())
                 {
@@ -20,16 +20,16 @@ namespace zenoh_flow
                 ptr = std::make_shared<zenoh_flow::autoware_auto::goal_pose_receiver::GoalPoseReceiver>(options);
                 signal(SIGINT, shutdown);
             }
-            GeometryMsgsPoseStamped GoalPose::GetGoalPose()
+            GeometryMsgsPoseStamped NativeNode::GetGoalPose()
             {
                 return Convert(ptr->GetGoalPose());
             }
-            bool GoalPose::IsNew()
+            bool NativeNode::IsNew()
             {
                 rclcpp::spin_some(ptr);
                 return ptr->IsNew();
             }
-            GeometryMsgsPoseStamped goal_pose_get_goal_pose(std::unique_ptr<GoalPose> &node)
+            GeometryMsgsPoseStamped get_goal_pose(std::unique_ptr<NativeNode> &node)
             {
                 return node->GetGoalPose();
             }
@@ -38,8 +38,9 @@ namespace zenoh_flow
                 (void)sig;
                 exit(0);
             }
-            bool goal_pose_is_new(std::unique_ptr<GoalPose> &node) { return node->IsNew(); }
-            std::unique_ptr<GoalPose> goal_pose_init() { return std::make_unique<GoalPose>(); }
+            bool is_new(std::unique_ptr<NativeNode> &node) { return node->IsNew(); }
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg) { return std::make_unique<NativeNode>(); }
+            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
         }
     }
 }

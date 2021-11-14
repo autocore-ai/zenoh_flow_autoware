@@ -14,7 +14,7 @@ use zenoh_flow::zenoh_flow_derive::ZFState;
 pub mod ffi {
     unsafe extern "C++" {
         type NativeNode;
-        fn default() -> UniquePtr<NativeNode>;
+        fn init_null_config() -> UniquePtr<NativeNode>;
     }
 
     // unsafe extern "C++" {

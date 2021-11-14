@@ -6,7 +6,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            LanePlanner::LanePlanner(const CfgLanePlanner &cfg)
+            NativeNode::NativeNode() {}
+            NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -29,11 +30,11 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("gaussian_smoother.kernel_size", cfg.gaussian_smoother.kernel_size));
                 options.parameter_overrides(paramters);
                 ptr = std::make_shared<autoware::lane_planner_nodes::LanePlannerNode>(options);
-                std::thread{std::bind(&LanePlanner::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void LanePlanner::spin()
+            void NativeNode::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -47,9 +48,14 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<LanePlanner> lane_planner_init(const CfgLanePlanner &cfg)
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
             {
-                return std::make_unique<LanePlanner>(cfg);
+                return std::make_unique<NativeNode>(cfg);
+            }
+
+            std::unique_ptr<NativeNode> init_null_config()
+            {
+                return std::make_unique<NativeNode>();
             }
         }
     }

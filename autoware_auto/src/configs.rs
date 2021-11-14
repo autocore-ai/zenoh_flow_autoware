@@ -10,27 +10,6 @@ pub mod ffi {
         pub elevation: f64,
     }
     #[derive(Debug)]
-    pub struct Vector3 {
-        pub x: f64,
-        pub y: f64,
-        pub z: f64,
-    }
-    #[derive(Debug)]
-    pub struct MapConfig {
-        pub capacity: i64,
-        pub min_point: Vector3,
-        pub max_point: Vector3,
-        pub voxel_size: Vector3,
-    }
-    #[derive(Debug)]
-    pub struct CfgPcdMapLoader {
-        pub map_pcd_file: String,
-        pub map_yaml_file: String,
-        pub map_frame: String,
-        pub map_config: MapConfig,
-        pub viz_map: bool,
-    }
-    #[derive(Debug)]
     pub struct Vehicle {
         pub cg_to_front_m: f64,
         pub cg_to_rear_m: f64,
@@ -51,22 +30,6 @@ pub mod ffi {
         pub subroute_goal_offset_lane2parking: f64,
         pub subroute_goal_offset_parking2lane: f64,
         pub vehicle: Vehicle,
-    }
-    #[derive(Debug)]
-    pub struct LanePlannerConfig {
-        pub trajectory_resolution: f64,
-    }
-    #[derive(Debug)]
-    pub struct GaussianSmoother {
-        pub standard_deviation: f64,
-        pub kernel_size: i64,
-    }
-    #[derive(Debug)]
-    pub struct CfgLanePlanner {
-        pub heading_weight: f64,
-        pub lane_planner: LanePlannerConfig,
-        pub vehicle: Vehicle,
-        pub gaussian_smoother: GaussianSmoother,
     }
     #[derive(Debug)]
     pub struct OptimizationWeights {

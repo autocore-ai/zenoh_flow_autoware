@@ -99,33 +99,11 @@ sources:
     output:
       id: log
       type: Str
-    configuration:
-      map_pcd_file: /opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd
-      map_yaml_file: /opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.yaml
-      map_frame: "map"
-      capacity: 1000000
-      min_point_x: -1000.0
-      min_point_y: -1000.0
-      min_point_z: -3.0
-      max_point_x: 1000.0
-      max_point_y: 1000.0
-      max_point_z: 3.0
-      voxel_size_x: 3.5
-      voxel_size_y: 3.5
-      voxel_size_z: 3.5
-      viz_map: true
   - id: zenoh_flow_osm_map_loader
     uri: file://./install/lib/libzenoh_flow_osm_map_loader.so
     output:
       id: log
       type: Str
-    configuration:
-      map_osm_file: /opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot.osm
-      origin_offset_lat: 0.0
-      origin_offset_lon: 0.0
-      latitude: 37.380811523812845
-      longitude: -121.90840595108715
-      elevation: 0
   - id: zenoh_flow_lane_planner
     uri: file://./install/lib/libzenoh_flow_lane_planner.so
     output:
@@ -178,12 +156,12 @@ sources:
       upper_steering_rate_rps: 5.0
       upper_throttle_mps2: 5.0
 sinks:
-  - id: zenoh_flow_osm_map_loader_monitor
+  - id: zenoh_flow_pcd_map_loader_monitor
     uri: file://./target/release/libzenon_flow_system_monitor.so
     input:
       id: log
       type: Str
-  - id: zenoh_flow_pcd_map_loader_monitor
+  - id: zenoh_flow_osm_map_loader_monitor
     uri: file://./target/release/libzenon_flow_system_monitor.so
     input:
       id: log

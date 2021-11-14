@@ -5,9 +5,10 @@ pub mod ffi {
         pub node_name: String,
     }
     unsafe extern "C++" {
-        type NativeNode = common::autoware_auto::ffi::NativeNode;
+        include!("zenoh_flow_init_pose/zenoh_flow_init_pose.hpp");
+        type NativeNode = autoware_auto::ffi::NativeNode;
         type GeometryMsgsPoseWithCovarianceStamped =
-            common::autoware_auto::msgs::ffi::GeometryMsgsPoseWithCovarianceStamped;
+            autoware_auto::msgs::ffi::GeometryMsgsPoseWithCovarianceStamped;
 
         fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
         fn get_init_pose(node: &mut UniquePtr<NativeNode>)
