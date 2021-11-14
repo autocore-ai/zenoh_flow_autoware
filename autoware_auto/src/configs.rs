@@ -1,28 +1,6 @@
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(Debug)]
-    pub struct Vehicle {
-        pub cg_to_front_m: f64,
-        pub cg_to_rear_m: f64,
-        pub front_corner_stiffness: f64,
-        pub rear_corner_stiffness: f64,
-        pub mass_kg: f64,
-        pub yaw_inertia_kgm2: f64,
-        pub width_m: f64,
-        pub front_overhang_m: f64,
-        pub rear_overhang_m: f64,
-    }
-    #[derive(Debug)]
-    pub struct CfgLocalPlanner {
-        pub enable_object_collision_estimator: bool,
-        pub heading_weight: f64,
-        pub goal_distance_thresh: f64,
-        pub stop_velocity_thresh: f64,
-        pub subroute_goal_offset_lane2parking: f64,
-        pub subroute_goal_offset_parking2lane: f64,
-        pub vehicle: Vehicle,
-    }
-    #[derive(Debug)]
     pub struct CfgPurePursuit {
         pub minimum_lookahead_distance: f64,
         pub maximum_lookahead_distance: f64,

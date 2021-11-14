@@ -5,10 +5,10 @@ use autoware_auto::NativeNodeInstance;
 use derive::ZenohFlowNode;
 use ffi::ffi::{get_route, init, set_current_pose, set_goal_pose, NativeConfig};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
-use zenoh_flow::runtime::message::DataMessage;
 use zenoh_flow::{
-    default_output_rule, export_operator, zenoh_flow_derive::ZFState, Configuration, Context, Data,
-    DeadlineMiss, Node, NodeOutput, Operator, State, Token, ZFError, ZFResult,
+    default_output_rule, export_operator, runtime::message::DataMessage,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    Operator, State, Token, ZFError, ZFResult,
 };
 
 static IN_GOAL_POSE: &str = "goal_pose";
@@ -65,8 +65,7 @@ impl Operator for CustomNode {
         dyn_state: &mut State,
         inputs: &mut HashMap<zenoh_flow::PortId, DataMessage>,
     ) -> ZFResult<HashMap<zenoh_flow::PortId, Data>> {
-        let instance = dyn_state.try_get::<NativeNodeInstance>()?;
-        let ptr = &mut instance.ptr;
+        let ptr = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let mut result: HashMap<zenoh_flow::PortId, Data> = HashMap::with_capacity(1);
 
         match context.mode {
