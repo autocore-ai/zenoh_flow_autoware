@@ -15,6 +15,7 @@ AddInclude(
     zenoh_flow_osm_map_loader
     zenoh_flow_parking_planner
     zenoh_flow_pcd_map_loader
+    zenoh_flow_pure_pursuit
     )
 
 message(STATUS "Patching ${TARGET} - done")

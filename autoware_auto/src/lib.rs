@@ -15,44 +15,6 @@ pub mod ffi {
         type NativeNode;
         fn init_null_config() -> UniquePtr<NativeNode>;
     }
-
-    // unsafe extern "C++" {
-    //     type LocalPlanner;
-    //     fn local_planner_init(cfg: &CfgLocalPlanner) -> UniquePtr<LocalPlanner>;
-    //     fn local_planner_set_route(
-    //         node: &mut UniquePtr<LocalPlanner>,
-    //         msg: &AutowareAutoMsgsHadmapRoute,
-    //     );
-    //     fn local_planner_set_kinematic_state(
-    //         node: &mut UniquePtr<LocalPlanner>,
-    //         msg: &AutowareAutoMsgsVehicleKinematicState,
-    //     );
-    //     fn local_planner_set_state_report(
-    //         node: &mut UniquePtr<LocalPlanner>,
-    //         msg: &AutowareAutoMsgsVehicleStateReport,
-    //     );
-    //     fn local_planner_get_trajectory(
-    //         node: &mut UniquePtr<LocalPlanner>,
-    //     ) -> AutowareAutoMsgsTrajectory;
-    //     fn local_planner_get_state_cmd(
-    //         node: &mut UniquePtr<LocalPlanner>,
-    //     ) -> AutowareAutoMsgsVehicleStateCommand;
-    // }
-    // unsafe extern "C++" {
-    //     type PurePursuit;
-    //     fn pure_pursuit_init(cfg: &CfgPurePursuit) -> UniquePtr<PurePursuit>;
-    //     fn pure_pursuit_set_trajectory(
-    //         node: &mut UniquePtr<PurePursuit>,
-    //         msg: &AutowareAutoMsgsTrajectory,
-    //     );
-    //     fn pure_pursuit_set_kinematic_state(
-    //         node: &mut UniquePtr<PurePursuit>,
-    //         msg: &AutowareAutoMsgsVehicleKinematicState,
-    //     );
-    //     fn pure_pursuit_get_control_cmd(
-    //         node: &mut UniquePtr<PurePursuit>,
-    //     ) -> AutowareAutoMsgsVehicleControlCommand;
-    // }
     // unsafe extern "C++" {
     //     type Simulator;
     //     fn simulator_init(cfg: &CfgSimulator) -> UniquePtr<Simulator>;

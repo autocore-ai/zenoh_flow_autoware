@@ -65,21 +65,19 @@ impl Operator for CustomNode {
         dyn_state: &mut State,
         inputs: &mut HashMap<zenoh_flow::PortId, DataMessage>,
     ) -> ZFResult<HashMap<zenoh_flow::PortId, Data>> {
-        let ptr = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
+        let node = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let mut result: HashMap<zenoh_flow::PortId, Data> = HashMap::with_capacity(1);
 
         match context.mode {
             GOAL_POSE_MODE => {
-                let mut goal_pose_message = inputs
+                let mut data_msg = inputs
                     .remove(IN_GOAL_POSE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let goal_pose = goal_pose_message
-                    .data
-                    .try_get::<GeometryMsgsPoseStamped>()?;
+                let msg = data_msg.data.try_get::<GeometryMsgsPoseStamped>()?;
 
-                set_goal_pose(ptr, &goal_pose);
+                set_goal_pose(node, &msg);
 
-                let hadmap_route = get_route(ptr);
+                let hadmap_route = get_route(node);
                 result.insert(OUT_ROUTE.into(), Data::from(hadmap_route));
             }
             CURRENT_POSE_MODE => {
@@ -89,7 +87,7 @@ impl Operator for CustomNode {
                 let vehicle_kinematic_state = vehicle_kinematic_state_data_message
                     .data
                     .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
-                set_current_pose(ptr, &vehicle_kinematic_state);
+                set_current_pose(node, &vehicle_kinematic_state);
             }
             _ => {
                 log::error!(
