@@ -8,21 +8,13 @@ use std::{
     any::type_name,
     fmt::{Debug, Formatter, Result},
 };
-use zenoh_flow::{zenoh_flow_derive::ZFState, Configuration, ZFResult};
-
-pub trait NativeNodeTrait {
-    fn get_config(_cfg: &Option<Configuration>) -> ZFResult<ffi::NativeConfig> {
-        todo!()
-    }
-}
+use zenoh_flow::zenoh_flow_derive::ZFState;
 
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     unsafe extern "C++" {
         type NativeNode;
-        type NativeConfig;
-        fn native_config() -> UniquePtr<NativeConfig>;
-        fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
+        fn default() -> UniquePtr<NativeNode>;
     }
 
     // unsafe extern "C++" {

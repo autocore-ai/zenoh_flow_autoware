@@ -34,9 +34,26 @@ pub fn zf_node_derive(input: TokenStream) -> TokenStream {
 
         impl Node for #ident {
             fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-                Ok(State::from(NativeNodeInstance { ptr: init(get_config(cfg).unwrap()) }))
+                Ok(State::from(NativeNodeInstance { ptr: init(&get_config(cfg)) }))
+            }
+            fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+                Ok(())
             }
         }
     };
     gen.into()
+}
+
+#[proc_macro_derive(DefaultConfig)]
+pub fn default_config_derive(_input: TokenStream) -> TokenStream {
+    {
+        quote! {
+            impl Default for NativeConfig {
+                fn default()->NativeConfig{
+                    NativeConfig{node_name: String::from(env!("CARGO_PKG_NAME"))}
+                }
+            }
+        }
+    }
+    .into()
 }
