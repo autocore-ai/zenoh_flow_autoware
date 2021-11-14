@@ -111,7 +111,7 @@ GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/configs.rs)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 
-# GenLib(zenoh_flow_global_planner)
+GenNode(zenoh_flow_global_planner)
 GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
 GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
 GenNode(zenoh_flow_lane_planner)

@@ -17,25 +17,6 @@ pub mod ffi {
     }
 
     // unsafe extern "C++" {
-    //     type PcdMapLoader;
-    //     fn pcd_map_loader_init(cfg: &CfgPcdMapLoader) -> UniquePtr<PcdMapLoader>;
-    // }
-    // unsafe extern "C++" {
-    //     type GlobalPlanner;
-    //     fn global_planner_init() -> UniquePtr<GlobalPlanner>;
-    //     fn global_planner_set_current_pose(
-    //         node: &mut UniquePtr<GlobalPlanner>,
-    //         msg: &AutowareAutoMsgsVehicleKinematicState,
-    //     );
-    //     fn global_planner_set_goal_pose(
-    //         node: &mut UniquePtr<GlobalPlanner>,
-    //         msg: &GeometryMsgsPoseStamped,
-    //     );
-    //     fn global_planner_get_route(
-    //         node: &mut UniquePtr<GlobalPlanner>,
-    //     ) -> AutowareAutoMsgsHadmapRoute;
-    // }
-    // unsafe extern "C++" {
     //     type LocalPlanner;
     //     fn local_planner_init(cfg: &CfgLocalPlanner) -> UniquePtr<LocalPlanner>;
     //     fn local_planner_set_route(
@@ -56,14 +37,6 @@ pub mod ffi {
     //     fn local_planner_get_state_cmd(
     //         node: &mut UniquePtr<LocalPlanner>,
     //     ) -> AutowareAutoMsgsVehicleStateCommand;
-    // }
-    // unsafe extern "C++" {
-    //     type LanePlanner;
-    //     fn lane_planner_init(cfg: &CfgLanePlanner) -> UniquePtr<LanePlanner>;
-    // }
-    // unsafe extern "C++" {
-    //     type ParkingPlanner;
-    //     fn parking_planner_init(cfg: &CfgParkingPlanner) -> UniquePtr<ParkingPlanner>;
     // }
     // unsafe extern "C++" {
     //     type PurePursuit;

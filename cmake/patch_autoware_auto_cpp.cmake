@@ -7,6 +7,7 @@ function(AddInclude)
 endfunction(AddInclude)
 
 AddInclude(
+    zenoh_flow_global_planner
     zenoh_flow_goal_pose
     zenoh_flow_init_pose
     zenoh_flow_lane_planner
