@@ -20,7 +20,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            ParkingPlanner::ParkingPlanner(const CfgParkingPlanner &cfg)
+            NativeNode::NativeNode() {}
+            NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -56,11 +57,11 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("command_bounds.upper.throttle_mps2", cfg.command_bounds.upper.throttle_mps2));
                 options.parameter_overrides(paramters);
                 ptr = std::make_shared<autoware::motion::planning::parking_planner_nodes::ParkingPlannerNode>(options);
-                std::thread{std::bind(&ParkingPlanner::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void ParkingPlanner::spin()
+            void NativeNode::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -74,9 +75,14 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<ParkingPlanner> parking_planner_init(const CfgParkingPlanner &cfg)
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
             {
-                return std::make_unique<ParkingPlanner>(cfg);
+                return std::make_unique<NativeNode>(cfg);
+            }
+
+            std::unique_ptr<NativeNode> init_null_config()
+            {
+                return std::make_unique<NativeNode>();
             }
         }
     }

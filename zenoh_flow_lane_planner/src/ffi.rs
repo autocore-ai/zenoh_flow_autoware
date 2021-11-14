@@ -11,7 +11,7 @@ pub mod ffi {
         pub front_overhang_m: f64,
         pub rear_overhang_m: f64,
     }
-    pub struct LanePlannerConfig {
+    pub struct LanePlanner {
         pub trajectory_resolution: f64,
     }
     pub struct GaussianSmoother {
@@ -20,7 +20,7 @@ pub mod ffi {
     }
     struct NativeConfig {
         pub heading_weight: f64,
-        pub lane_planner: LanePlannerConfig,
+        pub lane_planner: LanePlanner,
         pub vehicle: Vehicle,
         pub gaussian_smoother: GaussianSmoother,
     }

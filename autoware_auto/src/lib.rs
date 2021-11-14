@@ -1,5 +1,4 @@
 pub mod configs;
-pub mod default_config;
 pub mod default_msg;
 pub mod msgs;
 

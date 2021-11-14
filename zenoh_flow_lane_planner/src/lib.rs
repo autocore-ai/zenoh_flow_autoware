@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use autoware_auto::NativeNodeInstance;
 use common::built_in_types::ZFUsize;
 use derive::ZenohFlowNode;
-use ffi::ffi::{init, GaussianSmoother, LanePlannerConfig, NativeConfig, Vehicle};
+use ffi::ffi::{init, GaussianSmoother, LanePlanner, NativeConfig, Vehicle};
 use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
@@ -18,7 +18,7 @@ impl Default for NativeConfig {
     fn default() -> Self {
         NativeConfig {
             heading_weight: 0.1,
-            lane_planner: LanePlannerConfig {
+            lane_planner: LanePlanner {
                 trajectory_resolution: 0.5,
             },
             vehicle: Vehicle {
@@ -52,7 +52,7 @@ fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
                 Some(v) => v,
                 None => NativeConfig::default().lane_planner.trajectory_resolution,
             };
-            let lane_planner = LanePlannerConfig {
+            let lane_planner = LanePlanner {
                 trajectory_resolution,
             };
             let cg_to_front_m = match config["vehicle.cg_to_front_m"].as_f64() {

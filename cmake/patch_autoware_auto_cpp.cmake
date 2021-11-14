@@ -11,6 +11,7 @@ AddInclude(
     zenoh_flow_init_pose
     zenoh_flow_lane_planner
     zenoh_flow_osm_map_loader
+    zenoh_flow_parking_planner
     zenoh_flow_pcd_map_loader
     )
 

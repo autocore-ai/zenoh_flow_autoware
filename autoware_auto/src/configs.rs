@@ -1,15 +1,6 @@
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(Debug)]
-    pub struct CfgOsmMapLoader {
-        pub map_osm_file: String,
-        pub origin_offset_lat: f64,
-        pub origin_offset_lon: f64,
-        pub latitude: f64,
-        pub longitude: f64,
-        pub elevation: f64,
-    }
-    #[derive(Debug)]
     pub struct Vehicle {
         pub cg_to_front_m: f64,
         pub cg_to_rear_m: f64,
@@ -30,42 +21,6 @@ pub mod ffi {
         pub subroute_goal_offset_lane2parking: f64,
         pub subroute_goal_offset_parking2lane: f64,
         pub vehicle: Vehicle,
-    }
-    #[derive(Debug)]
-    pub struct OptimizationWeights {
-        pub steering: f64,
-        pub throttle: f64,
-        pub goal: f64,
-    }
-    #[derive(Debug)]
-    pub struct StateBound {
-        pub x_m: f64,
-        pub y_m: f64,
-        pub velocity_mps: f64,
-        pub heading_rad: f64,
-        pub steering_rad: f64,
-    }
-    #[derive(Debug)]
-    pub struct StateBounds {
-        pub lower: StateBound,
-        pub upper: StateBound,
-    }
-    #[derive(Debug)]
-    pub struct CommandBound {
-        pub steering_rate_rps: f64,
-        pub throttle_mps2: f64,
-    }
-    #[derive(Debug)]
-    pub struct CommandBounds {
-        pub lower: CommandBound,
-        pub upper: CommandBound,
-    }
-    #[derive(Debug)]
-    pub struct CfgParkingPlanner {
-        pub vehicle: Vehicle,
-        pub optimization_weights: OptimizationWeights,
-        pub state_bounds: StateBounds,
-        pub command_bounds: CommandBounds,
     }
     #[derive(Debug)]
     pub struct CfgPurePursuit {
