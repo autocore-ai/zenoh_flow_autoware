@@ -1,34 +1,34 @@
 flow: AutowareDemo
 operators:
-  # - id: zenoh_flow_global_planner
-  #   uri: file://./install/lib/libzenoh_flow_global_planner.so
-  #   inputs:
-  #     - id: goal_pose
-  #       type: geometry_msgs_PoseStamped
-  #     - id: current_pose
-  #       type: autoware_auto_msgs_VehicleKinematicState
-  #   outputs:
-  #     - id: route
-  #       type: autoware_auto_msgs_HADMapRoute
-  # - id: zenoh_flow_local_planner
-  #   uri: file://./install/lib/libzenoh_flow_local_planner.so
-  #   inputs:
-  #     - id: kinematic_state
-  #       type: autoware_auto_msgs_VehicleKinematicState
-  #     - id: route
-  #       type: autoware_auto_msgs_HADMapRoute
-  #     - id: state_report
-  #       type: autoware_auto_msgs_VehicleStateReport
-  #   outputs:
-  #     - id: trajectory
-  #       type: autoware_auto_msgs_Trajectory
-  #     - id: state_cmd
-  #       type: autoware_auto_msgs_VehicleStateCommand
+  - id: zenoh_flow_global_planner
+    uri: file://./install/lib/libzenoh_flow_global_planner.so
+    inputs:
+      - id: goal_pose
+        type: geometry_msgs_PoseStamped
+      # - id: current_pose
+      #   type: autoware_auto_msgs_VehicleKinematicState
+    outputs:
+      - id: route
+        type: autoware_auto_msgs_HADMapRoute
+  - id: zenoh_flow_local_planner
+    uri: file://./install/lib/libzenoh_flow_local_planner.so
+    inputs:
+      - id: kinematic_state
+        type: autoware_auto_msgs_VehicleKinematicState
+      - id: route
+        type: autoware_auto_msgs_HADMapRoute
+      - id: state_report
+        type: autoware_auto_msgs_VehicleStateReport
+    outputs:
+      - id: trajectory
+        type: autoware_auto_msgs_Trajectory
+      - id: state_cmd
+        type: autoware_auto_msgs_VehicleStateCommand
   - id: zenoh_flow_pure_pursuit
     uri: file://./install/lib/libzenoh_flow_pure_pursuit.so
     inputs:
-      # - id: trajectory
-      #   type: autoware_auto_msgs_Trajectory
+      - id: trajectory
+        type: autoware_auto_msgs_Trajectory
       - id: kinematic_state
         type: autoware_auto_msgs_VehicleKinematicState
     outputs:
@@ -43,13 +43,13 @@ operators:
         type: geometry_msgs_PoseWithCovarianceStamped
       - id: control_cmd
         type: autoware_auto_msgs_VehicleControlCommand
-      # - id: state_cmd
-      #   type: autoware_auto_msgs_VehicleStateCommand
+      - id: state_cmd
+        type: autoware_auto_msgs_VehicleStateCommand
     outputs:
       - id: kinematic_state
         type: autoware_auto_msgs_VehicleKinematicState
-      # - id: state_report
-      #   type: autoware_auto_msgs_VehicleStateReport
+      - id: state_report
+        type: autoware_auto_msgs_VehicleStateReport
 sources:
   - id: zenoh_flow_tick_source
     uri: file://./target/release/libzenoh_flow_tick_source.so
@@ -63,11 +63,11 @@ sources:
     output:
       id: init_pose
       type: geometry_msgs_PoseWithCovarianceStamped
-  # - id: zenoh_flow_goal_pose
-  #   uri: file://./install/lib/libzenoh_flow_goal_pose.so
-  #   output:
-  #     id: goal_pose
-  #     type: geometry_msgs_PoseStamped
+  - id: zenoh_flow_goal_pose
+    uri: file://./install/lib/libzenoh_flow_goal_pose.so
+    output:
+      id: goal_pose
+      type: geometry_msgs_PoseStamped
   - id: zenoh_flow_pcd_map_loader
     uri: file://./install/lib/libzenoh_flow_pcd_map_loader.so
     output:
@@ -78,16 +78,16 @@ sources:
     output:
       id: log
       type: Str
-  # - id: zenoh_flow_lane_planner
-  #   uri: file://./install/lib/libzenoh_flow_lane_planner.so
-  #   output:
-  #     id: log
-  #     type: Str
-  # - id: zenoh_flow_parking_planner
-  #   uri: file://./install/lib/libzenoh_flow_parking_planner.so
-  #   output:
-  #     id: log
-  #     type: Str
+  - id: zenoh_flow_lane_planner
+    uri: file://./install/lib/libzenoh_flow_lane_planner.so
+    output:
+      id: log
+      type: Str
+  - id: zenoh_flow_parking_planner
+    uri: file://./install/lib/libzenoh_flow_parking_planner.so
+    output:
+      id: log
+      type: Str
 sinks:
   - id: zenoh_flow_pcd_map_loader_monitor
     uri: file://./target/release/libzenoh_flow_system_monitor.so
@@ -99,16 +99,16 @@ sinks:
     input:
       id: log
       type: Str
-  # - id: zenoh_flow_lane_planner_monitor
-  #   uri: file://./target/release/libzenoh_flow_system_monitor.so
-  #   input:
-  #     id: log
-  #     type: Str
-  # - id: zenoh_flow_parking_planner_monitor
-  #   uri: file://./target/release/libzenoh_flow_system_monitor.so
-  #   input:
-  #     id: log
-  #     type: Str
+  - id: zenoh_flow_lane_planner_monitor
+    uri: file://./target/release/libzenoh_flow_system_monitor.so
+    input:
+      id: log
+      type: Str
+  - id: zenoh_flow_parking_planner_monitor
+    uri: file://./target/release/libzenoh_flow_system_monitor.so
+    input:
+      id: log
+      type: Str
 links:
   - from:
       node: zenoh_flow_osm_map_loader
@@ -122,48 +122,48 @@ links:
     to:
       node: zenoh_flow_pcd_map_loader_monitor
       input: log
-  # - from:
-  #     node: zenoh_flow_lane_planner
-  #     output: log
-  #   to:
-  #     node: zenoh_flow_lane_planner_monitor
-  #     input: log
-  # - from:
-  #     node: zenoh_flow_parking_planner
-  #     output: log
-  #   to:
-  #     node: zenoh_flow_parking_planner_monitor
-  #     input: log
+  - from:
+      node: zenoh_flow_lane_planner
+      output: log
+    to:
+      node: zenoh_flow_lane_planner_monitor
+      input: log
+  - from:
+      node: zenoh_flow_parking_planner
+      output: log
+    to:
+      node: zenoh_flow_parking_planner_monitor
+      input: log
   - from:
       node: zenoh_flow_init_pose
       output: init_pose
     to:
       node: zenoh_flow_simulator
       input: init_pose
-  # - from:
-  #     node: zenoh_flow_goal_pose
-  #     output: goal_pose
-  #   to:
-  #     node: zenoh_flow_global_planner
-  #     input: goal_pose
-  # - from:
-  #     node: zenoh_flow_global_planner
-  #     output: route
-  #   to:
-  #     node: zenoh_flow_local_planner
-  #     input: route
-  # - from:
-  #     node: zenoh_flow_local_planner
-  #     output: trajectory
-  #   to:
-  #     node: zenoh_flow_pure_pursuit
-  #     input: trajectory
-  # - from:
-  #     node: zenoh_flow_local_planner
-  #     output: state_cmd
-  #   to:
-  #     node: zenoh_flow_simulator
-  #     input: state_cmd
+  - from:
+      node: zenoh_flow_goal_pose
+      output: goal_pose
+    to:
+      node: zenoh_flow_global_planner
+      input: goal_pose
+  - from:
+      node: zenoh_flow_global_planner
+      output: route
+    to:
+      node: zenoh_flow_local_planner
+      input: route
+  - from:
+      node: zenoh_flow_local_planner
+      output: trajectory
+    to:
+      node: zenoh_flow_pure_pursuit
+      input: trajectory
+  - from:
+      node: zenoh_flow_local_planner
+      output: state_cmd
+    to:
+      node: zenoh_flow_simulator
+      input: state_cmd
   # - from:
   #     node: zenoh_flow_simulator
   #     output: kinematic_state
@@ -176,18 +176,18 @@ links:
     to:
       node: zenoh_flow_pure_pursuit
       input: kinematic_state
-  # - from:
-  #     node: zenoh_flow_simulator
-  #     output: kinematic_state
-  #   to:
-  #     node: zenoh_flow_local_planner
-  #     input: kinematic_state
-  # - from:
-  #     node: zenoh_flow_simulator
-  #     output: state_report
-  #   to:
-  #     node: zenoh_flow_local_planner
-  #     input: state_report
+  - from:
+      node: zenoh_flow_simulator
+      output: kinematic_state
+    to:
+      node: zenoh_flow_local_planner
+      input: kinematic_state
+  - from:
+      node: zenoh_flow_simulator
+      output: state_report
+    to:
+      node: zenoh_flow_local_planner
+      input: state_report
   - from:
       node: zenoh_flow_pure_pursuit
       output: control_cmd
@@ -201,20 +201,33 @@ links:
       node: zenoh_flow_simulator
       input: tick
 mapping:
-- id: zenoh_flow_pcd_map_loader
-  runtime: pcd
-- id: zenoh_flow_pcd_map_loader_monitor
-  runtime: pcd
-- id: zenoh_flow_osm_map_loader
-  runtime: osm
-- id: zenoh_flow_osm_map_loader_monitor
-  runtime: osm
-- id: zenoh_flow_init_pose
-  runtime: sim
-- id: zenoh_flow_tick_source
-  runtime: sim
-- id: zenoh_flow_pure_pursuit
-  runtime: sim
-- id: zenoh_flow_simulator
-  runtime: sim
-
+  - id: zenoh_flow_pcd_map_loader
+    runtime: pcd
+  - id: zenoh_flow_pcd_map_loader_monitor
+    runtime: pcd
+  - id: zenoh_flow_osm_map_loader
+    runtime: osm
+  - id: zenoh_flow_osm_map_loader_monitor
+    runtime: osm
+  - id: zenoh_flow_init_pose
+    runtime: sim
+  - id: zenoh_flow_goal_pose
+    runtime: sim
+  - id: zenoh_flow_tick_source
+    runtime: sim
+  - id: zenoh_flow_global_planner
+    runtime: sim
+  - id: zenoh_flow_local_planner
+    runtime: sim
+  - id: zenoh_flow_lane_planner
+    runtime: sim
+  - id: zenoh_flow_parking_planner
+    runtime: sim
+  - id: zenoh_flow_lane_planner_monitor
+    runtime: sim
+  - id: zenoh_flow_parking_planner_monitor
+    runtime: sim
+  - id: zenoh_flow_pure_pursuit
+    runtime: sim
+  - id: zenoh_flow_simulator
+    runtime: sim

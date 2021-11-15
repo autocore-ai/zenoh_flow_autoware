@@ -2,6 +2,7 @@
 
 AutowareAutoMsgsComplex32 Convert(const autoware_auto_msgs::msg::Complex32 &src) { return {src.real, src.imag}; }
 AutowareAutoMsgsTrajectoryPoint Convert(const autoware_auto_msgs::msg::TrajectoryPoint &src) { return {Convert(src.time_from_start), src.x, src.y, src.z, Convert(src.heading), src.longitudinal_velocity_mps, src.lateral_velocity_mps, src.acceleration_mps2, src.heading_rate_rps, src.front_wheel_angle_rad, src.rear_wheel_angle_rad}; }
+AutowareAutoMsgsVehicleControlCommand Convert(const autoware_auto_msgs::msg::VehicleControlCommand &src) { return {Convert(src.stamp), src.long_accel_mps2, src.velocity_mps, src.front_wheel_angle_rad, src.rear_wheel_angle_rad}; }
 AutowareAutoMsgsVehicleKinematicState Convert(const autoware_auto_msgs::msg::VehicleKinematicState &src) { return {Convert(src.header), Convert(src.state), Convert(src.delta)}; }
 AutowareAutoMsgsVehicleStateReport Convert(const autoware_auto_msgs::msg::VehicleStateReport &src) { return {Convert(src.stamp), src.fuel, src.blinker, src.headlight, src.wiper, src.gear, src.mode, src.hand_brake, src.horn}; }
 BuiltinInterfacesDuration Convert(const builtin_interfaces::msg::Duration &src) { return {src.sec, src.nanosec}; }
@@ -16,6 +17,7 @@ GeometryMsgsVector3 Convert(const geometry_msgs::msg::Vector3 &src) { return {sr
 StdMsgsHeader Convert(const std_msgs::msg::Header &src) { return {Convert(src.stamp), Convert(src.frame_id)}; }
 autoware_auto_msgs::msg::Complex32 Convert(const AutowareAutoMsgsComplex32 &src) { return autoware_auto_msgs::msg::Complex32().set__real(src.real).set__imag(src.imag); }
 autoware_auto_msgs::msg::TrajectoryPoint Convert(const AutowareAutoMsgsTrajectoryPoint &src) { return autoware_auto_msgs::msg::TrajectoryPoint().set__time_from_start(Convert(src.time_from_start)).set__x(src.x).set__y(src.y).set__z(src.z).set__heading(Convert(src.heading)).set__longitudinal_velocity_mps(src.longitudinal_velocity_mps).set__lateral_velocity_mps(src.lateral_velocity_mps).set__acceleration_mps2(src.acceleration_mps2).set__heading_rate_rps(src.heading_rate_rps).set__front_wheel_angle_rad(src.front_wheel_angle_rad).set__rear_wheel_angle_rad(src.rear_wheel_angle_rad); }
+autoware_auto_msgs::msg::VehicleControlCommand Convert(const AutowareAutoMsgsVehicleControlCommand &src) { return autoware_auto_msgs::msg::VehicleControlCommand().set__stamp(Convert(src.stamp)).set__long_accel_mps2(src.long_accel_mps2).set__velocity_mps(src.velocity_mps).set__front_wheel_angle_rad(src.front_wheel_angle_rad).set__rear_wheel_angle_rad(src.rear_wheel_angle_rad); }
 autoware_auto_msgs::msg::VehicleKinematicState Convert(const AutowareAutoMsgsVehicleKinematicState &src) { return autoware_auto_msgs::msg::VehicleKinematicState().set__header(Convert(src.header)).set__state(Convert(src.state)).set__delta(Convert(src.delta)); }
 builtin_interfaces::msg::Duration Convert(const BuiltinInterfacesDuration &src) { return builtin_interfaces::msg::Duration().set__sec(src.sec).set__nanosec(src.nanosec); }
 builtin_interfaces::msg::Time Convert(const BuiltinInterfacesTime &src) { return builtin_interfaces::msg::Time().set__sec(src.sec).set__nanosec(src.nanosec); }
