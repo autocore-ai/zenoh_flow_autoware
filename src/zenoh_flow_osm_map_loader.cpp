@@ -10,14 +10,13 @@ namespace zenoh_flow
             NativeNode::NativeNode() {}
             NativeNode::NativeNode(const NativeConfig &cfg)
             {
-                std::cout << "OOOOOOOOOOOOOOOOOOOOOO" << std::endl;
                 if (!rclcpp::ok())
                 {
                     rclcpp::init(0, nullptr);
                 }
                 rclcpp::NodeOptions options;
                 std::vector<rclcpp::Parameter> paramters = std::vector<rclcpp::Parameter>();
-                // paramters.push_back(rclcpp::Parameter("map_osm_file", static_cast<std::string>(cfg.map_osm_file)));
+                paramters.push_back(rclcpp::Parameter("map_osm_file", static_cast<std::string>(cfg.map_osm_file)));
                 paramters.push_back(rclcpp::Parameter("origin_offset_lat", cfg.origin_offset_lat));
                 paramters.push_back(rclcpp::Parameter("origin_offset_lon", cfg.origin_offset_lon));
                 paramters.push_back(rclcpp::Parameter("latitude", cfg.latitude));
@@ -48,7 +47,6 @@ namespace zenoh_flow
 
             std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
             {
-                std::cout <<"AAAAAAAAAAAAAAAAAAAAA" <<std::endl;
                 return std::make_unique<NativeNode>(cfg);
             }
             std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }

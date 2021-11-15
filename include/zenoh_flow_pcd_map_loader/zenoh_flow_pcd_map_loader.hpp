@@ -12,6 +12,7 @@ namespace zenoh_flow
             class NativeNode
             {
             public:
+                NativeNode();
                 NativeNode(const NativeConfig &);
 
             private:

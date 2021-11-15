@@ -34,10 +34,7 @@ pub fn zf_node_derive(input: TokenStream) -> TokenStream {
 
         impl Node for #ident {
             fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-                println!("KKKKKKK");
-                let state = State::from(NativeNodeInstance { ptr: init(&get_config(cfg)) });
-                println!("PPPPPPPP");
-                Ok(state)
+                Ok(State::from(NativeNodeInstance { ptr: init(&get_config(cfg)) }))
             }
             fn finalize(&self, _state: &mut State) -> ZFResult<()> {
                 Ok(())

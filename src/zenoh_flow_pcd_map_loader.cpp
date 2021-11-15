@@ -7,6 +7,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
+            NativeNode::NativeNode() {}
             NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -54,6 +55,7 @@ namespace zenoh_flow
             {
                 return std::make_unique<NativeNode>(cfg);
             }
+            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
         }
     }
 }

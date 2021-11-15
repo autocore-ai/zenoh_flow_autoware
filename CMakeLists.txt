@@ -132,7 +132,7 @@ GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 # GenNode(zenoh_flow_local_planner)
 GenNode(zenoh_flow_osm_map_loader)
 # GenNode(zenoh_flow_parking_planner)
-# GenNode(zenoh_flow_pcd_map_loader)
+GenNode(zenoh_flow_pcd_map_loader)
 # GenNode(zenoh_flow_pure_pursuit)
 # GenNode(zenoh_flow_simulator)
 
