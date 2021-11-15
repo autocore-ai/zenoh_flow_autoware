@@ -49,6 +49,5 @@ impl Node for TickSource {
 zenoh_flow::export_source!(register);
 
 fn register() -> ZFResult<Arc<dyn Source>> {
-    env_logger::init();
     Ok(Arc::new(TickSource) as Arc<dyn Source>)
 }
