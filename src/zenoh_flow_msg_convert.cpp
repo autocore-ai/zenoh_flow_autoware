@@ -7,6 +7,22 @@ AutowareAutoMsgsVehicleKinematicState Convert(const autoware_auto_msgs::msg::Veh
 BuiltinInterfacesDuration Convert(const builtin_interfaces::msg::Duration &src) { return {src.sec, src.nanosec}; }
 BuiltinInterfacesTime Convert(const builtin_interfaces::msg::Time &src) { return {src.sec, src.nanosec}; }
 GeometryMsgsQuaternion Convert(const geometry_msgs::msg::Quaternion &src) { return {src.x, src.y, src.z, src.w}; }
+GeometryMsgsPoint Convert(const geometry_msgs::msg::Point &src)
+{
+    return {src.x, src.y, src.z};
+}
+GeometryMsgsPose Convert(const geometry_msgs::msg::Pose &src)
+{
+    return {Convert(src.position), Convert(src.orientation)};
+}
+GeometryMsgsPoseWithCovariance Convert(const geometry_msgs::msg::PoseWithCovariance &src)
+{
+    return {Convert(src.pose), {}};
+}
+GeometryMsgsPoseWithCovarianceStamped Convert(const geometry_msgs::msg::PoseWithCovarianceStamped &src)
+{
+    return {Convert(src.header), Convert(src.pose)};
+}
 GeometryMsgsTransform Convert(const geometry_msgs::msg::Transform &src) { return {Convert(src.translation), Convert(src.rotation)}; }
 GeometryMsgsVector3 Convert(const geometry_msgs::msg::Vector3 &src) { return {src.x, src.y, src.z}; }
 StdMsgsHeader Convert(const std_msgs::msg::Header &src) { return {Convert(src.stamp), Convert(src.frame_id)}; }

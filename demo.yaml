@@ -39,8 +39,8 @@ operators:
     inputs:
       - id: tick
         type: u64
-      # - id: init_pose
-      #   type: geometry_msgs_PoseWithCovarianceStamped
+      - id: init_pose
+        type: geometry_msgs_PoseWithCovarianceStamped
       # - id: control_cmd
       #   type: autoware_auto_msgs_VehicleControlCommand
       # - id: state_cmd
@@ -60,11 +60,11 @@ sources:
       type: u64
     configuration:
       hz: 1
-  # - id: zenoh_flow_init_pose
-  #   uri: file://./install/lib/libzenoh_flow_init_pose.so
-  #   output:
-  #     id: init_pose
-  #     type: geometry_msgs_PoseWithCovarianceStamped
+  - id: zenoh_flow_init_pose
+    uri: file://./install/lib/libzenoh_flow_init_pose.so
+    output:
+      id: init_pose
+      type: geometry_msgs_PoseWithCovarianceStamped
   # - id: zenoh_flow_goal_pose
   #   uri: file://./install/lib/libzenoh_flow_goal_pose.so
   #   output:
@@ -142,12 +142,12 @@ links:
   #   to:
   #     node: zenoh_flow_parking_planner_monitor
   #     input: log
-  # - from:
-  #     node: zenoh_flow_init_pose
-  #     output: init_pose
-  #   to:
-  #     node: zenoh_flow_simulator
-  #     input: init_pose
+  - from:
+      node: zenoh_flow_init_pose
+      output: init_pose
+    to:
+      node: zenoh_flow_simulator
+      input: init_pose
   # - from:
   #     node: zenoh_flow_goal_pose
   #     output: goal_pose
@@ -208,3 +208,19 @@ links:
     to:
       node: zenoh_flow_simulator
       input: tick
+# mapping:
+# - id: zenoh_flow_pcd_map_loader
+#   runtime: pcd
+# - id: zenoh_flow_pcd_map_loader_monitor
+#   runtime: pcd
+# - id: zenoh_flow_osm_map_loader
+#   runtime: osm
+# - id: zenoh_flow_osm_map_loader_monitor
+#   runtime: osm
+# - id: zenoh_flow_init_pose
+#   runtime: sim
+# - id: zenoh_flow_tick_source
+#   runtime: sim
+# - id: zenoh_flow_simulator
+#   runtime: sim
+
