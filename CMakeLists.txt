@@ -84,7 +84,7 @@ message(STATUS "Start GenNode : ${node_name}")
 add_custom_target(WrapperLib_${node_name} ALL DEPENDS ${rust_lib})
 add_custom_command(
   OUTPUT ${rust_lib}
-  COMMAND cargo build --release -p ${node_name}
+  COMMAND cargo build --release
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   DEPENDS NodeFFI_${node_name}
   COMMENT "Generating Rust library: ${node_name}"
@@ -125,15 +125,15 @@ include_directories(${CMAKE_BINARY_DIR})
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 
-GenNode(zenoh_flow_global_planner)
-GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
-GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
-GenNode(zenoh_flow_lane_planner)
-GenNode(zenoh_flow_local_planner)
+# GenNode(zenoh_flow_global_planner)
+# GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
+# GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
+# GenNode(zenoh_flow_lane_planner)
+# GenNode(zenoh_flow_local_planner)
 GenNode(zenoh_flow_osm_map_loader)
-GenNode(zenoh_flow_parking_planner)
-GenNode(zenoh_flow_pcd_map_loader)
-GenNode(zenoh_flow_pure_pursuit)
-GenNode(zenoh_flow_simulator)
+# GenNode(zenoh_flow_parking_planner)
+# GenNode(zenoh_flow_pcd_map_loader)
+# GenNode(zenoh_flow_pure_pursuit)
+# GenNode(zenoh_flow_simulator)
 
 ament_auto_package()

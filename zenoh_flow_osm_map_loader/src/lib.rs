@@ -30,22 +30,28 @@ pub struct CustomNode;
 
 impl Default for NativeConfig {
     fn default() -> Self {
-        NativeConfig {
+        println!("OK0");
+        let ret = NativeConfig {
             map_osm_file: String::from(
                 "/opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot.osm",
             ),
-            origin_offset_lat: -5.239983224214484e-06,
-            origin_offset_lon: 4.5845488187978845e-06,
+            origin_offset_lat: 0.1,
+            origin_offset_lon: 0.1,
             latitude: 37.380811523812845,
             longitude: -121.90840595108715,
             elevation: 16.0,
-        }
+        };
+        println!("OK1");
+        return ret;
     }
 }
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
-    match configuration {
+    println!("OKOKOK");
+    let ret = match configuration {
         Some(config) => {
+            
+            println!("OKKKKKKK0");
             let map_osm_file = match config["map_osm_file"].as_str() {
                 Some(v) => String::from(v),
                 None => NativeConfig::default().map_osm_file,
@@ -70,6 +76,8 @@ fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
                 Some(v) => v,
                 None => NativeConfig::default().elevation,
             };
+            
+            println!("OKKKKKKK1");
             NativeConfig {
                 map_osm_file,
                 origin_offset_lat,
@@ -80,12 +88,15 @@ fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
             }
         }
         None => NativeConfig::default(),
-    }
+    };
+    println!("ENDDDDDD");
+    return ret;
 }
 
 #[async_trait]
 impl Source for CustomNode {
     async fn run(&self, _context: &mut Context, _dyn_state: &mut State) -> ZFResult<Data> {
+        println!("XXXXXXXXXXXZZZZZZZZZZZ");
         sleep(Duration::from_secs(1)).await;
         Ok(Data::from::<ZFString>(ZFString(String::from("running"))))
     }

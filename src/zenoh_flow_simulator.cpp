@@ -110,7 +110,7 @@ namespace zenoh_flow
       {
         node->SetStateCmd(msg);
       }
-      void set_vehicle_cmd(
+      void set_control_cmd(
           std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
       {
         node->SetVehicleCmd(msg);
