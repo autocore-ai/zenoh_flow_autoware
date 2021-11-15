@@ -1,21 +1,27 @@
 mod ffi;
 use async_trait::async_trait;
-use common::autoware_auto::{ffi::init, NativeNodeInstance};
-use ffi::ffi::{get_init_pose, is_new};
+use autoware_auto::NativeNodeInstance;
+use derive::ZenohFlowNode;
+use ffi::ffi::{get_init_pose, init, is_new, NativeConfig};
 use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
     Data, Node, Source, State, ZFError, ZFResult,
 };
 
-#[derive(Debug, ZFState)]
+#[derive(ZenohFlowNode, Debug, ZFState)]
 pub struct CustomNode;
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
 
-impl Node for CustomNode {
-    fn initialize(&self, _configuration: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance { ptr: init() }))
+fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
+    match configuration {
+        Some(config) => {
+            let node_name = match config["node_name"].as_str() {
+                Some(v) => String::from(v),
+                None => NativeConfig::default().node_name,
+            };
+            NativeConfig { node_name }
+        }
+        None => NativeConfig::default(),
     }
 }
 

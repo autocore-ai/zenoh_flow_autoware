@@ -14,6 +14,7 @@
   <depend>autoware_auto_msgs</depend>
   <depend>behavior_planner_nodes</depend>
   <depend>lane_planner_nodes</depend>
+  <depend>lanelet2_global_planner_nodes</depend>
   <depend>lanelet2_map_provider</depend>
   <depend>ndt_nodes</depend>
   <depend>parking_planner_nodes</depend>

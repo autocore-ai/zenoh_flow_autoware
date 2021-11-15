@@ -21,7 +21,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            LocalPlanner::LocalPlanner(const CfgLocalPlanner &cfg)
+            NativeNode::NativeNode() {}
+            NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -43,55 +44,59 @@ namespace zenoh_flow
                 ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(
                     options, autocore::NodeType::ZenohFlow);
             }
-            void LocalPlanner::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
+            void NativeNode::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
             {
                 if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
                 {
                     ptr->SetRoute(Convert(msg));
                 }
             }
-            void LocalPlanner::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
+            void NativeNode::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
                 {
                     ptr->SetKinematicState(Convert(msg));
                 }
             }
-            void LocalPlanner::SetStateReport(const AutowareAutoMsgsVehicleStateReport &msg)
+            void NativeNode::SetStateReport(const AutowareAutoMsgsVehicleStateReport &msg)
             {
                 if (!(msg.stamp.nanosec == 0 && msg.stamp.sec == 0))
                 {
                     ptr->SetStateReport(Convert(msg));
                 }
             }
-            AutowareAutoMsgsTrajectory LocalPlanner::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
-            AutowareAutoMsgsVehicleStateCommand LocalPlanner::GetStateCmd()
+            AutowareAutoMsgsTrajectory NativeNode::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
+            AutowareAutoMsgsVehicleStateCommand NativeNode::GetStateCmd()
             {
                 return Convert(ptr->GetStateCmd());
             }
-            std::unique_ptr<LocalPlanner> local_planner_init(const CfgLocalPlanner &cfg)
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
             {
-                return std::make_unique<LocalPlanner>(cfg);
+                return std::make_unique<NativeNode>(cfg);
             }
-            AutowareAutoMsgsTrajectory local_planner_get_trajectory(std::unique_ptr<LocalPlanner> &node)
+            std::unique_ptr<NativeNode> init_null_config()
+            {
+                return std::make_unique<NativeNode>();
+            }
+            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode> &node)
             {
                 return node->GetTrajectory();
             }
-            AutowareAutoMsgsVehicleStateCommand local_planner_get_state_cmd(std::unique_ptr<LocalPlanner> &node)
+            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode> &node)
             {
                 return node->GetStateCmd();
             }
-            void local_planner_set_route(std::unique_ptr<LocalPlanner> &node, const AutowareAutoMsgsHadmapRoute &msg)
+            void set_route(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsHadmapRoute &msg)
             {
                 node->SetRoute(msg);
             }
-            void local_planner_set_kinematic_state(
-                std::unique_ptr<LocalPlanner> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
+            void set_kinematic_state(
+                std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetKinematicState(msg);
             }
-            void local_planner_set_state_report(
-                std::unique_ptr<LocalPlanner> &node, const AutowareAutoMsgsVehicleStateReport &msg)
+            void set_state_report(
+                std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleStateReport &msg)
             {
                 node->SetStateReport(msg);
             }

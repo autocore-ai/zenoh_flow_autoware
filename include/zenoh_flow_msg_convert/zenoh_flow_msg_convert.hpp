@@ -1,5 +1,5 @@
 #pragma once
-#include <autoware_auto.hpp>
+#include <msgs.hpp>
 #include <autoware_auto_msgs/msg/had_map_route.hpp>
 #include <autoware_auto_msgs/msg/trajectory.hpp>
 #include <autoware_auto_msgs/msg/vehicle_control_command.hpp>

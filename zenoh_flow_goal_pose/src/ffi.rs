@@ -5,14 +5,12 @@ pub mod ffi {
         pub node_name: String,
     }
     unsafe extern "C++" {
-        include!("zenoh_flow_init_pose/zenoh_flow_init_pose.hpp");
+        include!("zenoh_flow_goal_pose/zenoh_flow_goal_pose.hpp");
         type NativeNode = autoware_auto::ffi::NativeNode;
-        type GeometryMsgsPoseWithCovarianceStamped =
-            autoware_auto::msgs::ffi::GeometryMsgsPoseWithCovarianceStamped;
+        type GeometryMsgsPoseStamped = autoware_auto::msgs::ffi::GeometryMsgsPoseStamped;
 
         fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
-        fn get_init_pose(node: &mut UniquePtr<NativeNode>)
-            -> GeometryMsgsPoseWithCovarianceStamped;
+        fn get_goal_pose(node: &mut UniquePtr<NativeNode>) -> GeometryMsgsPoseStamped;
         fn is_new(node: &mut UniquePtr<NativeNode>) -> bool;
     }
 }

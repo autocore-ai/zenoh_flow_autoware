@@ -1,10 +1,9 @@
-
 use async_trait::async_trait;
+use common::built_in_types::ZFUsize;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use ffi::common_type::{ZFUsize};
 use zenoh_flow::async_std::sync::Arc;
 use zenoh_flow::{
-    types::ZFResult, zenoh_flow_derive::ZFState, Configuration, Data, Node, Source, State, ZFError
+    types::ZFResult, zenoh_flow_derive::ZFState, Configuration, Data, Node, Source, State, ZFError,
 };
 
 static COUNTER: AtomicUsize = AtomicUsize::new(0);

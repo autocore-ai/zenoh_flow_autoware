@@ -10,7 +10,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            InitPose::InitPose()
+            NativeNode::NativeNode()
             {
                 if (!rclcpp::ok())
                 {
@@ -20,16 +20,16 @@ namespace zenoh_flow
                 ptr = std::make_shared<zenoh_flow::autoware_auto::init_pose_receiver::InitPoseReceiver>(options);
                 signal(SIGINT, shutdown);
             }
-            GeometryMsgsPoseWithCovarianceStamped InitPose::GetInitPose()
+            GeometryMsgsPoseWithCovarianceStamped NativeNode::GetInitPose()
             {
                 return Convert(ptr->GetInitPose());
             }
-            bool InitPose::IsNew()
+            bool NativeNode::IsNew()
             {
                 rclcpp::spin_some(ptr);
                 return ptr->IsNew();
             }
-            GeometryMsgsPoseWithCovarianceStamped init_pose_get_init_pose(std::unique_ptr<InitPose> &node)
+            GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<NativeNode> &node)
             {
                 return node->GetInitPose();
             }
@@ -38,8 +38,9 @@ namespace zenoh_flow
                 (void)sig;
                 exit(0);
             }
-            bool init_pose_is_new(std::unique_ptr<InitPose> &node) { return node->IsNew(); }
-            std::unique_ptr<InitPose> init_pose_init() { return std::make_unique<InitPose>(); }
+            bool is_new(std::unique_ptr<NativeNode> &node) { return node->IsNew(); }
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg) { return std::make_unique<NativeNode>(); }
+            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
         }
     }
 }

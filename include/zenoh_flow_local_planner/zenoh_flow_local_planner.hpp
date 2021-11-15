@@ -1,5 +1,6 @@
 #pragma once
-#include <autoware_auto.hpp>
+#include <msgs.hpp>
+#include <zenoh_flow_local_planner.hpp>
 #include <behavior_planner_nodes/behavior_planner_node.hpp>
 
 namespace zenoh_flow
@@ -8,10 +9,11 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class LocalPlanner
+            class NativeNode
             {
             public:
-                LocalPlanner(const CfgLocalPlanner &);
+                NativeNode();
+                NativeNode(const NativeConfig &);
                 AutowareAutoMsgsTrajectory GetTrajectory();
                 AutowareAutoMsgsVehicleStateCommand GetStateCmd();
                 void SetRoute(const AutowareAutoMsgsHadmapRoute &);
@@ -22,12 +24,13 @@ namespace zenoh_flow
                 std::shared_ptr<autoware::behavior_planner_nodes::BehaviorPlannerNode> ptr;
             };
 
-            AutowareAutoMsgsTrajectory local_planner_get_trajectory(std::unique_ptr<LocalPlanner> &);
-            AutowareAutoMsgsVehicleStateCommand local_planner_get_state_cmd(std::unique_ptr<LocalPlanner> &);
-            std::unique_ptr<LocalPlanner> local_planner_init(const CfgLocalPlanner &);
-            void local_planner_set_kinematic_state(std::unique_ptr<LocalPlanner> &, const AutowareAutoMsgsVehicleKinematicState &);
-            void local_planner_set_route(std::unique_ptr<LocalPlanner> &, const AutowareAutoMsgsHadmapRoute &);
-            void local_planner_set_state_report(std::unique_ptr<LocalPlanner> &, const AutowareAutoMsgsVehicleStateReport &);
+            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode> &);
+            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode> &);
+            std::unique_ptr<NativeNode> init(const NativeConfig &);
+            std::unique_ptr<NativeNode> init_null_config();
+            void set_kinematic_state(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleKinematicState &);
+            void set_route(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsHadmapRoute &);
+            void set_state_report(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleStateReport &);
         }
     }
 }

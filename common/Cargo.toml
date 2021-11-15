@@ -7,5 +7,6 @@ version = "0.1.0"
 
 [dependencies]
 cxx = {git = "https://github.com/autocore-ai/cxx.git", branch = "autocore-dev"}
-serde = {version = "*", features = ["derive"]}
+derive = {path = "../derive"}
+serde = {version = "1.0.130", features = ["derive"]}
 zenoh-flow = {git = "https://github.com/autocore-ai/zenoh-flow.git", branch = "autocore-dev"}

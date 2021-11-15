@@ -1,15 +1,14 @@
+mod ffi;
+
+use autoware_auto::msgs::ffi::{AutowareAutoMsgsVehicleKinematicState, GeometryMsgsPoseStamped};
+use autoware_auto::NativeNodeInstance;
+use derive::ZenohFlowNode;
+use ffi::ffi::{get_route, init, set_current_pose, set_goal_pose, NativeConfig};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
-use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{
-    global_planner_init, global_planner_set_current_pose, global_planner_set_goal_pose,
-    global_planner_get_route, GlobalPlanner, AutowareAutoMsgsVehicleKinematicState,
-    GeometryMsgsPoseStamped
-};
-use zenoh_flow::runtime::message::DataMessage;
 use zenoh_flow::{
-    default_output_rule, export_operator, Configuration, Context, Data, DeadlineMiss,
-    Node, NodeOutput, Operator, State, Token, ZFError,
-    ZFResult, zenoh_flow_derive::ZFState,
+    default_output_rule, export_operator, runtime::message::DataMessage,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    Operator, State, Token, ZFError, ZFResult,
 };
 
 static IN_GOAL_POSE: &str = "goal_pose";
@@ -19,28 +18,23 @@ static OUT_ROUTE: &str = "route";
 const GOAL_POSE_MODE: usize = 1;
 const CURRENT_POSE_MODE: usize = 2;
 
-#[derive(Debug, ZFState)]
-pub struct GlobalPlannerOperator;
-unsafe impl Send for GlobalPlannerOperator {}
-unsafe impl Sync for GlobalPlannerOperator {}
+#[derive(ZenohFlowNode, Debug, ZFState)]
+pub struct CustomNode;
 
-#[derive(Debug, ZFState)]
-pub struct Instance {
-    pub ptr: UniquePtr<GlobalPlanner>,
-}
-
-impl Node for GlobalPlannerOperator {
-    fn initialize(&self, _configuration: &Option<Configuration>) -> ZFResult<State> {
-        let ptr = global_planner_init();
-        Ok(State::from(Instance { ptr }))
-    }
-
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
+fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
+    match configuration {
+        Some(config) => {
+            let node_name = match config["node_name"].as_str() {
+                Some(v) => String::from(v),
+                None => NativeConfig::default().node_name,
+            };
+            NativeConfig { node_name }
+        }
+        None => NativeConfig::default(),
     }
 }
 
-impl Operator for GlobalPlannerOperator {
+impl Operator for CustomNode {
     fn input_rule(
         &self,
         context: &mut Context,
@@ -71,22 +65,19 @@ impl Operator for GlobalPlannerOperator {
         dyn_state: &mut State,
         inputs: &mut HashMap<zenoh_flow::PortId, DataMessage>,
     ) -> ZFResult<HashMap<zenoh_flow::PortId, Data>> {
-        let instance = dyn_state.try_get::<Instance>()?;
-        let ptr = &mut instance.ptr;
+        let node = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let mut result: HashMap<zenoh_flow::PortId, Data> = HashMap::with_capacity(1);
 
         match context.mode {
             GOAL_POSE_MODE => {
-                let mut goal_pose_message = inputs
+                let mut data_msg = inputs
                     .remove(IN_GOAL_POSE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let goal_pose = goal_pose_message
-                    .data
-                    .try_get::<GeometryMsgsPoseStamped>()?;
+                let msg = data_msg.data.try_get::<GeometryMsgsPoseStamped>()?;
 
-                global_planner_set_goal_pose(ptr, &goal_pose);
+                set_goal_pose(node, &msg);
 
-                let hadmap_route = global_planner_get_route(ptr);
+                let hadmap_route = get_route(node);
                 result.insert(OUT_ROUTE.into(), Data::from(hadmap_route));
             }
             CURRENT_POSE_MODE => {
@@ -95,9 +86,8 @@ impl Operator for GlobalPlannerOperator {
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let vehicle_kinematic_state = vehicle_kinematic_state_data_message
                     .data
-                    .try_get::<AutowareAutoMsgsVehicleKinematicState>(
-                )?;
-                global_planner_set_current_pose(ptr, &vehicle_kinematic_state);
+                    .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
+                set_current_pose(node, &vehicle_kinematic_state);
             }
             _ => {
                 log::error!(
@@ -125,5 +115,5 @@ export_operator!(register);
 
 fn register() -> ZFResult<Arc<dyn Operator>> {
     env_logger::init();
-    Ok(Arc::new(GlobalPlannerOperator) as Arc<dyn Operator>)
+    Ok(Arc::new(CustomNode) as Arc<dyn Operator>)
 }

@@ -23,61 +23,102 @@ find_program(CXXBRIDGE cxxbridge REQUIRED PATHS $ENV{HOME}/.cargo/bin)
 
 message(STATUS "Using cxxbridge: ${CXXBRIDGE}")
 
-set(rust_code_file autoware_auto)
-set(cxxbridge_in         ${CMAKE_SOURCE_DIR}/ffi/src/${rust_code_file}.rs)
-set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${rust_code_file}.hpp)
-set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${rust_code_file}.cpp)
+macro(GenCommonFFI rust_src_path)
 
-add_custom_target(CxxBridge ALL
+set(cxx_file_file ${ARGV1})
+
+if("${cxx_file_file} " STREQUAL " ")
+  STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" cxx_file_file ${rust_src_path})
+endif()
+
+set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${cxx_file_file}.hpp)
+set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${cxx_file_file}.cpp)
+
+add_custom_target(CommonFFI_${cxx_file_file} ALL
   DEPENDS ${cxxbridge_header_out} ${cxxbridge_source_out})
 
 add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
-  COMMAND find ${CMAKE_BINARY_DIR} -name "${rust_code_file}.*" |xargs rm -rf
-  COMMAND ${CXXBRIDGE} ${cxxbridge_in} --output ${cxxbridge_source_out}
-  COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/HppPatcher.cmake
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_source_out} -P ${CMAKE_SOURCE_DIR}/cmake/CppPatcher.cmake
-  COMMENT "Generating CXX bridge:"
+  COMMAND ${CXXBRIDGE} ${rust_src_path} --output ${cxxbridge_source_out}
+  COMMAND ${CXXBRIDGE} ${rust_src_path} --header --output ${cxxbridge_header_out}
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_hpp.cmake
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_source_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_cpp.cmake
+  COMMENT "Generating Common FFI: ${cxx_file_file}"
 )
 
-macro(GenLib)
+endmacro(GenCommonFFI)
 
-set(cxxwrapper_lib ${CMAKE_SOURCE_DIR}/target/release/lib${ARGV0}.a)
+macro(GenNodeFFI node_name)
 
-add_custom_target(WrapperLib_${ARGV0} ALL DEPENDS ${cxxwrapper_lib})
+set(cxxbridge_in ${CMAKE_SOURCE_DIR}/${node_name}/src/ffi.rs)
+set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${node_name}.hpp)
+set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${node_name}.cpp)
+
+add_custom_target(NodeFFI_${node_name} ALL
+  DEPENDS ${cxxbridge_header_out} ${cxxbridge_source_out})
+
 add_custom_command(
-  OUTPUT ${cxxwrapper_lib}
-  COMMAND cargo build --release
+  OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
+  COMMAND ${CXXBRIDGE} ${cxxbridge_in} --output ${cxxbridge_source_out}
+  COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
+  COMMENT "Generating Node FFI: ${node_name}"
+)
+  
+endmacro(GenNodeFFI node_name)
+
+macro(GenNode node_name)
+
+GenNodeFFI(${node_name})
+
+set(rust_lib ${CMAKE_SOURCE_DIR}/target/release/lib${node_name}.a)
+
+add_custom_target(WrapperLib_${node_name} ALL DEPENDS ${rust_lib})
+add_custom_command(
+  OUTPUT ${rust_lib}
+  COMMAND cargo build --release -p ${node_name}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  DEPENDS ${cxxbridge_in}
-  COMMENT "Generating Rust library:"
+  DEPENDS NodeFFI_${node_name}
+  COMMENT "Generating Rust library: ${node_name}"
   )
 
-add_library(CxxWrapper_${ARGV0} STATIC IMPORTED GLOBAL)
-add_dependencies(CxxWrapper_${ARGV0} WrapperLib_${ARGV0})
-set_target_properties(CxxWrapper_${ARGV0}
+add_library(CxxWrapper_${node_name} STATIC IMPORTED GLOBAL)
+add_dependencies(CxxWrapper_${node_name} WrapperLib_${node_name})
+set_target_properties(CxxWrapper_${node_name}
   PROPERTIES
-  IMPORTED_LOCATION ${cxxwrapper_lib}
+  IMPORTED_LOCATION ${rust_lib}
 )
 
 include_directories(${CMAKE_BINARY_DIR})
 
-ament_auto_add_library(${ARGV0} SHARED ${cxxbridge_source_out} src/zenoh_flow_msg_convert.cpp src/${ARGV0}.cpp ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4})
-add_dependencies(${ARGV0} CxxBridge)
-target_link_libraries(${ARGV0} "-Wl,--whole-archive" CxxWrapper_${ARGV0} "-Wl,--no-whole-archive")
+ament_auto_add_library(${node_name} SHARED
+  ${CMAKE_BINARY_DIR}/autoware_auto.cpp
+  ${CMAKE_BINARY_DIR}/msgs.cpp
+  ${CMAKE_BINARY_DIR}/${node_name}.cpp
+  src/zenoh_flow_msg_convert.cpp
+  src/${node_name}.cpp
+  ${ARGV1}
+  ${ARGV2}
+  ${ARGV3}
+  ${ARGV4}
+)
+target_compile_definitions(${node_name} PRIVATE build_${node_name})
+add_dependencies(${node_name} CxxWrapper_${node_name})
+target_link_libraries(${node_name} "-Wl,--whole-archive" CxxWrapper_${node_name} "-Wl,--no-whole-archive")
 
-endmacro(GenLib)
+endmacro(GenNode)
 
-GenLib(zenoh_flow_global_planner)
-GenLib(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
-GenLib(zenoh_flow_init_pose src/init_pose_receiver.cpp)
-GenLib(zenoh_flow_lane_planner)
-GenLib(zenoh_flow_local_planner)
-GenLib(zenoh_flow_osm_map_loader)
-GenLib(zenoh_flow_parking_planner)
-GenLib(zenoh_flow_pcd_map_loader)
-GenLib(zenoh_flow_pure_pursuit)
-GenLib(zenoh_flow_simulator)
+GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
+GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
+
+GenNode(zenoh_flow_global_planner)
+GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
+GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
+GenNode(zenoh_flow_lane_planner)
+GenNode(zenoh_flow_local_planner)
+GenNode(zenoh_flow_osm_map_loader)
+GenNode(zenoh_flow_parking_planner)
+GenNode(zenoh_flow_pcd_map_loader)
+GenNode(zenoh_flow_pure_pursuit)
+GenNode(zenoh_flow_simulator)
 
 ament_auto_package()
