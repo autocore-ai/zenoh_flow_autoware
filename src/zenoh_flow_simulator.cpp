@@ -17,7 +17,7 @@
 #include <memory>
 #include <zenoh_flow_simulator/zenoh_flow_simulator.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
-
+#include <iostream>
 namespace zenoh_flow
 {
   namespace autoware_auto
@@ -48,6 +48,7 @@ namespace zenoh_flow
         paramters.push_back(rclcpp::Parameter("steer_time_delay", cfg.steer_time_delay));
         paramters.push_back(rclcpp::Parameter("steer_time_constant", cfg.steer_time_constant));
         options.parameter_overrides(paramters);
+        std::cout << "SimplePlanningSimulator" << std::endl;
         ptr = std::make_shared<simulation::simple_planning_simulator::SimplePlanningSimulator>(options, ::autocore::NodeType::ZenohFlow);
         signal(SIGINT, shutdown);
       }

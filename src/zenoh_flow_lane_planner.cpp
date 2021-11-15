@@ -1,4 +1,5 @@
 #include <zenoh_flow_lane_planner/zenoh_flow_lane_planner.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -29,6 +30,7 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("gaussian_smoother.standard_deviation", cfg.gaussian_smoother.standard_deviation));
                 paramters.push_back(rclcpp::Parameter("gaussian_smoother.kernel_size", cfg.gaussian_smoother.kernel_size));
                 options.parameter_overrides(paramters);
+                std::cout << "LanePlannerNode" << std::endl;
                 ptr = std::make_shared<autoware::lane_planner_nodes::LanePlannerNode>(options);
                 std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
