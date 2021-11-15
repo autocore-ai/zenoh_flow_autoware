@@ -1,4 +1,4 @@
-use crate::autoware_auto::ffi::*;
+use crate::msgs::ffi::*;
 
 impl Default for GeometryMsgsPoseWithCovariance {
     fn default() -> Self {

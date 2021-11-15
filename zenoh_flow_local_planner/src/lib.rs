@@ -1,15 +1,20 @@
-use std::{collections::HashMap, fmt::Debug, sync::Arc};
-use cxx::UniquePtr;
-use ffi::autoware_auto::ffi::{
-    local_planner_init, local_planner_set_route, local_planner_set_kinematic_state, local_planner_set_state_report,
-    local_planner_get_trajectory, local_planner_get_state_cmd, LocalPlanner, AutowareAutoMsgsHadmapRoute, 
-    AutowareAutoMsgsVehicleKinematicState, AutowareAutoMsgsVehicleStateReport, CfgLocalPlanner
+mod ffi;
+
+use autoware_auto::msgs::ffi::{
+    AutowareAutoMsgsHadmapRoute, AutowareAutoMsgsVehicleKinematicState,
+    AutowareAutoMsgsVehicleStateReport,
 };
+use autoware_auto::NativeNodeInstance;
+use derive::ZenohFlowNode;
+use ffi::ffi::{
+    get_state_cmd, get_trajectory, init, set_kinematic_state, set_route, set_state_report,
+    NativeConfig, Vehicle,
+};
+use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
-    default_output_rule, export_operator, Configuration, Context, Data, DeadlineMiss,
-    Node, NodeOutput, Operator, State, Token, ZFError,
-    ZFResult, zenoh_flow_derive::ZFState,
-    runtime::message::DataMessage
+    default_output_rule, export_operator, runtime::message::DataMessage,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    Operator, State, Token, ZFError, ZFResult,
 };
 
 static IN_VEHICLE_KINEMATIC_STATE: &str = "vehicle_kinematic_state";
@@ -22,75 +27,125 @@ const VEHICLE_KINEMATIC_STATE_MODE: usize = 1;
 const HADMAP_ROUTE_MODE: usize = 2;
 const VEHICLE_STATE_REPORT_MODE: usize = 3;
 
-#[derive(Debug, ZFState)]
-pub struct LocalPlannerOperator;
-unsafe impl Send for LocalPlannerOperator {}
-unsafe impl Sync for LocalPlannerOperator {}
+#[derive(ZenohFlowNode, Debug, ZFState)]
+pub struct CustomNode;
 
-#[derive(Debug, ZFState)]
-pub struct Instance {
-    pub ptr: UniquePtr<LocalPlanner>,
+impl Default for NativeConfig {
+    fn default() -> Self {
+        NativeConfig {
+            enable_object_collision_estimator: false,
+            heading_weight: 0.1,
+            goal_distance_thresh: 3.0,
+            stop_velocity_thresh: 2.0,
+            subroute_goal_offset_lane2parking: 7.5,
+            subroute_goal_offset_parking2lane: 7.5,
+            vehicle: Vehicle {
+                cg_to_front_m: 1.228,
+                cg_to_rear_m: 1.5618,
+                front_corner_stiffness: 0.1,
+                rear_corner_stiffness: 0.1,
+                mass_kg: 1500.0,
+                yaw_inertia_kgm2: 12.0,
+                width_m: 2.0,
+                front_overhang_m: 1.05,
+                rear_overhang_m: 0.92,
+            },
+        }
+    }
 }
 
-impl Node for LocalPlannerOperator {
-    fn initialize(&self, configuration: &Option<Configuration>) -> ZFResult<State> {
-        let cfg = match configuration {
-            Some(config) => {
-                if let (
-                    Some(enable_object_collision_estimator),
-                    Some(heading_weight),
-                    Some(goal_distance_thresh),
-                    Some(stop_velocity_thresh),
-                    Some(subroute_goal_offset_lane2parking),
-                    Some(subroute_goal_offset_parking2lane),
-                    Some(cg_to_front_m),
-                    Some(cg_to_rear_m),
-                    Some(front_overhang_m),
-                    Some(rear_overhang_m),
-                ) = (
-                    config.get("enable_object_collision_estimator"),
-                    config.get("heading_weight"),
-                    config.get("goal_distance_thresh"),
-                    config.get("stop_velocity_thresh"),
-                    config.get("subroute_goal_offset_lane2parking"),
-                    config.get("subroute_goal_offset_parking2lane"),
-                    config.get("cg_to_front_m"),
-                    config.get("cg_to_rear_m"),
-                    config.get("front_overhang_m"),
-                    config.get("rear_overhang_m"),
-                ) {
-                    let mut cxx_cfg = CfgLocalPlanner::default();
-                    cxx_cfg.enable_object_collision_estimator =
-                        enable_object_collision_estimator.as_bool().unwrap();
-                    cxx_cfg.heading_weight = heading_weight.as_f64().unwrap();
-                    cxx_cfg.goal_distance_thresh = goal_distance_thresh.as_f64().unwrap();
-                    cxx_cfg.stop_velocity_thresh = stop_velocity_thresh.as_f64().unwrap();
-                    cxx_cfg.subroute_goal_offset_lane2parking =
-                        subroute_goal_offset_lane2parking.as_f64().unwrap();
-                    cxx_cfg.subroute_goal_offset_parking2lane =
-                        subroute_goal_offset_parking2lane.as_f64().unwrap();
-                    cxx_cfg.vehicle.cg_to_front_m = cg_to_front_m.as_f64().unwrap();
-                    cxx_cfg.vehicle.cg_to_rear_m = cg_to_rear_m.as_f64().unwrap();
-                    cxx_cfg.vehicle.front_overhang_m = front_overhang_m.as_f64().unwrap();
-                    cxx_cfg.vehicle.rear_overhang_m = rear_overhang_m.as_f64().unwrap();
-                    log::info!("Local Planner configuration: {:?}", cxx_cfg);
-                    Ok(cxx_cfg)
-                } else {
-                    Err(ZFError::MissingConfiguration)
-                }
+fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
+    match configuration {
+        Some(config) => {
+            let enable_object_collision_estimator =
+                match config["enable_object_collision_estimator"].as_bool() {
+                    Some(v) => v,
+                    None => NativeConfig::default().enable_object_collision_estimator,
+                };
+            let heading_weight = match config["heading_weight"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().heading_weight,
+            };
+            let goal_distance_thresh = match config["goal_distance_thresh"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().goal_distance_thresh,
+            };
+            let stop_velocity_thresh = match config["stop_velocity_thresh"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().stop_velocity_thresh,
+            };
+            let subroute_goal_offset_lane2parking =
+                match config["subroute_goal_offset_lane2parking"].as_f64() {
+                    Some(v) => v,
+                    None => NativeConfig::default().subroute_goal_offset_lane2parking,
+                };
+            let subroute_goal_offset_parking2lane =
+                match config["subroute_goal_offset_parking2lane"].as_f64() {
+                    Some(v) => v,
+                    None => NativeConfig::default().subroute_goal_offset_parking2lane,
+                };
+            let cg_to_front_m = match config["vehicle.cg_to_front_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.cg_to_front_m,
+            };
+            let cg_to_rear_m = match config["vehicle.cg_to_rear_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.cg_to_rear_m,
+            };
+            let front_corner_stiffness = match config["vehicle.front_corner_stiffness"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.front_corner_stiffness,
+            };
+            let rear_corner_stiffness = match config["vehicle.rear_corner_stiffness"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.rear_corner_stiffness,
+            };
+            let mass_kg = match config["vehicle.mass_kg"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.mass_kg,
+            };
+            let yaw_inertia_kgm2 = match config["vehicle.yaw_inertia_kgm2"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.yaw_inertia_kgm2,
+            };
+            let width_m = match config["vehicle.width_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.width_m,
+            };
+            let front_overhang_m = match config["vehicle.front_overhang_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.front_overhang_m,
+            };
+            let rear_overhang_m = match config["vehicle.rear_overhang_m"].as_f64() {
+                Some(v) => v,
+                None => NativeConfig::default().vehicle.rear_overhang_m,
+            };
+            let vehicle = Vehicle {
+                cg_to_front_m,
+                cg_to_rear_m,
+                front_corner_stiffness,
+                rear_corner_stiffness,
+                mass_kg,
+                yaw_inertia_kgm2,
+                width_m,
+                front_overhang_m,
+                rear_overhang_m,
+            };
+            NativeConfig {
+                enable_object_collision_estimator,
+                heading_weight,
+                goal_distance_thresh,
+                stop_velocity_thresh,
+                subroute_goal_offset_lane2parking,
+                subroute_goal_offset_parking2lane,
+                vehicle,
             }
-            None => Err(ZFError::InvalidData(String::from("Configuration of Local Planner is None")))
-        }?;
-        
-        let ptr = local_planner_init(&cfg);
-        Ok(State::from(Instance { ptr }))
-    }
-
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
+        }
+        None => NativeConfig::default(),
     }
 }
-impl Operator for LocalPlannerOperator {
+
+impl Operator for CustomNode {
     fn input_rule(
         &self,
         context: &mut Context,
@@ -126,9 +181,8 @@ impl Operator for LocalPlannerOperator {
         let mut results = HashMap::with_capacity(2);
 
         log::debug!("Local Planner receive messages ...");
-        let instance = dyn_state.try_get::<Instance>()?;
-        let ptr = &mut instance.ptr;
-        
+        let ptr = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
+
         match context.mode {
             VEHICLE_KINEMATIC_STATE_MODE => {
                 let mut vehicle_kinematic_state_data_message = inputs
@@ -136,12 +190,11 @@ impl Operator for LocalPlannerOperator {
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let vehicle_kinematic_state = vehicle_kinematic_state_data_message
                     .data
-                    .try_get::<AutowareAutoMsgsVehicleKinematicState>(
-                )?;
-                local_planner_set_kinematic_state(ptr, &vehicle_kinematic_state);
+                    .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
+                set_kinematic_state(ptr, &vehicle_kinematic_state);
 
-                let trajectory = local_planner_get_trajectory(ptr);
-                let vehicle_state_command = local_planner_get_state_cmd(ptr);
+                let trajectory = get_trajectory(ptr);
+                let vehicle_state_command = get_state_cmd(ptr);
                 results.insert(OUT_TRAJECTORY.into(), Data::from(trajectory));
                 results.insert(
                     OUT_VEHICLE_STATE_COMMAND.into(),
@@ -156,7 +209,7 @@ impl Operator for LocalPlannerOperator {
                 let hadmap_route = hadmap_route_data_message
                     .data
                     .try_get::<AutowareAutoMsgsHadmapRoute>()?;
-                local_planner_set_route(ptr, &hadmap_route);
+                set_route(ptr, &hadmap_route);
             }
 
             VEHICLE_STATE_REPORT_MODE => {
@@ -165,16 +218,12 @@ impl Operator for LocalPlannerOperator {
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let vehicle_state_report = vehicle_state_report_data_message
                     .data
-                    .try_get::<AutowareAutoMsgsVehicleStateReport>(
-                )?;
-                local_planner_set_state_report(ptr, &vehicle_state_report);
+                    .try_get::<AutowareAutoMsgsVehicleStateReport>()?;
+                set_state_report(ptr, &vehicle_state_report);
             }
 
             _ => {
-                log::error!(
-                    "Local Planner, unknown context mode: {}",
-                    context.mode
-                );
+                log::error!("Local Planner, unknown context mode: {}", context.mode);
             }
         };
 
@@ -196,5 +245,5 @@ export_operator!(register);
 
 fn register() -> ZFResult<Arc<dyn Operator>> {
     env_logger::init();
-    Ok(Arc::new(LocalPlannerOperator) as Arc<dyn Operator>)
+    Ok(Arc::new(CustomNode) as Arc<dyn Operator>)
 }

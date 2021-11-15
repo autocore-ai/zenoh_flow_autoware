@@ -6,7 +6,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            PcdMapLoader::PcdMapLoader(const CfgPcdMapLoader &cfg)
+            NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -30,11 +30,11 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("viz_map", cfg.viz_map));
                 options.parameter_overrides(paramters);
                 ptr = std::make_shared<autoware::localization::ndt_nodes::NDTMapPublisherNode>(options);
-                std::thread{std::bind(&PcdMapLoader::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void PcdMapLoader::spin()
+            void NativeNode::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -48,9 +48,9 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<PcdMapLoader> initialize(const CfgPcdMapLoader &cfg)
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
             {
-                return std::make_unique<PcdMapLoader>(cfg);
+                return std::make_unique<NativeNode>(cfg);
             }
         }
     }

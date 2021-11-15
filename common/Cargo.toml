@@ -1,0 +1,12 @@
+[package]
+edition = "2021"
+name = "common"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cxx = {git = "https://github.com/autocore-ai/cxx.git", branch = "autocore-dev"}
+derive = {path = "../derive"}
+serde = {version = "1.0.130", features = ["derive"]}
+zenoh-flow = {git = "https://github.com/autocore-ai/zenoh-flow.git", branch = "autocore-dev"}
