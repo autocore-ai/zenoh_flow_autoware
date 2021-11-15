@@ -4,6 +4,8 @@
 #include <rclcpp/node_options.hpp>
 #include <zenoh_flow_goal_pose/zenoh_flow_goal_pose.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
+#include <iostream>
+
 namespace zenoh_flow
 {
     namespace autoware_auto
@@ -17,6 +19,7 @@ namespace zenoh_flow
                     rclcpp::init(0, nullptr);
                 }
                 rclcpp::NodeOptions options;
+                std::cout << "GoalPoseReceiver" << std::endl;
                 ptr = std::make_shared<zenoh_flow::autoware_auto::goal_pose_receiver::GoalPoseReceiver>(options);
                 signal(SIGINT, shutdown);
             }

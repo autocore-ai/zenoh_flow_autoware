@@ -14,6 +14,7 @@
 
 #include <zenoh_flow_pure_pursuit/zenoh_flow_pure_pursuit.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -36,6 +37,7 @@ namespace zenoh_flow
                     cfg.emergency_stop_distance,
                     cfg.speed_thres_traveling_direction,
                     cfg.dist_front_rear_wheels);
+                std::cout << "PurePursuitNode" << std::endl;
                 ptr = std::make_shared<autoware::motion::control::pure_pursuit_nodes::PurePursuitNode>(
                     "pure_pursuit_node", config, "", autocore::NodeType::ZenohFlow);
             }

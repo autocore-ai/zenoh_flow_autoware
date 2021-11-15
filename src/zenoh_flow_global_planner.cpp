@@ -1,6 +1,6 @@
 #include <zenoh_flow_global_planner/zenoh_flow_global_planner.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
-
+#include <iostream>
 namespace zenoh_flow
 {
     namespace autoware_auto
@@ -15,6 +15,7 @@ namespace zenoh_flow
                     rclcpp::init(0, nullptr);
                 }
                 rclcpp::NodeOptions options;
+                std::cout << "Lanelet2GlobalPlannerNode" << std::endl;
                 ptr = std::make_shared<autoware::planning::lanelet2_global_planner_nodes::Lanelet2GlobalPlannerNode>(
                     options, autocore::NodeType::ZenohFlow);
             }

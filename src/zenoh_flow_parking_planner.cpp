@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <zenoh_flow_parking_planner/zenoh_flow_parking_planner.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -56,6 +57,7 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("command_bounds.upper.steering_rate_rps", cfg.command_bounds.upper.steering_rate_rps));
                 paramters.push_back(rclcpp::Parameter("command_bounds.upper.throttle_mps2", cfg.command_bounds.upper.throttle_mps2));
                 options.parameter_overrides(paramters);
+                std::cout << "ParkingPlannerNode" << std::endl;
                 ptr = std::make_shared<autoware::motion::planning::parking_planner_nodes::ParkingPlannerNode>(options);
                 std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
