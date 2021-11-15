@@ -24,16 +24,16 @@ operators:
   #       type: autoware_auto_msgs_Trajectory
   #     - id: state_cmd
   #       type: autoware_auto_msgs_VehicleStateCommand
-  # - id: zenoh_flow_pure_pursuit
-  #   uri: file://./install/lib/libzenoh_flow_pure_pursuit.so
-  #   inputs:
-  #     - id: trajectory
-  #       type: autoware_auto_msgs_Trajectory
-  #     - id: kinematic_state
-  #       type: autoware_auto_msgs_VehicleKinematicState
-  #   outputs:
-  #     - id: control_cmd
-  #       type: autoware_auto_msgs_VehicleControlCommand
+  - id: zenoh_flow_pure_pursuit
+    uri: file://./install/lib/libzenoh_flow_pure_pursuit.so
+    inputs:
+      # - id: trajectory
+      #   type: autoware_auto_msgs_Trajectory
+      - id: kinematic_state
+        type: autoware_auto_msgs_VehicleKinematicState
+    outputs:
+      - id: control_cmd
+        type: autoware_auto_msgs_VehicleControlCommand
   - id: zenoh_flow_simulator
     uri: file://./install/lib/libzenoh_flow_simulator.so
     inputs:
@@ -41,17 +41,15 @@ operators:
         type: u64
       - id: init_pose
         type: geometry_msgs_PoseWithCovarianceStamped
-      # - id: control_cmd
-      #   type: autoware_auto_msgs_VehicleControlCommand
+      - id: control_cmd
+        type: autoware_auto_msgs_VehicleControlCommand
       # - id: state_cmd
       #   type: autoware_auto_msgs_VehicleStateCommand
     outputs:
-      # - id: kinematic_state
-      #   type: autoware_auto_msgs_VehicleKinematicState
+      - id: kinematic_state
+        type: autoware_auto_msgs_VehicleKinematicState
       # - id: state_report
       #   type: autoware_auto_msgs_VehicleStateReport
-      - id: log
-        type: Str
 sources:
   - id: zenoh_flow_tick_source
     uri: file://./target/release/libzenoh_flow_tick_source.so
@@ -106,18 +104,12 @@ sinks:
   #   input:
   #     id: log
   #     type: Str
-  - id: zenoh_flow_parking_planner_monitor
-    uri: file://./target/release/libzenoh_flow_system_monitor.so
-    input:
-      id: log
-      type: Str
+  # - id: zenoh_flow_parking_planner_monitor
+  #   uri: file://./target/release/libzenoh_flow_system_monitor.so
+  #   input:
+  #     id: log
+  #     type: Str
 links:
-  - from:
-      node: zenoh_flow_simulator
-      output: log
-    to:
-      node: zenoh_flow_parking_planner_monitor
-      input: log
   - from:
       node: zenoh_flow_osm_map_loader
       output: log
@@ -178,12 +170,12 @@ links:
   #   to:
   #     node: zenoh_flow_global_planner
   #     input: current_pose
-  # - from:
-  #     node: zenoh_flow_simulator
-  #     output: kinematic_state
-  #   to:
-  #     node: zenoh_flow_pure_pursuit
-  #     input: kinematic_state
+  - from:
+      node: zenoh_flow_simulator
+      output: kinematic_state
+    to:
+      node: zenoh_flow_pure_pursuit
+      input: kinematic_state
   # - from:
   #     node: zenoh_flow_simulator
   #     output: kinematic_state
@@ -196,31 +188,33 @@ links:
   #   to:
   #     node: zenoh_flow_local_planner
   #     input: state_report
-  # - from:
-  #     node: zenoh_flow_pure_pursuit
-  #     output: control_cmd
-  #   to:
-  #     node: zenoh_flow_simulator
-  #     input: control_cmd
+  - from:
+      node: zenoh_flow_pure_pursuit
+      output: control_cmd
+    to:
+      node: zenoh_flow_simulator
+      input: control_cmd
   - from:
       node: zenoh_flow_tick_source
       output: tick
     to:
       node: zenoh_flow_simulator
       input: tick
-# mapping:
-# - id: zenoh_flow_pcd_map_loader
-#   runtime: pcd
-# - id: zenoh_flow_pcd_map_loader_monitor
-#   runtime: pcd
-# - id: zenoh_flow_osm_map_loader
-#   runtime: osm
-# - id: zenoh_flow_osm_map_loader_monitor
-#   runtime: osm
-# - id: zenoh_flow_init_pose
-#   runtime: sim
-# - id: zenoh_flow_tick_source
-#   runtime: sim
-# - id: zenoh_flow_simulator
-#   runtime: sim
+mapping:
+- id: zenoh_flow_pcd_map_loader
+  runtime: pcd
+- id: zenoh_flow_pcd_map_loader_monitor
+  runtime: pcd
+- id: zenoh_flow_osm_map_loader
+  runtime: osm
+- id: zenoh_flow_osm_map_loader_monitor
+  runtime: osm
+- id: zenoh_flow_init_pose
+  runtime: sim
+- id: zenoh_flow_tick_source
+  runtime: sim
+- id: zenoh_flow_pure_pursuit
+  runtime: sim
+- id: zenoh_flow_simulator
+  runtime: sim
 
