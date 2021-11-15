@@ -1,4 +1,5 @@
 #include <zenoh_flow_osm_map_loader/zenoh_flow_osm_map_loader.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -22,7 +23,9 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("longitude", cfg.longitude));
                 paramters.push_back(rclcpp::Parameter("elevation", cfg.elevation));
                 options.parameter_overrides(paramters);
+                std::cout << "Lanelet2MapProviderNode" << std::endl;
                 ptr = std::make_shared<autoware::lanelet2_map_provider::Lanelet2MapProviderNode>(options);
+                std::cout << "Lanelet2MapVisualizer" << std::endl;
                 ptr_viz = std::make_shared<autoware::lanelet2_map_provider::Lanelet2MapVisualizer>(options);
                 std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);

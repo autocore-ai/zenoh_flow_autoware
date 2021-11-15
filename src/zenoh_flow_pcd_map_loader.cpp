@@ -1,4 +1,5 @@
 #include <zenoh_flow_pcd_map_loader/zenoh_flow_pcd_map_loader.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -6,6 +7,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
+            NativeNode::NativeNode() {}
             NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -29,6 +31,7 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("map_config.voxel_size.z", cfg.map_config.voxel_size.z));
                 paramters.push_back(rclcpp::Parameter("viz_map", cfg.viz_map));
                 options.parameter_overrides(paramters);
+                std::cout << "NDTMapPublisherNode" << std::endl;
                 ptr = std::make_shared<autoware::localization::ndt_nodes::NDTMapPublisherNode>(options);
                 std::thread{std::bind(&NativeNode::spin, this)}.detach();
                 signal(SIGINT, shutdown);
@@ -52,6 +55,7 @@ namespace zenoh_flow
             {
                 return std::make_unique<NativeNode>(cfg);
             }
+            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
         }
     }
 }

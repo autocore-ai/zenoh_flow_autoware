@@ -228,6 +228,5 @@ impl Operator for CustomNode {
 export_operator!(register);
 
 fn register() -> ZFResult<Arc<dyn Operator>> {
-    env_logger::init();
     Ok(Arc::new(CustomNode) as Arc<dyn Operator>)
 }

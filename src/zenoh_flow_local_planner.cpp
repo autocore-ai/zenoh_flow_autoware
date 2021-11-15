@@ -14,6 +14,7 @@
 
 #include <zenoh_flow_local_planner/zenoh_flow_local_planner.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -41,6 +42,7 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("vehicle.front_overhang_m", cfg.vehicle.front_overhang_m));
                 paramters.push_back(rclcpp::Parameter("vehicle.rear_overhang_m", cfg.vehicle.rear_overhang_m));
                 options.parameter_overrides(paramters);
+                std::cout << "BehaviorPlannerNode" << std::endl;
                 ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(
                     options, autocore::NodeType::ZenohFlow);
             }

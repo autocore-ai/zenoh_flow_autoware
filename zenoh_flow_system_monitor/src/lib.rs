@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use zenoh_flow::async_std::sync::Arc;
 use zenoh_flow::runtime::message::DataMessage;
-use zenoh_flow::{Configuration,types::ZFResult, zf_empty_state, Node, Sink, State};
+use zenoh_flow::{types::ZFResult, zf_empty_state, Configuration, Node, Sink, State};
 
 struct SystemMonitor;
 
@@ -31,6 +31,5 @@ impl Node for SystemMonitor {
 zenoh_flow::export_sink!(register);
 
 fn register() -> ZFResult<Arc<dyn Sink>> {
-    env_logger::init();
     Ok(Arc::new(SystemMonitor) as Arc<dyn Sink>)
 }

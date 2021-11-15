@@ -152,6 +152,5 @@ impl Source for CustomNode {
 export_source!(register);
 
 fn register() -> ZFResult<Arc<dyn Source>> {
-    env_logger::init();
     Ok(Arc::new(CustomNode) as Arc<dyn Source>)
 }

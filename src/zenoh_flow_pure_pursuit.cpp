@@ -14,6 +14,7 @@
 
 #include <zenoh_flow_pure_pursuit/zenoh_flow_pure_pursuit.hpp>
 #include <zenoh_flow_msg_convert/zenoh_flow_msg_convert.hpp>
+#include <iostream>
 
 namespace zenoh_flow
 {
@@ -21,6 +22,7 @@ namespace zenoh_flow
     {
         namespace ffi
         {
+            NativeNode::NativeNode(){}
             NativeNode::NativeNode(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -36,6 +38,7 @@ namespace zenoh_flow
                     cfg.emergency_stop_distance,
                     cfg.speed_thres_traveling_direction,
                     cfg.dist_front_rear_wheels);
+                std::cout << "PurePursuitNode" << std::endl;
                 ptr = std::make_shared<autoware::motion::control::pure_pursuit_nodes::PurePursuitNode>(
                     "pure_pursuit_node", config, "", autocore::NodeType::ZenohFlow);
             }
@@ -57,7 +60,7 @@ namespace zenoh_flow
             {
                 return node->GetControlCmd();
             }
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg) { return std::make_unique<NativeNode>(); }
+            std::unique_ptr<NativeNode> init(const NativeConfig &cfg) { return std::make_unique<NativeNode>(cfg); }
             std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
             void set_kinematic_state(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {

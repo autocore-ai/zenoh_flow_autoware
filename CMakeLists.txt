@@ -31,6 +31,8 @@ if("${cxx_file_file} " STREQUAL " ")
   STRING(REGEX REPLACE ".+/(.+)\\..*" "\\1" cxx_file_file ${rust_src_path})
 endif()
 
+message(STATUS "Start GenCommonFFI : ${cxx_file_file}")
+
 set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${cxx_file_file}.hpp)
 set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${cxx_file_file}.cpp)
 
@@ -46,16 +48,20 @@ add_custom_command(
   COMMENT "Generating Common FFI: ${cxx_file_file}"
 )
 
+message(STATUS "Finish GenCommonFFI : ${cxx_file_file}")
+
 endmacro(GenCommonFFI)
 
 macro(GenNodeFFI node_name)
+
+message(STATUS "Start GenNodeFFI : ${node_name}")
 
 set(cxxbridge_in ${CMAKE_SOURCE_DIR}/${node_name}/src/ffi.rs)
 set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${node_name}.hpp)
 set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${node_name}.cpp)
 
 add_custom_target(NodeFFI_${node_name} ALL
-  DEPENDS ${cxxbridge_header_out} ${cxxbridge_source_out})
+  DEPENDS CommonFFI_autoware_auto CommonFFI_msgs ${cxxbridge_header_out} ${cxxbridge_source_out})
 
 add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
@@ -63,6 +69,7 @@ add_custom_command(
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
   COMMENT "Generating Node FFI: ${node_name}"
 )
+message(STATUS "Finish GenNodeFFI : ${node_name}")
   
 endmacro(GenNodeFFI node_name)
 
@@ -72,14 +79,18 @@ GenNodeFFI(${node_name})
 
 set(rust_lib ${CMAKE_SOURCE_DIR}/target/release/lib${node_name}.a)
 
+message(STATUS "Start GenNode : ${node_name}")
+
 add_custom_target(WrapperLib_${node_name} ALL DEPENDS ${rust_lib})
 add_custom_command(
   OUTPUT ${rust_lib}
-  COMMAND cargo build --release -p ${node_name}
+  COMMAND cargo build --release
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   DEPENDS NodeFFI_${node_name}
   COMMENT "Generating Rust library: ${node_name}"
   )
+
+message(STATUS "Finish WrapperLib_${node_name}")
 
 add_library(CxxWrapper_${node_name} STATIC IMPORTED GLOBAL)
 add_dependencies(CxxWrapper_${node_name} WrapperLib_${node_name})
@@ -88,7 +99,7 @@ set_target_properties(CxxWrapper_${node_name}
   IMPORTED_LOCATION ${rust_lib}
 )
 
-include_directories(${CMAKE_BINARY_DIR})
+message(STATUS "Finish CxxWrapper_${node_name}")
 
 ament_auto_add_library(${node_name} SHARED
   ${CMAKE_BINARY_DIR}/autoware_auto.cpp
@@ -105,7 +116,11 @@ target_compile_definitions(${node_name} PRIVATE build_${node_name})
 add_dependencies(${node_name} CxxWrapper_${node_name})
 target_link_libraries(${node_name} "-Wl,--whole-archive" CxxWrapper_${node_name} "-Wl,--no-whole-archive")
 
+message(STATUS "Finish GenNode : ${node_name}")
+
 endmacro(GenNode)
+
+include_directories(${CMAKE_BINARY_DIR})
 
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)

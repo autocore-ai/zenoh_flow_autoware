@@ -37,6 +37,7 @@ pub mod ffi {
         pub time_from_start: BuiltinInterfacesDuration,
         pub x: f32,
         pub y: f32,
+        pub z: f32,
         pub heading: AutowareAutoMsgsComplex32,
         pub longitudinal_velocity_mps: f32,
         pub lateral_velocity_mps: f32,
