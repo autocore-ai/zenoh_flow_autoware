@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_lane_planner.hpp>
 #include <lane_planner_nodes/lane_planner_node.hpp>

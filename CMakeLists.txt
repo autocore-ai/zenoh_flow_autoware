@@ -77,7 +77,7 @@ add_custom_command(
   OUTPUT ${rust_lib}
   COMMAND cargo build --release -p ${node_name}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  DEPENDS ${cxxbridge_in}
+  DEPENDS NodeFFI_${node_name}
   COMMENT "Generating Rust library: ${node_name}"
   )
 
@@ -92,7 +92,6 @@ include_directories(${CMAKE_BINARY_DIR})
 
 ament_auto_add_library(${node_name} SHARED
   ${CMAKE_BINARY_DIR}/autoware_auto.cpp
-  ${CMAKE_BINARY_DIR}/configs.cpp
   ${CMAKE_BINARY_DIR}/msgs.cpp
   ${CMAKE_BINARY_DIR}/${node_name}.cpp
   src/zenoh_flow_msg_convert.cpp
@@ -103,12 +102,12 @@ ament_auto_add_library(${node_name} SHARED
   ${ARGV4}
 )
 target_compile_definitions(${node_name} PRIVATE build_${node_name})
+add_dependencies(${node_name} CxxWrapper_${node_name})
 target_link_libraries(${node_name} "-Wl,--whole-archive" CxxWrapper_${node_name} "-Wl,--no-whole-archive")
 
 endmacro(GenNode)
 
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
-GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/configs.rs)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 
 GenNode(zenoh_flow_global_planner)

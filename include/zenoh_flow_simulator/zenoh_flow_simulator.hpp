@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_simulator.hpp>
 #include <simple_planning_simulator/simple_planning_simulator_core.hpp>

@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_parking_planner.hpp>
 #include <parking_planner_nodes/parking_planner_node.hpp>

@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_pcd_map_loader.hpp>
 #include <ndt_nodes/map_publisher.hpp>

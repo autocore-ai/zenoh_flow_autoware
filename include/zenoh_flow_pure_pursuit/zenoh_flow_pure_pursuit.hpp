@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_pure_pursuit.hpp>
 #include <pure_pursuit_nodes/pure_pursuit_node.hpp>

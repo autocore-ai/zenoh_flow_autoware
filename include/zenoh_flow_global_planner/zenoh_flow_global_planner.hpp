@@ -1,7 +1,7 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_global_planner.hpp>
+#include <lanelet2_global_planner_nodes/lanelet2_global_planner_node.hpp>
 
 namespace zenoh_flow
 {
@@ -11,6 +11,15 @@ namespace zenoh_flow
         {
             class NativeNode
             {
+            public:
+                NativeNode();
+                NativeNode(const NativeConfig &);
+                AutowareAutoMsgsHadmapRoute GetRoute();
+                void SetCurrentPose(const AutowareAutoMsgsVehicleKinematicState &);
+                void SetGoalPose(const GeometryMsgsPoseStamped &);
+
+            private:
+                std::shared_ptr<autoware::planning::lanelet2_global_planner_nodes::Lanelet2GlobalPlannerNode> ptr;
             };
             AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<NativeNode> &);
             std::unique_ptr<NativeNode> init(const NativeConfig &);

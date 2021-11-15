@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_local_planner.hpp>
 #include <behavior_planner_nodes/behavior_planner_node.hpp>

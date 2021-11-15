@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_osm_map_loader.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>

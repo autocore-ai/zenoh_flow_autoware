@@ -1,5 +1,4 @@
 #pragma once
-#include <configs.hpp>
 #include <msgs.hpp>
 #include <zenoh_flow_init_pose.hpp>
 #include <zenoh_flow_init_pose/init_pose_receiver.hpp>
