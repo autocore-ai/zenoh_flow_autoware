@@ -6,8 +6,6 @@ string(REPLACE "zenoh_flow" "NativeNode" class_name "${node_name}")
 
 file(READ ${TARGET} header_unpatched)
 
-message("class_name : ${class_name}")
-
 string(REPLACE "using ${class_name} = ::zenoh_flow::autoware_auto::ffi::${class_name};" "" header_patched "${header_unpatched}")
 
 file(WRITE ${TARGET} "${header_patched}")
