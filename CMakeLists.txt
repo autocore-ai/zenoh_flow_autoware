@@ -61,7 +61,7 @@ set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${node_name}.hpp)
 set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${node_name}.cpp)
 
 add_custom_target(NodeFFI_${node_name} ALL
-  DEPENDS CommonFFI_autoware_auto CommonFFI_msgs ${cxxbridge_header_out} ${cxxbridge_source_out})
+  DEPENDS CommonFFI_msgs ${cxxbridge_header_out} ${cxxbridge_source_out})
 
 add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
@@ -102,7 +102,6 @@ set_target_properties(CxxWrapper_${node_name}
 message(STATUS "Finish CxxWrapper_${node_name}")
 
 ament_auto_add_library(${node_name} SHARED
-  ${CMAKE_BINARY_DIR}/autoware_auto.cpp
   ${CMAKE_BINARY_DIR}/msgs.cpp
   ${CMAKE_BINARY_DIR}/${node_name}.cpp
   src/zenoh_flow_msg_convert.cpp
@@ -121,19 +120,17 @@ message(STATUS "Finish GenNode : ${node_name}")
 endmacro(GenNode)
 
 include_directories(${CMAKE_BINARY_DIR})
-
-GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 
 GenNode(zenoh_flow_global_planner)
-GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
-GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
-GenNode(zenoh_flow_lane_planner)
-GenNode(zenoh_flow_local_planner)
-GenNode(zenoh_flow_osm_map_loader)
-GenNode(zenoh_flow_parking_planner)
-GenNode(zenoh_flow_pcd_map_loader)
-GenNode(zenoh_flow_pure_pursuit)
-GenNode(zenoh_flow_simulator)
+# GenNode(zenoh_flow_goal_pose src/goal_pose_receiver.cpp)
+# GenNode(zenoh_flow_init_pose src/init_pose_receiver.cpp)
+# GenNode(zenoh_flow_lane_planner)
+# GenNode(zenoh_flow_local_planner)
+# GenNode(zenoh_flow_osm_map_loader)
+# GenNode(zenoh_flow_parking_planner)
+# GenNode(zenoh_flow_pcd_map_loader)
+# GenNode(zenoh_flow_pure_pursuit)
+# GenNode(zenoh_flow_simulator)
 
 ament_auto_package()

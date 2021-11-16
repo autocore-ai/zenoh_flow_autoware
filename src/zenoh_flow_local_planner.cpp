@@ -22,8 +22,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode() {}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_local_planner::NativeNode_local_planner() {}
+            NativeNode_local_planner::NativeNode_local_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -46,59 +46,59 @@ namespace zenoh_flow
                 ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(
                     options, autocore::NodeType::ZenohFlow);
             }
-            void NativeNode::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
+            void NativeNode_local_planner::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
             {
                 if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
                 {
                     ptr->SetRoute(Convert(msg));
                 }
             }
-            void NativeNode::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
+            void NativeNode_local_planner::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
                 {
                     ptr->SetKinematicState(Convert(msg));
                 }
             }
-            void NativeNode::SetStateReport(const AutowareAutoMsgsVehicleStateReport &msg)
+            void NativeNode_local_planner::SetStateReport(const AutowareAutoMsgsVehicleStateReport &msg)
             {
                 if (!(msg.stamp.nanosec == 0 && msg.stamp.sec == 0))
                 {
                     ptr->SetStateReport(Convert(msg));
                 }
             }
-            AutowareAutoMsgsTrajectory NativeNode::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
-            AutowareAutoMsgsVehicleStateCommand NativeNode::GetStateCmd()
+            AutowareAutoMsgsTrajectory NativeNode_local_planner::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
+            AutowareAutoMsgsVehicleStateCommand NativeNode_local_planner::GetStateCmd()
             {
                 return Convert(ptr->GetStateCmd());
             }
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+            std::unique_ptr<NativeNode_local_planner> init_local_planner(const NativeConfig &cfg)
             {
-                return std::make_unique<NativeNode>(cfg);
+                return std::make_unique<NativeNode_local_planner>(cfg);
             }
-            std::unique_ptr<NativeNode> init_null_config()
+            std::unique_ptr<NativeNode_local_planner> init_null_config()
             {
-                return std::make_unique<NativeNode>();
+                return std::make_unique<NativeNode_local_planner>();
             }
-            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode> &node)
+            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode_local_planner> &node)
             {
                 return node->GetTrajectory();
             }
-            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode> &node)
+            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode_local_planner> &node)
             {
                 return node->GetStateCmd();
             }
-            void set_route(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsHadmapRoute &msg)
+            void set_route(std::unique_ptr<NativeNode_local_planner> &node, const AutowareAutoMsgsHadmapRoute &msg)
             {
                 node->SetRoute(msg);
             }
             void set_kinematic_state(
-                std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
+                std::unique_ptr<NativeNode_local_planner> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetKinematicState(msg);
             }
             void set_state_report(
-                std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleStateReport &msg)
+                std::unique_ptr<NativeNode_local_planner> &node, const AutowareAutoMsgsVehicleStateReport &msg)
             {
                 node->SetStateReport(msg);
             }

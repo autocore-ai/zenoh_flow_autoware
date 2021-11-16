@@ -1,15 +1,14 @@
 mod ffi;
 
 use autoware_auto::msgs::ffi::{AutowareAutoMsgsVehicleKinematicState, GeometryMsgsPoseStamped};
-use autoware_auto::NativeNodeInstance;
-use derive::ZenohFlowNode;
-use ffi::ffi::{get_route, init, set_current_pose, set_goal_pose, NativeConfig};
+use ffi::ffi::{get_route, init_global_planner, set_current_pose, set_goal_pose, NativeConfig};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
+use ffi::NativeNodeInstance;
 
 static IN_GOAL_POSE: &str = "goal_pose";
 static IN_CURRENT_POSE: &str = "current_pose";
@@ -18,8 +17,22 @@ static OUT_ROUTE: &str = "route";
 const GOAL_POSE_MODE: usize = 1;
 const CURRENT_POSE_MODE: usize = 2;
 
-#[derive(ZenohFlowNode, Debug, ZFState)]
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_global_planner(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {

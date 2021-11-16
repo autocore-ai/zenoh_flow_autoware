@@ -200,34 +200,34 @@ links:
     to:
       node: zenoh_flow_simulator
       input: tick
-mapping:
-  - id: zenoh_flow_pcd_map_loader
-    runtime: pcd
-  - id: zenoh_flow_pcd_map_loader_monitor
-    runtime: pcd
-  - id: zenoh_flow_osm_map_loader
-    runtime: osm
-  - id: zenoh_flow_osm_map_loader_monitor
-    runtime: osm
-  - id: zenoh_flow_init_pose
-    runtime: sim
-  - id: zenoh_flow_goal_pose
-    runtime: sim
-  - id: zenoh_flow_tick_source
-    runtime: sim
-  - id: zenoh_flow_global_planner
-    runtime: sim
-  - id: zenoh_flow_local_planner
-    runtime: sim
-  - id: zenoh_flow_lane_planner
-    runtime: sim
-  - id: zenoh_flow_parking_planner
-    runtime: sim
-  - id: zenoh_flow_lane_planner_monitor
-    runtime: sim
-  - id: zenoh_flow_parking_planner_monitor
-    runtime: sim
-  - id: zenoh_flow_pure_pursuit
-    runtime: sim
-  - id: zenoh_flow_simulator
-    runtime: sim
+# mapping:
+#   - id: zenoh_flow_pcd_map_loader
+#     runtime: pcd
+#   - id: zenoh_flow_pcd_map_loader_monitor
+#     runtime: pcd
+#   - id: zenoh_flow_osm_map_loader
+#     runtime: osm
+#   - id: zenoh_flow_osm_map_loader_monitor
+#     runtime: osm
+#   - id: zenoh_flow_init_pose
+#     runtime: sim
+#   - id: zenoh_flow_goal_pose
+#     runtime: sim
+#   - id: zenoh_flow_tick_source
+#     runtime: sim
+#   - id: zenoh_flow_global_planner
+#     runtime: sim
+#   - id: zenoh_flow_local_planner
+#     runtime: sim
+#   - id: zenoh_flow_lane_planner
+#     runtime: sim
+#   - id: zenoh_flow_parking_planner
+#     runtime: sim
+#   - id: zenoh_flow_lane_planner_monitor
+#     runtime: sim
+#   - id: zenoh_flow_parking_planner_monitor
+#     runtime: sim
+#   - id: zenoh_flow_pure_pursuit
+#     runtime: sim
+#   - id: zenoh_flow_simulator
+#     runtime: sim

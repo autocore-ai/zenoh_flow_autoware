@@ -1,11 +1,10 @@
 mod ffi;
 
 use async_trait::async_trait;
-use autoware_auto::NativeNodeInstance;
+use ffi::NativeNodeInstance;
 use common::built_in_types::ZFUsize;
-use derive::ZenohFlowNode;
 use ffi::ffi::{
-    init, CommandBound, CommandBounds, NativeConfig, OptimizationWeights, StateBound, StateBounds,
+    init_parking_planner, CommandBound, CommandBounds, NativeConfig, OptimizationWeights, StateBound, StateBounds,
     Vehicle,
 };
 use std::{fmt::Debug, sync::Arc, time::Duration};
@@ -14,8 +13,22 @@ use zenoh_flow::{
     Configuration, Context, Data, Node, Source, State,
 };
 
-#[derive(ZenohFlowNode, Debug, ZFState)]
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_parking_planner(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
 
 impl Default for NativeConfig {
     fn default() -> Self {

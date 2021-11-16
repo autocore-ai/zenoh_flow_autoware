@@ -7,8 +7,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode() {}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_pcd_map_loader::NativeNode_pcd_map_loader() {}
+            NativeNode_pcd_map_loader::NativeNode_pcd_map_loader(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -33,11 +33,11 @@ namespace zenoh_flow
                 options.parameter_overrides(paramters);
                 std::cout << "NDTMapPublisherNode" << std::endl;
                 ptr = std::make_shared<autoware::localization::ndt_nodes::NDTMapPublisherNode>(options);
-                std::thread{std::bind(&NativeNode::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode_pcd_map_loader::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void NativeNode::spin()
+            void NativeNode_pcd_map_loader::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -51,11 +51,11 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+            std::unique_ptr<NativeNode_pcd_map_loader> init_pcd_map_loader(const NativeConfig &cfg)
             {
-                return std::make_unique<NativeNode>(cfg);
+                return std::make_unique<NativeNode_pcd_map_loader>(cfg);
             }
-            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
+            std::unique_ptr<NativeNode_pcd_map_loader> init_null_config() { return std::make_unique<NativeNode_pcd_map_loader>(); }
         }
     }
 }

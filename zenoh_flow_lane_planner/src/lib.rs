@@ -1,17 +1,16 @@
 mod ffi;
 
 use async_trait::async_trait;
-use autoware_auto::NativeNodeInstance;
+use ffi::NativeNodeInstance;
 use common::built_in_types::ZFUsize;
-use derive::ZenohFlowNode;
-use ffi::ffi::{init, GaussianSmoother, LanePlanner, NativeConfig, Vehicle};
+use ffi::ffi::{init_lane_planner, GaussianSmoother, LanePlanner, NativeConfig, Vehicle};
 use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
 
-#[derive(ZenohFlowNode, Debug, ZFState)]
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
 
 impl Default for NativeConfig {
@@ -39,6 +38,21 @@ impl Default for NativeConfig {
         }
     }
 }
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_lane_planner(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
+
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {

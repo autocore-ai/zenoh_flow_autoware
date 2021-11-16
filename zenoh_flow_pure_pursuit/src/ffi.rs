@@ -1,3 +1,10 @@
+use cxx::UniquePtr;
+use std::{
+    any::type_name,
+    fmt::{Debug, Formatter, Result},
+};
+use zenoh_flow::zenoh_flow_derive::ZFState;
+
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     struct NativeConfig {
@@ -12,21 +19,35 @@ pub mod ffi {
     }
     unsafe extern "C++" {
         include!("zenoh_flow_pure_pursuit/zenoh_flow_pure_pursuit.hpp");
-        type NativeNode = autoware_auto::ffi::NativeNode;
+        type NativeNode_pure_pursuit;
         type AutowareAutoMsgsTrajectory = autoware_auto::msgs::ffi::AutowareAutoMsgsTrajectory;
         type AutowareAutoMsgsVehicleKinematicState =
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleKinematicState;
         type AutowareAutoMsgsVehicleControlCommand =
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleControlCommand;
 
-        fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
-        fn set_trajectory(node: &mut UniquePtr<NativeNode>, msg: &AutowareAutoMsgsTrajectory);
+        fn init_pure_pursuit(cfg: &NativeConfig) -> UniquePtr<NativeNode_pure_pursuit>;
+        fn set_trajectory(node: &mut UniquePtr<NativeNode_pure_pursuit>, msg: &AutowareAutoMsgsTrajectory);
         fn set_kinematic_state(
-            node: &mut UniquePtr<NativeNode>,
+            node: &mut UniquePtr<NativeNode_pure_pursuit>,
             msg: &AutowareAutoMsgsVehicleKinematicState,
         );
         fn get_control_cmd(
-            node: &mut UniquePtr<NativeNode>,
+            node: &mut UniquePtr<NativeNode_pure_pursuit>,
         ) -> AutowareAutoMsgsVehicleControlCommand;
     }
+}
+
+unsafe impl Send for ffi::NativeNode_pure_pursuit {}
+unsafe impl Sync for ffi::NativeNode_pure_pursuit {}
+
+impl Debug for ffi::NativeNode_pure_pursuit {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        f.debug_struct(type_name::<ffi::NativeNode_pure_pursuit>()).finish()
+    }
+}
+
+#[derive(Debug, ZFState)]
+pub struct NativeNodeInstance {
+    pub ptr: UniquePtr<ffi::NativeNode_pure_pursuit>,
 }

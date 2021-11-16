@@ -1,3 +1,11 @@
+use cxx::UniquePtr;
+use std::{
+    any::type_name,
+    fmt::{Debug, Formatter, Result},
+};
+use zenoh_flow::zenoh_flow_derive::ZFState;
+
+
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     pub struct Vehicle {
@@ -22,7 +30,7 @@ pub mod ffi {
     }
     unsafe extern "C++" {
         include!("zenoh_flow_local_planner/zenoh_flow_local_planner.hpp");
-        type NativeNode = autoware_auto::ffi::NativeNode;
+        type NativeNode_local_planner;
         type AutowareAutoMsgsHadmapRoute = autoware_auto::msgs::ffi::AutowareAutoMsgsHadmapRoute;
         type AutowareAutoMsgsVehicleKinematicState =
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleKinematicState;
@@ -32,17 +40,31 @@ pub mod ffi {
         type AutowareAutoMsgsVehicleStateCommand =
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleStateCommand;
 
-        fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
-        fn set_route(node: &mut UniquePtr<NativeNode>, msg: &AutowareAutoMsgsHadmapRoute);
+        fn init_local_planner(cfg: &NativeConfig) -> UniquePtr<NativeNode_local_planner>;
+        fn set_route(node: &mut UniquePtr<NativeNode_local_planner>, msg: &AutowareAutoMsgsHadmapRoute);
         fn set_kinematic_state(
-            node: &mut UniquePtr<NativeNode>,
+            node: &mut UniquePtr<NativeNode_local_planner>,
             msg: &AutowareAutoMsgsVehicleKinematicState,
         );
         fn set_state_report(
-            node: &mut UniquePtr<NativeNode>,
+            node: &mut UniquePtr<NativeNode_local_planner>,
             msg: &AutowareAutoMsgsVehicleStateReport,
         );
-        fn get_trajectory(node: &mut UniquePtr<NativeNode>) -> AutowareAutoMsgsTrajectory;
-        fn get_state_cmd(node: &mut UniquePtr<NativeNode>) -> AutowareAutoMsgsVehicleStateCommand;
+        fn get_trajectory(node: &mut UniquePtr<NativeNode_local_planner>) -> AutowareAutoMsgsTrajectory;
+        fn get_state_cmd(node: &mut UniquePtr<NativeNode_local_planner>) -> AutowareAutoMsgsVehicleStateCommand;
     }
+}
+
+unsafe impl Send for ffi::NativeNode_local_planner {}
+unsafe impl Sync for ffi::NativeNode_local_planner {}
+
+impl Debug for ffi::NativeNode_local_planner {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        f.debug_struct(type_name::<ffi::NativeNode_local_planner>()).finish()
+    }
+}
+
+#[derive(Debug, ZFState)]
+pub struct NativeNodeInstance {
+    pub ptr: UniquePtr<ffi::NativeNode_local_planner>,
 }
