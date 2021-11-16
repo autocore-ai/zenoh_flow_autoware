@@ -4,10 +4,9 @@ use autoware_auto::msgs::ffi::{
     AutowareAutoMsgsHadmapRoute, AutowareAutoMsgsVehicleKinematicState,
     AutowareAutoMsgsVehicleStateReport,
 };
-use autoware_auto::NativeNodeInstance;
-use derive::ZenohFlowNode;
+use ffi::NativeNodeInstance;
 use ffi::ffi::{
-    get_state_cmd, get_trajectory, init, set_kinematic_state, set_route, set_state_report,
+    get_state_cmd, get_trajectory, init_local_planner, set_kinematic_state, set_route, set_state_report,
     NativeConfig, Vehicle,
 };
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
@@ -27,8 +26,23 @@ const VEHICLE_KINEMATIC_STATE_MODE: usize = 1;
 const HADMAP_ROUTE_MODE: usize = 2;
 const VEHICLE_STATE_REPORT_MODE: usize = 3;
 
-#[derive(ZenohFlowNode, Debug, ZFState)]
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
+
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_local_planner(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
 
 impl Default for NativeConfig {
     fn default() -> Self {

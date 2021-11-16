@@ -9,18 +9,18 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_lane_planner
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_lane_planner();
+                NativeNode_lane_planner(const NativeConfig &);
 
             private:
                 std::shared_ptr<autoware::lane_planner_nodes::LanePlannerNode> ptr;
                 void spin();
             };
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            std::unique_ptr<NativeNode_lane_planner> init_lane_planner(const NativeConfig &);
+            std::unique_ptr<NativeNode_lane_planner> init_null_config();
             void shutdown(int sig);
         }
     }

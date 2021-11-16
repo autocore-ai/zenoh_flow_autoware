@@ -9,18 +9,18 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_pcd_map_loader
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_pcd_map_loader();
+                NativeNode_pcd_map_loader(const NativeConfig &);
 
             private:
                 std::shared_ptr<autoware::localization::ndt_nodes::NDTMapPublisherNode> ptr;
                 void spin();
             };
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            std::unique_ptr<NativeNode_pcd_map_loader> init_pcd_map_loader(const NativeConfig &);
+            std::unique_ptr<NativeNode_pcd_map_loader> init_null_config();
             void shutdown(int sig);
         }
     }

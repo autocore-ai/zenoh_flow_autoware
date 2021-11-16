@@ -9,20 +9,20 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_goal_pose
             {
             public:
-                NativeNode();
+                NativeNode_goal_pose();
                 GeometryMsgsPoseStamped GetGoalPose();
                 bool IsNew();
 
             private:
                 std::shared_ptr<zenoh_flow::autoware_auto::goal_pose_receiver::GoalPoseReceiver> ptr;
             };
-            GeometryMsgsPoseStamped get_goal_pose(std::unique_ptr<NativeNode> &);
-            bool is_new(std::unique_ptr<NativeNode> &);
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            GeometryMsgsPoseStamped get_goal_pose(std::unique_ptr<NativeNode_goal_pose> &);
+            bool is_new(std::unique_ptr<NativeNode_goal_pose> &);
+            std::unique_ptr<NativeNode_goal_pose> init_goal_pose(const NativeConfig &);
+            std::unique_ptr<NativeNode_goal_pose> init_null_config();
             void shutdown(int sig);
         }
     }

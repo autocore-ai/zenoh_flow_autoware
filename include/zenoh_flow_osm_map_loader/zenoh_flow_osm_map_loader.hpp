@@ -11,19 +11,19 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_osm_map_loader
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_osm_map_loader();
+                NativeNode_osm_map_loader(const NativeConfig &);
 
             private:
                 std::shared_ptr<autoware::lanelet2_map_provider::Lanelet2MapProviderNode> ptr;
                 std::shared_ptr<autoware::lanelet2_map_provider::Lanelet2MapVisualizer> ptr_viz;
                 void spin();
             };
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            std::unique_ptr<NativeNode_osm_map_loader> init_osm_map_loader(const NativeConfig &);
+            std::unique_ptr<NativeNode_osm_map_loader> init_null_config();
             void shutdown(int sig);
         }
     }

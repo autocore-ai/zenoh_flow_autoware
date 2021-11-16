@@ -1,16 +1,30 @@
 mod ffi;
 use async_trait::async_trait;
-use autoware_auto::NativeNodeInstance;
-use derive::ZenohFlowNode;
-use ffi::ffi::{get_goal_pose, init, is_new, NativeConfig};
+use ffi::ffi::{get_goal_pose, init_goal_pose, is_new, NativeConfig};
 use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
     Data, Node, Source, State, ZFError, ZFResult,
 };
-
-#[derive(ZenohFlowNode, Debug, ZFState)]
+use ffi::NativeNodeInstance;
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
+
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_goal_pose(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
+
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {

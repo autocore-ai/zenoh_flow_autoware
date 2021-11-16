@@ -9,11 +9,11 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_global_planner
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_global_planner();
+                NativeNode_global_planner(const NativeConfig &);
                 AutowareAutoMsgsHadmapRoute GetRoute();
                 void SetCurrentPose(const AutowareAutoMsgsVehicleKinematicState &);
                 void SetGoalPose(const GeometryMsgsPoseStamped &);
@@ -21,11 +21,11 @@ namespace zenoh_flow
             private:
                 std::shared_ptr<autoware::planning::lanelet2_global_planner_nodes::Lanelet2GlobalPlannerNode> ptr;
             };
-            AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<NativeNode> &);
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
-            void set_current_pose(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleKinematicState &);
-            void set_goal_pose(std::unique_ptr<NativeNode> &, const GeometryMsgsPoseStamped &);
+            AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<NativeNode_global_planner> &);
+            std::unique_ptr<NativeNode_global_planner> init_global_planner(const NativeConfig &);
+            std::unique_ptr<NativeNode_global_planner> init_null_config();
+            void set_current_pose(std::unique_ptr<NativeNode_global_planner> &, const AutowareAutoMsgsVehicleKinematicState &);
+            void set_goal_pose(std::unique_ptr<NativeNode_global_planner> &, const GeometryMsgsPoseStamped &);
         }
     }
 }

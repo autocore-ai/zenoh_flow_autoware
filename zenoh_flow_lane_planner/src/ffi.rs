@@ -1,3 +1,10 @@
+use cxx::UniquePtr;
+use std::{
+    any::type_name,
+    fmt::{Debug, Formatter, Result},
+};
+use zenoh_flow::zenoh_flow_derive::ZFState;
+
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     pub struct Vehicle {
@@ -26,8 +33,24 @@ pub mod ffi {
     }
     unsafe extern "C++" {
         include!("zenoh_flow_lane_planner/zenoh_flow_lane_planner.hpp");
-        type NativeNode = autoware_auto::ffi::NativeNode;
+        type NativeNode_lane_planner;
 
-        fn init(cfg: &NativeConfig) -> UniquePtr<NativeNode>;
+        fn init_lane_planner(cfg: &NativeConfig) -> UniquePtr<NativeNode_lane_planner>;
     }
+}
+
+
+
+unsafe impl Send for ffi::NativeNode_lane_planner {}
+unsafe impl Sync for ffi::NativeNode_lane_planner {}
+
+impl Debug for ffi::NativeNode_lane_planner {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        f.debug_struct(type_name::<ffi::NativeNode_lane_planner>()).finish()
+    }
+}
+
+#[derive(Debug, ZFState)]
+pub struct NativeNodeInstance {
+    pub ptr: UniquePtr<ffi::NativeNode_lane_planner>,
 }

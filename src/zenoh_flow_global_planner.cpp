@@ -7,8 +7,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode() {}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_global_planner::NativeNode_global_planner() {}
+            NativeNode_global_planner::NativeNode_global_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -20,29 +20,29 @@ namespace zenoh_flow
                     options, autocore::NodeType::ZenohFlow);
             }
 
-            void NativeNode::SetCurrentPose(const AutowareAutoMsgsVehicleKinematicState &msg)
+            void NativeNode_global_planner::SetCurrentPose(const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 ptr->SetCurrentPose(Convert(msg));
             }
-            void NativeNode::SetGoalPose(const GeometryMsgsPoseStamped &msg)
+            void NativeNode_global_planner::SetGoalPose(const GeometryMsgsPoseStamped &msg)
             {
                 ptr->SetGoalPose(Convert(msg));
             }
-            AutowareAutoMsgsHadmapRoute NativeNode::GetRoute() { return Convert(ptr->GetRoute()); }
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+            AutowareAutoMsgsHadmapRoute NativeNode_global_planner::GetRoute() { return Convert(ptr->GetRoute()); }
+            std::unique_ptr<NativeNode_global_planner> init_global_planner(const NativeConfig &cfg)
             {
-                return std::make_unique<NativeNode>(cfg);
+                return std::make_unique<NativeNode_global_planner>(cfg);
             }
-            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
-            void set_current_pose(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
+            std::unique_ptr<NativeNode_global_planner> init_null_config() { return std::make_unique<NativeNode_global_planner>(); }
+            void set_current_pose(std::unique_ptr<NativeNode_global_planner> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetCurrentPose(msg);
             }
-            void set_goal_pose(std::unique_ptr<NativeNode> &node, const GeometryMsgsPoseStamped &msg)
+            void set_goal_pose(std::unique_ptr<NativeNode_global_planner> &node, const GeometryMsgsPoseStamped &msg)
             {
                 node->SetGoalPose(msg);
             }
-            AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<NativeNode> &node)
+            AutowareAutoMsgsHadmapRoute get_route(std::unique_ptr<NativeNode_global_planner> &node)
             {
                 return node->GetRoute();
             }
