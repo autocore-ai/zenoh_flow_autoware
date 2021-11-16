@@ -43,8 +43,6 @@ add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${rust_src_path} --output ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${rust_src_path} --header --output ${cxxbridge_header_out}
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_hpp.cmake
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_source_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_cpp.cmake
   COMMENT "Generating Common FFI: ${cxx_file_file}"
 )
 
@@ -67,6 +65,7 @@ add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --output ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_node_hpp.cmake
   COMMENT "Generating Node FFI: ${node_name}"
 )
 message(STATUS "Finish GenNodeFFI : ${node_name}")
