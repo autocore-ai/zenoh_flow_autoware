@@ -7,8 +7,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode() {}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_osm_map_loader::NativeNode_osm_map_loader() {}
+            NativeNode_osm_map_loader::NativeNode_osm_map_loader(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -27,11 +27,11 @@ namespace zenoh_flow
                 ptr = std::make_shared<autoware::lanelet2_map_provider::Lanelet2MapProviderNode>(options);
                 std::cout << "Lanelet2MapVisualizer" << std::endl;
                 ptr_viz = std::make_shared<autoware::lanelet2_map_provider::Lanelet2MapVisualizer>(options);
-                std::thread{std::bind(&NativeNode::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode_osm_map_loader::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void NativeNode::spin()
+            void NativeNode_osm_map_loader::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -45,11 +45,11 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+            std::unique_ptr<NativeNode_osm_map_loader> init_osm_map_loader(const NativeConfig &cfg)
             {
-                return std::make_unique<NativeNode>(cfg);
+                return std::make_unique<NativeNode_osm_map_loader>(cfg);
             }
-            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
+            std::unique_ptr<NativeNode_osm_map_loader> init_null_config() { return std::make_unique<NativeNode_osm_map_loader>(); }
         }
     }
 }

@@ -24,8 +24,8 @@ namespace zenoh_flow
   {
     namespace ffi
     {
-      NativeNode::NativeNode() {}
-      NativeNode::NativeNode(const NativeConfig &cfg)
+      NativeNode_simulator::NativeNode_simulator() {}
+      NativeNode_simulator::NativeNode_simulator(const NativeConfig &cfg)
       {
         if (!rclcpp::ok())
         {
@@ -58,65 +58,65 @@ namespace zenoh_flow
         (void)sig;
         exit(0);
       }
-      AutowareAutoMsgsVehicleKinematicState NativeNode::GetKinematicState()
+      AutowareAutoMsgsVehicleKinematicState NativeNode_simulator::GetKinematicState()
       {
         return Convert(ptr->GetKinematicState());
       }
-      AutowareAutoMsgsVehicleStateReport NativeNode::GetStateReport()
+      AutowareAutoMsgsVehicleStateReport NativeNode_simulator::GetStateReport()
       {
         return Convert(ptr->GetStateReport());
       }
-      GeometryMsgsPoseStamped NativeNode::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
+      GeometryMsgsPoseStamped NativeNode_simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
 
-      void NativeNode::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
+      void NativeNode_simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         ptr->SetInitPose(Convert(msg));
       }
-      void NativeNode::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &msg)
+      void NativeNode_simulator::SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &msg)
       {
         ptr->SetStateCmd(Convert(msg));
       }
-      void NativeNode::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &msg)
+      void NativeNode_simulator::SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &msg)
       {
         ptr->SetVehicleCmd(Convert(msg));
       }
-      void NativeNode::Update() { ptr->Update(); }
-      std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+      void NativeNode_simulator::Update() { ptr->Update(); }
+      std::unique_ptr<NativeNode_simulator> init_simulator(const NativeConfig &cfg)
       {
-        return std::make_unique<NativeNode>(cfg);
+        return std::make_unique<NativeNode_simulator>(cfg);
       }
-      std::unique_ptr<NativeNode> init_null_config()
+      std::unique_ptr<NativeNode_simulator> init_null_config()
       {
-        return std::make_unique<NativeNode>();
+        return std::make_unique<NativeNode_simulator>();
       }
-      AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode> &node)
+      AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode_simulator> &node)
       {
         return node->GetKinematicState();
       }
-      AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode> &node)
+      AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode_simulator> &node)
       {
         return node->GetStateReport();
       }
-      GeometryMsgsPoseStamped get_current_pose(std::unique_ptr<NativeNode> &node)
+      GeometryMsgsPoseStamped get_current_pose(std::unique_ptr<NativeNode_simulator> &node)
       {
         return node->GetCurrentPose();
       }
       void set_init_pose(
-          std::unique_ptr<NativeNode> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
+          std::unique_ptr<NativeNode_simulator> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         node->SetInitPose(msg);
       }
       void set_state_cmd(
-          std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleStateCommand &msg)
+          std::unique_ptr<NativeNode_simulator> &node, const AutowareAutoMsgsVehicleStateCommand &msg)
       {
         node->SetStateCmd(msg);
       }
       void set_control_cmd(
-          std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
+          std::unique_ptr<NativeNode_simulator> &node, const AutowareAutoMsgsVehicleControlCommand &msg)
       {
         node->SetVehicleCmd(msg);
       }
-      void update(std::unique_ptr<NativeNode> &node) { node->Update(); }
+      void update(std::unique_ptr<NativeNode_simulator> &node) { node->Update(); }
     }
   }
 }

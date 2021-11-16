@@ -9,20 +9,20 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_init_pose
             {
             public:
-                NativeNode();
+                NativeNode_init_pose();
                 GeometryMsgsPoseWithCovarianceStamped GetInitPose();
                 bool IsNew();
 
             private:
                 std::shared_ptr<zenoh_flow::autoware_auto::init_pose_receiver::InitPoseReceiver> ptr;
             };
-            GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<NativeNode> &);
-            bool is_new(std::unique_ptr<NativeNode> &);
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<NativeNode_init_pose> &);
+            bool is_new(std::unique_ptr<NativeNode_init_pose> &);
+            std::unique_ptr<NativeNode_init_pose> init_init_pose(const NativeConfig &);
+            std::unique_ptr<NativeNode_init_pose> init_null_config();
             void shutdown(int sig);
         }
     }

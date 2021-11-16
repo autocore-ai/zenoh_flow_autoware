@@ -9,6 +9,7 @@ BuiltinInterfacesDuration Convert(const builtin_interfaces::msg::Duration &src) 
 BuiltinInterfacesTime Convert(const builtin_interfaces::msg::Time &src) { return {src.sec, src.nanosec}; }
 GeometryMsgsPoint Convert(const geometry_msgs::msg::Point &src) { return {src.x, src.y, src.z}; }
 GeometryMsgsPose Convert(const geometry_msgs::msg::Pose &src) { return {Convert(src.position), Convert(src.orientation)}; }
+GeometryMsgsPoseStamped Convert(const geometry_msgs::msg::PoseStamped &src) { return {Convert(src.header), Convert(src.pose)}; }
 GeometryMsgsPoseWithCovariance Convert(const geometry_msgs::msg::PoseWithCovariance &src) { return {Convert(src.pose), {}}; }
 GeometryMsgsPoseWithCovarianceStamped Convert(const geometry_msgs::msg::PoseWithCovarianceStamped &src) { return {Convert(src.header), Convert(src.pose)}; }
 GeometryMsgsQuaternion Convert(const geometry_msgs::msg::Quaternion &src) { return {src.x, src.y, src.z, src.w}; }
@@ -23,6 +24,7 @@ builtin_interfaces::msg::Duration Convert(const BuiltinInterfacesDuration &src) 
 builtin_interfaces::msg::Time Convert(const BuiltinInterfacesTime &src) { return builtin_interfaces::msg::Time().set__sec(src.sec).set__nanosec(src.nanosec); }
 geometry_msgs::msg::Point Convert(const GeometryMsgsPoint &src) { return geometry_msgs::msg::Point().set__x(src.x).set__y(src.y).set__z(src.z); }
 geometry_msgs::msg::Pose Convert(const GeometryMsgsPose &src) { return geometry_msgs::msg::Pose().set__position(Convert(src.position)).set__orientation(Convert(src.orientation)); }
+geometry_msgs::msg::PoseStamped Convert(const GeometryMsgsPoseStamped &src) { return geometry_msgs::msg::PoseStamped().set__header(Convert(src.header)).set__pose(Convert(src.pose)); }
 geometry_msgs::msg::PoseWithCovariance Convert(const GeometryMsgsPoseWithCovariance &src) { return geometry_msgs::msg::PoseWithCovariance().set__pose(Convert(src.pose)).set__covariance({}); }
 geometry_msgs::msg::PoseWithCovarianceStamped Convert(const GeometryMsgsPoseWithCovarianceStamped &src) { return geometry_msgs::msg::PoseWithCovarianceStamped().set__header(Convert(src.header)).set__pose(Convert(src.pose)); }
 geometry_msgs::msg::Quaternion Convert(const GeometryMsgsQuaternion &src) { return geometry_msgs::msg::Quaternion().set__x(src.x).set__y(src.y).set__z(src.z).set__w(src.w); }

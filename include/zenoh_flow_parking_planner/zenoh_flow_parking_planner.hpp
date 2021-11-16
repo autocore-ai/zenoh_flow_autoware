@@ -9,18 +9,18 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_parking_planner
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_parking_planner();
+                NativeNode_parking_planner(const NativeConfig &);
 
             private:
                 std::shared_ptr<autoware::motion::planning::parking_planner_nodes::ParkingPlannerNode> ptr;
                 void spin();
             };
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
+            std::unique_ptr<NativeNode_parking_planner> init_parking_planner(const NativeConfig &);
+            std::unique_ptr<NativeNode_parking_planner> init_null_config();
             void shutdown(int sig);
         }
     }

@@ -9,11 +9,11 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_local_planner
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_local_planner();
+                NativeNode_local_planner(const NativeConfig &);
                 AutowareAutoMsgsTrajectory GetTrajectory();
                 AutowareAutoMsgsVehicleStateCommand GetStateCmd();
                 void SetRoute(const AutowareAutoMsgsHadmapRoute &);
@@ -24,13 +24,13 @@ namespace zenoh_flow
                 std::shared_ptr<autoware::behavior_planner_nodes::BehaviorPlannerNode> ptr;
             };
 
-            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode> &);
-            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode> &);
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
-            void set_kinematic_state(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleKinematicState &);
-            void set_route(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsHadmapRoute &);
-            void set_state_report(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleStateReport &);
+            AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode_local_planner> &);
+            AutowareAutoMsgsVehicleStateCommand get_state_cmd(std::unique_ptr<NativeNode_local_planner> &);
+            std::unique_ptr<NativeNode_local_planner> init_local_planner(const NativeConfig &);
+            std::unique_ptr<NativeNode_local_planner> init_null_config();
+            void set_kinematic_state(std::unique_ptr<NativeNode_local_planner> &, const AutowareAutoMsgsVehicleKinematicState &);
+            void set_route(std::unique_ptr<NativeNode_local_planner> &, const AutowareAutoMsgsHadmapRoute &);
+            void set_state_report(std::unique_ptr<NativeNode_local_planner> &, const AutowareAutoMsgsVehicleStateReport &);
         }
     }
 }

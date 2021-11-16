@@ -22,8 +22,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode(){}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_pure_pursuit::NativeNode_pure_pursuit(){}
+            NativeNode_pure_pursuit::NativeNode_pure_pursuit(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -42,31 +42,31 @@ namespace zenoh_flow
                 ptr = std::make_shared<autoware::motion::control::pure_pursuit_nodes::PurePursuitNode>(
                     "pure_pursuit_node", config, "", autocore::NodeType::ZenohFlow);
             }
-            AutowareAutoMsgsVehicleControlCommand NativeNode::GetControlCmd()
+            AutowareAutoMsgsVehicleControlCommand NativeNode_pure_pursuit::GetControlCmd()
             {
                 return Convert(ptr->GetVehicleCmd());
             }
-            void NativeNode::SetTrajectory(const AutowareAutoMsgsTrajectory &msg)
+            void NativeNode_pure_pursuit::SetTrajectory(const AutowareAutoMsgsTrajectory &msg)
             {
                 ptr->SetTrajectory(Convert(msg));
                 rclcpp::spin_some(this->ptr);
             }
-            void NativeNode::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
+            void NativeNode_pure_pursuit::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 ptr->SetKinematicState(Convert(msg));
                 rclcpp::spin_some(this->ptr);
             }
-            AutowareAutoMsgsVehicleControlCommand get_control_cmd(std::unique_ptr<NativeNode> &node)
+            AutowareAutoMsgsVehicleControlCommand get_control_cmd(std::unique_ptr<NativeNode_pure_pursuit> &node)
             {
                 return node->GetControlCmd();
             }
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg) { return std::make_unique<NativeNode>(cfg); }
-            std::unique_ptr<NativeNode> init_null_config() { return std::make_unique<NativeNode>(); }
-            void set_kinematic_state(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
+            std::unique_ptr<NativeNode_pure_pursuit> init_pure_pursuit(const NativeConfig &cfg) { return std::make_unique<NativeNode_pure_pursuit>(cfg); }
+            std::unique_ptr<NativeNode_pure_pursuit> init_null_config() { return std::make_unique<NativeNode_pure_pursuit>(); }
+            void set_kinematic_state(std::unique_ptr<NativeNode_pure_pursuit> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetKinematicState(msg);
             }
-            void set_trajectory(std::unique_ptr<NativeNode> &node, const AutowareAutoMsgsTrajectory &msg)
+            void set_trajectory(std::unique_ptr<NativeNode_pure_pursuit> &node, const AutowareAutoMsgsTrajectory &msg)
             {
                 node->SetTrajectory(msg);
             }

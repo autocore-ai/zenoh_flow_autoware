@@ -7,8 +7,8 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode::NativeNode() {}
-            NativeNode::NativeNode(const NativeConfig &cfg)
+            NativeNode_lane_planner::NativeNode_lane_planner() {}
+            NativeNode_lane_planner::NativeNode_lane_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
                 {
@@ -32,11 +32,11 @@ namespace zenoh_flow
                 options.parameter_overrides(paramters);
                 std::cout << "LanePlannerNode" << std::endl;
                 ptr = std::make_shared<autoware::lane_planner_nodes::LanePlannerNode>(options);
-                std::thread{std::bind(&NativeNode::spin, this)}.detach();
+                std::thread{std::bind(&NativeNode_lane_planner::spin, this)}.detach();
                 signal(SIGINT, shutdown);
             }
 
-            void NativeNode::spin()
+            void NativeNode_lane_planner::spin()
             {
                 while (rclcpp::ok())
                 {
@@ -50,14 +50,14 @@ namespace zenoh_flow
                 exit(0);
             }
 
-            std::unique_ptr<NativeNode> init(const NativeConfig &cfg)
+            std::unique_ptr<NativeNode_lane_planner> init_lane_planner(const NativeConfig &cfg)
             {
-                return std::make_unique<NativeNode>(cfg);
+                return std::make_unique<NativeNode_lane_planner>(cfg);
             }
 
-            std::unique_ptr<NativeNode> init_null_config()
+            std::unique_ptr<NativeNode_lane_planner> init_null_config()
             {
-                return std::make_unique<NativeNode>();
+                return std::make_unique<NativeNode_lane_planner>();
             }
         }
     }

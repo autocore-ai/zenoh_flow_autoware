@@ -9,11 +9,11 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            class NativeNode
+            class NativeNode_simulator
             {
             public:
-                NativeNode();
-                NativeNode(const NativeConfig &);
+                NativeNode_simulator();
+                NativeNode_simulator(const NativeConfig &);
                 AutowareAutoMsgsVehicleKinematicState GetKinematicState();
                 AutowareAutoMsgsVehicleStateReport GetStateReport();
                 GeometryMsgsPoseStamped GetCurrentPose();
@@ -25,15 +25,15 @@ namespace zenoh_flow
             private:
                 std::shared_ptr<simulation::simple_planning_simulator::SimplePlanningSimulator> ptr;
             };
-            AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode> &);
-            AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode> &);
-            std::unique_ptr<NativeNode> init(const NativeConfig &);
-            std::unique_ptr<NativeNode> init_null_config();
-            void set_control_cmd(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleControlCommand &);
-            void set_init_pose(std::unique_ptr<NativeNode> &, const GeometryMsgsPoseWithCovarianceStamped &);
-            void set_state_cmd(std::unique_ptr<NativeNode> &, const AutowareAutoMsgsVehicleStateCommand &);
+            AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode_simulator> &);
+            AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode_simulator> &);
+            std::unique_ptr<NativeNode_simulator> init_simulator(const NativeConfig &);
+            std::unique_ptr<NativeNode_simulator> init_null_config();
+            void set_control_cmd(std::unique_ptr<NativeNode_simulator> &, const AutowareAutoMsgsVehicleControlCommand &);
+            void set_init_pose(std::unique_ptr<NativeNode_simulator> &, const GeometryMsgsPoseWithCovarianceStamped &);
+            void set_state_cmd(std::unique_ptr<NativeNode_simulator> &, const AutowareAutoMsgsVehicleStateCommand &);
             void shutdown(int sig);
-            void update(std::unique_ptr<NativeNode> &);
+            void update(std::unique_ptr<NativeNode_simulator> &);
         }
     }
 }

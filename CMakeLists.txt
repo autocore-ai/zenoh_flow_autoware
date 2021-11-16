@@ -43,8 +43,6 @@ add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${rust_src_path} --output ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${rust_src_path} --header --output ${cxxbridge_header_out}
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_hpp.cmake
-  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_source_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_${cxx_file_file}_cpp.cmake
   COMMENT "Generating Common FFI: ${cxx_file_file}"
 )
 
@@ -61,12 +59,13 @@ set(cxxbridge_header_out ${CMAKE_BINARY_DIR}/${node_name}.hpp)
 set(cxxbridge_source_out ${CMAKE_BINARY_DIR}/${node_name}.cpp)
 
 add_custom_target(NodeFFI_${node_name} ALL
-  DEPENDS CommonFFI_autoware_auto CommonFFI_msgs ${cxxbridge_header_out} ${cxxbridge_source_out})
+  DEPENDS CommonFFI_msgs ${cxxbridge_header_out} ${cxxbridge_source_out})
 
 add_custom_command(
   OUTPUT ${cxxbridge_header_out} ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --output ${cxxbridge_source_out}
   COMMAND ${CXXBRIDGE} ${cxxbridge_in} --header --output ${cxxbridge_header_out}
+  COMMAND ${CMAKE_COMMAND} -DTARGET=${cxxbridge_header_out} -P ${CMAKE_SOURCE_DIR}/cmake/patch_node_hpp.cmake
   COMMENT "Generating Node FFI: ${node_name}"
 )
 message(STATUS "Finish GenNodeFFI : ${node_name}")
@@ -102,7 +101,6 @@ set_target_properties(CxxWrapper_${node_name}
 message(STATUS "Finish CxxWrapper_${node_name}")
 
 ament_auto_add_library(${node_name} SHARED
-  ${CMAKE_BINARY_DIR}/autoware_auto.cpp
   ${CMAKE_BINARY_DIR}/msgs.cpp
   ${CMAKE_BINARY_DIR}/${node_name}.cpp
   src/zenoh_flow_msg_convert.cpp
@@ -121,8 +119,6 @@ message(STATUS "Finish GenNode : ${node_name}")
 endmacro(GenNode)
 
 include_directories(${CMAKE_BINARY_DIR})
-
-GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/lib.rs autoware_auto)
 GenCommonFFI(${CMAKE_SOURCE_DIR}/autoware_auto/src/msgs.rs)
 
 GenNode(zenoh_flow_global_planner)
