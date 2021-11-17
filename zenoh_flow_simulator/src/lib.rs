@@ -1,16 +1,14 @@
 mod ffi;
 
-use autoware_auto::{
-    msgs::ffi::{
-        AutowareAutoMsgsVehicleControlCommand, AutowareAutoMsgsVehicleStateCommand,
-        GeometryMsgsPoseWithCovarianceStamped,
-    },
+use autoware_auto::msgs::ffi::{
+    AutowareAutoMsgsVehicleControlCommand, AutowareAutoMsgsVehicleStateCommand,
+    GeometryMsgsPoseWithCovarianceStamped,
+};
+use ffi::ffi::{
+    get_kinematic_state, get_state_report, init_simulator, is_initialized, set_control_cmd,
+    set_init_pose, set_state_cmd, update, NativeConfig,
 };
 use ffi::NativeNodeInstance;
-use ffi::ffi::{
-    get_kinematic_state, get_state_report, init_simulator, set_control_cmd, set_init_pose, set_state_cmd,
-    update, NativeConfig,
-};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
@@ -51,7 +49,7 @@ impl Default for NativeConfig {
     fn default() -> Self {
         NativeConfig {
             simulated_frame_id: String::from("base_link"),
-            origin_frame_id: String::from("odom"),
+            origin_frame_id: String::from("map"),
             vehicle_model_type: String::from("IDEAL_STEER_VEL"),
             initialize_source: String::from("INITIAL_POSE_TOPIC"),
             timer_sampling_time_ms: 25,
@@ -186,12 +184,16 @@ impl Operator for CustomNode {
 
         match context.mode {
             TICK_MODE => {
-                update(node);
-                results.insert(
-                    OUT_KINEMATIC_STATE.into(),
-                    Data::from(get_kinematic_state(node)),
-                );
-                results.insert(OUT_STATE_REPORT.into(), Data::from(get_state_report(node)));
+                if is_initialized(node) {
+                    update(node);
+                    results.insert(
+                        OUT_KINEMATIC_STATE.into(),
+                        Data::from(get_kinematic_state(node)),
+                    );
+                    results.insert(OUT_STATE_REPORT.into(), Data::from(get_state_report(node)));
+                } else {
+                    println!("Simulator waiting initialization...")
+                }
             }
             INIT_POSE_MODE => {
                 let mut data_msgs = inputs

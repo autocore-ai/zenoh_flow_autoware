@@ -12,7 +12,7 @@ namespace zenoh_flow
                 using rclcpp::QoS;
                 using std::placeholders::_1;
                 sub_goal_pose_ = create_subscription<geometry_msgs::msg::PoseStamped>(
-                    "/pose_goal", QoS{1}, std::bind(&GoalPoseReceiver::on_goalpose, this, _1));
+                    "/planning/goal_pose", QoS{1}, std::bind(&GoalPoseReceiver::on_goalpose, this, _1));
             }
 
             void GoalPoseReceiver::on_goalpose(const geometry_msgs::msg::PoseStamped::ConstSharedPtr msg)

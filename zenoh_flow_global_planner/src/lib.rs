@@ -2,13 +2,13 @@ mod ffi;
 
 use autoware_auto::msgs::ffi::{AutowareAutoMsgsVehicleKinematicState, GeometryMsgsPoseStamped};
 use ffi::ffi::{get_route, init_global_planner, set_current_pose, set_goal_pose, NativeConfig};
+use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
-use ffi::NativeNodeInstance;
 
 static IN_GOAL_POSE: &str = "goal_pose";
 static IN_CURRENT_POSE: &str = "current_pose";

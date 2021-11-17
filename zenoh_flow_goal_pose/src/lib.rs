@@ -1,15 +1,14 @@
 mod ffi;
 use async_trait::async_trait;
-use ffi::ffi::{get_goal_pose, init_goal_pose, is_new, NativeConfig};
+use ffi::ffi::{get_goal_pose, init_goal_pose, is_new_goal_pose, NativeConfig};
+use ffi::NativeNodeInstance;
 use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
     Data, Node, Source, State, ZFError, ZFResult,
 };
-use ffi::NativeNodeInstance;
 #[derive(Debug, ZFState)]
 pub struct CustomNode;
-
 
 unsafe impl Send for CustomNode {}
 unsafe impl Sync for CustomNode {}
@@ -24,7 +23,6 @@ impl Node for CustomNode {
         Ok(())
     }
 }
-
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {
@@ -46,8 +44,7 @@ impl Source for CustomNode {
         let node = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let flag = true;
         while flag {
-            log::info!("Waiting goal pose message ...");
-            if is_new(node) {
+            if is_new_goal_pose(node) {
                 return Ok(Data::from(get_goal_pose(node)));
             }
             sleep(Duration::from_secs(1)).await;

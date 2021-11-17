@@ -18,7 +18,7 @@ namespace zenoh_flow
             private:
                 rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr sub_init_pose_;
                 geometry_msgs::msg::PoseWithCovarianceStamped init_pose_msg;
-                bool is_new_msg;
+                bool is_new_msg = false;
                 void on_initpose(const geometry_msgs::msg::PoseWithCovarianceStamped::ConstSharedPtr msg);
             };
         }

@@ -12,7 +12,6 @@ namespace zenoh_flow
             class NativeNode_parking_planner
             {
             public:
-                NativeNode_parking_planner();
                 NativeNode_parking_planner(const NativeConfig &);
 
             private:
@@ -20,7 +19,6 @@ namespace zenoh_flow
                 void spin();
             };
             std::unique_ptr<NativeNode_parking_planner> init_parking_planner(const NativeConfig &);
-            std::unique_ptr<NativeNode_parking_planner> init_null_config();
             void shutdown(int sig);
         }
     }

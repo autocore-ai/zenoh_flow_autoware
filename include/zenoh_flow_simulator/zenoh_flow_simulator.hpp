@@ -12,7 +12,6 @@ namespace zenoh_flow
             class NativeNode_simulator
             {
             public:
-                NativeNode_simulator();
                 NativeNode_simulator(const NativeConfig &);
                 AutowareAutoMsgsVehicleKinematicState GetKinematicState();
                 AutowareAutoMsgsVehicleStateReport GetStateReport();
@@ -21,6 +20,7 @@ namespace zenoh_flow
                 void SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &);
                 void SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &);
                 void Update();
+                bool IsInitialized();
 
             private:
                 std::shared_ptr<simulation::simple_planning_simulator::SimplePlanningSimulator> ptr;
@@ -28,12 +28,12 @@ namespace zenoh_flow
             AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode_simulator> &);
             AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode_simulator> &);
             std::unique_ptr<NativeNode_simulator> init_simulator(const NativeConfig &);
-            std::unique_ptr<NativeNode_simulator> init_null_config();
             void set_control_cmd(std::unique_ptr<NativeNode_simulator> &, const AutowareAutoMsgsVehicleControlCommand &);
             void set_init_pose(std::unique_ptr<NativeNode_simulator> &, const GeometryMsgsPoseWithCovarianceStamped &);
             void set_state_cmd(std::unique_ptr<NativeNode_simulator> &, const AutowareAutoMsgsVehicleStateCommand &);
             void shutdown(int sig);
             void update(std::unique_ptr<NativeNode_simulator> &);
+            bool is_initialized(std::unique_ptr<NativeNode_simulator> &);
         }
     }
 }

@@ -41,9 +41,8 @@ namespace zenoh_flow
                 (void)sig;
                 exit(0);
             }
-            bool is_new(std::unique_ptr<NativeNode_goal_pose> &node) { return node->IsNew(); }
+            bool is_new_goal_pose(std::unique_ptr<NativeNode_goal_pose> &node) { return node->IsNew(); }
             std::unique_ptr<NativeNode_goal_pose> init_goal_pose(const NativeConfig &cfg) { return std::make_unique<NativeNode_goal_pose>(); }
-            std::unique_ptr<NativeNode_goal_pose> init_null_config() { return std::make_unique<NativeNode_goal_pose>(); }
         }
     }
 }

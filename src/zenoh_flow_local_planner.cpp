@@ -22,7 +22,6 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode_local_planner::NativeNode_local_planner() {}
             NativeNode_local_planner::NativeNode_local_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -43,29 +42,23 @@ namespace zenoh_flow
                 paramters.push_back(rclcpp::Parameter("vehicle.rear_overhang_m", cfg.vehicle.rear_overhang_m));
                 options.parameter_overrides(paramters);
                 std::cout << "BehaviorPlannerNode" << std::endl;
-                ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(
-                    options, autocore::NodeType::ZenohFlow);
+                ptr = std::make_shared<autoware::behavior_planner_nodes::BehaviorPlannerNode>(options, autocore::NodeType::ZenohFlow);
             }
             void NativeNode_local_planner::SetRoute(const AutowareAutoMsgsHadmapRoute &msg)
             {
-                if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
-                {
-                    ptr->SetRoute(Convert(msg));
-                }
+                ptr->SetRoute(Convert(msg));
             }
             void NativeNode_local_planner::SetKinematicState(const AutowareAutoMsgsVehicleKinematicState &msg)
             {
-                if (!(msg.header.stamp.nanosec == 0 && msg.header.stamp.sec == 0))
+                if (rclcpp::ok())
                 {
-                    ptr->SetKinematicState(Convert(msg));
+                    rclcpp::spin_some(ptr);
                 }
+                ptr->SetKinematicState(Convert(msg));
             }
             void NativeNode_local_planner::SetStateReport(const AutowareAutoMsgsVehicleStateReport &msg)
             {
-                if (!(msg.stamp.nanosec == 0 && msg.stamp.sec == 0))
-                {
-                    ptr->SetStateReport(Convert(msg));
-                }
+                ptr->SetStateReport(Convert(msg));
             }
             AutowareAutoMsgsTrajectory NativeNode_local_planner::GetTrajectory() { return Convert(ptr->GetTrajectory()); }
             AutowareAutoMsgsVehicleStateCommand NativeNode_local_planner::GetStateCmd()
@@ -75,10 +68,6 @@ namespace zenoh_flow
             std::unique_ptr<NativeNode_local_planner> init_local_planner(const NativeConfig &cfg)
             {
                 return std::make_unique<NativeNode_local_planner>(cfg);
-            }
-            std::unique_ptr<NativeNode_local_planner> init_null_config()
-            {
-                return std::make_unique<NativeNode_local_planner>();
             }
             AutowareAutoMsgsTrajectory get_trajectory(std::unique_ptr<NativeNode_local_planner> &node)
             {

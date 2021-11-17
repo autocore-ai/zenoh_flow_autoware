@@ -56,6 +56,7 @@ pub mod ffi {
         fn get_state_report(node: &mut UniquePtr<NativeNode_simulator>)
             -> AutowareAutoMsgsVehicleStateReport;
         fn update(node: &mut UniquePtr<NativeNode_simulator>);
+        fn is_initialized(node: &mut UniquePtr<NativeNode_simulator>)->bool;
     }
 }
 

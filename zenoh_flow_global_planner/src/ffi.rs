@@ -15,7 +15,6 @@ pub mod ffi {
     unsafe extern "C++" {
         include!("zenoh_flow_global_planner/zenoh_flow_global_planner.hpp");
         type NativeNode_global_planner;
-        fn init_null_config() -> UniquePtr<NativeNode_global_planner>;
         type AutowareAutoMsgsVehicleKinematicState =
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleKinematicState;
         type GeometryMsgsPoseStamped = autoware_auto::msgs::ffi::GeometryMsgsPoseStamped;

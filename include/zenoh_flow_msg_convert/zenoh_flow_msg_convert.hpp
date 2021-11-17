@@ -12,7 +12,11 @@
 #include <std_msgs/msg/header.hpp>
 using namespace zenoh_flow::autoware_auto::ffi;
 
+AutowareAutoMsgsComplex32 Convert(const autoware_auto_msgs::msg::Complex32 &src);
 AutowareAutoMsgsHadmapRoute Convert(const autoware_auto_msgs::msg::HADMapRoute &);
+AutowareAutoMsgsHadmapSegment Convert(const autoware_auto_msgs::msg::HADMapSegment &src);
+AutowareAutoMsgsMapPrimitive Convert(const autoware_auto_msgs::msg::MapPrimitive &src);
+AutowareAutoMsgsRoutePoint Convert(const autoware_auto_msgs::msg::RoutePoint &src);
 AutowareAutoMsgsTrajectory Convert(const autoware_auto_msgs::msg::Trajectory &);
 AutowareAutoMsgsVehicleControlCommand Convert(const autoware_auto_msgs::msg::VehicleControlCommand &);
 AutowareAutoMsgsVehicleKinematicState Convert(const autoware_auto_msgs::msg::VehicleKinematicState &);

@@ -18,7 +18,7 @@ namespace zenoh_flow
             private:
                 rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr sub_goal_pose_;
                 geometry_msgs::msg::PoseStamped goal_pose_msg;
-                bool is_new_msg;
+                bool is_new_msg = false;
                 void on_goalpose(const geometry_msgs::msg::PoseStamped::ConstSharedPtr msg);
             };
         }

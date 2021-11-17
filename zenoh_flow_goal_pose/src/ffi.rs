@@ -14,13 +14,12 @@ pub mod ffi {
     unsafe extern "C++" {
         include!("zenoh_flow_goal_pose/zenoh_flow_goal_pose.hpp");
         type NativeNode_goal_pose;
-        fn init_null_config() -> UniquePtr<NativeNode_goal_pose>;
 
         type GeometryMsgsPoseStamped = autoware_auto::msgs::ffi::GeometryMsgsPoseStamped;
 
         fn init_goal_pose(cfg: &NativeConfig) -> UniquePtr<NativeNode_goal_pose>;
         fn get_goal_pose(node: &mut UniquePtr<NativeNode_goal_pose>) -> GeometryMsgsPoseStamped;
-        fn is_new(node: &mut UniquePtr<NativeNode_goal_pose>) -> bool;
+        fn is_new_goal_pose(node: &mut UniquePtr<NativeNode_goal_pose>) -> bool;
     }
 }
 unsafe impl Send for ffi::NativeNode_goal_pose {}
@@ -28,7 +27,8 @@ unsafe impl Sync for ffi::NativeNode_goal_pose {}
 
 impl Debug for ffi::NativeNode_goal_pose {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_goal_pose>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_goal_pose>())
+            .finish()
     }
 }
 
@@ -36,4 +36,3 @@ impl Debug for ffi::NativeNode_goal_pose {
 pub struct NativeNodeInstance {
     pub ptr: UniquePtr<ffi::NativeNode_goal_pose>,
 }
-
