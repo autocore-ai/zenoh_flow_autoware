@@ -12,7 +12,6 @@ namespace zenoh_flow
             class NativeNode_pure_pursuit
             {
             public:
-                NativeNode_pure_pursuit();
                 NativeNode_pure_pursuit(const NativeConfig &);
                 AutowareAutoMsgsVehicleControlCommand GetControlCmd();
                 void SetTrajectory(const AutowareAutoMsgsTrajectory &);
@@ -23,7 +22,6 @@ namespace zenoh_flow
             };
             AutowareAutoMsgsVehicleControlCommand get_control_cmd(std::unique_ptr<NativeNode_pure_pursuit> &);
             std::unique_ptr<NativeNode_pure_pursuit> init_pure_pursuit(const NativeConfig &);
-            std::unique_ptr<NativeNode_pure_pursuit> init_null_config();
             void set_kinematic_state(std::unique_ptr<NativeNode_pure_pursuit> &, const AutowareAutoMsgsVehicleKinematicState &);
             void set_trajectory(std::unique_ptr<NativeNode_pure_pursuit> &, const AutowareAutoMsgsTrajectory &);
         }

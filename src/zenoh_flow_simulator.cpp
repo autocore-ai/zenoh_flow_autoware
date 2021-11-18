@@ -24,7 +24,6 @@ namespace zenoh_flow
   {
     namespace ffi
     {
-      NativeNode_simulator::NativeNode_simulator() {}
       NativeNode_simulator::NativeNode_simulator(const NativeConfig &cfg)
       {
         if (!rclcpp::ok())
@@ -66,8 +65,6 @@ namespace zenoh_flow
       {
         return Convert(ptr->GetStateReport());
       }
-      GeometryMsgsPoseStamped NativeNode_simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
-
       void NativeNode_simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         ptr->SetInitPose(Convert(msg));
@@ -80,14 +77,15 @@ namespace zenoh_flow
       {
         ptr->SetVehicleCmd(Convert(msg));
       }
-      void NativeNode_simulator::Update() { ptr->Update(); }
+      void NativeNode_simulator::Update()
+      {
+        rclcpp::spin_some(ptr);
+        ptr->Update();
+      }
+      bool NativeNode_simulator::IsInitialized() { return ptr->IsInitialized(); }
       std::unique_ptr<NativeNode_simulator> init_simulator(const NativeConfig &cfg)
       {
         return std::make_unique<NativeNode_simulator>(cfg);
-      }
-      std::unique_ptr<NativeNode_simulator> init_null_config()
-      {
-        return std::make_unique<NativeNode_simulator>();
       }
       AutowareAutoMsgsVehicleKinematicState get_kinematic_state(std::unique_ptr<NativeNode_simulator> &node)
       {
@@ -96,10 +94,6 @@ namespace zenoh_flow
       AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode_simulator> &node)
       {
         return node->GetStateReport();
-      }
-      GeometryMsgsPoseStamped get_current_pose(std::unique_ptr<NativeNode_simulator> &node)
-      {
-        return node->GetCurrentPose();
       }
       void set_init_pose(
           std::unique_ptr<NativeNode_simulator> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)
@@ -117,6 +111,7 @@ namespace zenoh_flow
         node->SetVehicleCmd(msg);
       }
       void update(std::unique_ptr<NativeNode_simulator> &node) { node->Update(); }
+      bool is_initialized(std::unique_ptr<NativeNode_simulator> &node) { return node->IsInitialized(); }
     }
   }
 }

@@ -20,9 +20,8 @@ namespace zenoh_flow
                 std::shared_ptr<zenoh_flow::autoware_auto::init_pose_receiver::InitPoseReceiver> ptr;
             };
             GeometryMsgsPoseWithCovarianceStamped get_init_pose(std::unique_ptr<NativeNode_init_pose> &);
-            bool is_new(std::unique_ptr<NativeNode_init_pose> &);
+            bool is_new_init_pose(std::unique_ptr<NativeNode_init_pose> &);
             std::unique_ptr<NativeNode_init_pose> init_init_pose(const NativeConfig &);
-            std::unique_ptr<NativeNode_init_pose> init_null_config();
             void shutdown(int sig);
         }
     }

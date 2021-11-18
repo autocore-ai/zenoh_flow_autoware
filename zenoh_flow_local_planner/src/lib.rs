@@ -4,11 +4,11 @@ use autoware_auto::msgs::ffi::{
     AutowareAutoMsgsHadmapRoute, AutowareAutoMsgsVehicleKinematicState,
     AutowareAutoMsgsVehicleStateReport,
 };
-use ffi::NativeNodeInstance;
 use ffi::ffi::{
-    get_state_cmd, get_trajectory, init_local_planner, set_kinematic_state, set_route, set_state_report,
-    NativeConfig, Vehicle,
+    get_state_cmd, get_trajectory, init_local_planner, set_kinematic_state, set_route,
+    set_state_report, NativeConfig, Vehicle,
 };
+use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
@@ -16,11 +16,11 @@ use zenoh_flow::{
     Operator, State, Token, ZFError, ZFResult,
 };
 
-static IN_VEHICLE_KINEMATIC_STATE: &str = "vehicle_kinematic_state";
-static IN_HADMAP_ROUTE: &str = "hadmap_route";
-static IN_VEHICLE_STATE_REPORT: &str = "vehicle_state_report";
+static IN_VEHICLE_KINEMATIC_STATE: &str = "kinematic_state";
+static IN_HADMAP_ROUTE: &str = "route";
+static IN_VEHICLE_STATE_REPORT: &str = "state_report";
 static OUT_TRAJECTORY: &str = "trajectory";
-static OUT_VEHICLE_STATE_COMMAND: &str = "vehicle_state_command";
+static OUT_VEHICLE_STATE_COMMAND: &str = "state_cmd";
 
 const VEHICLE_KINEMATIC_STATE_MODE: usize = 1;
 const HADMAP_ROUTE_MODE: usize = 2;
@@ -28,7 +28,6 @@ const VEHICLE_STATE_REPORT_MODE: usize = 3;
 
 #[derive(Debug, ZFState)]
 pub struct CustomNode;
-
 
 unsafe impl Send for CustomNode {}
 unsafe impl Sync for CustomNode {}
@@ -199,41 +198,36 @@ impl Operator for CustomNode {
 
         match context.mode {
             VEHICLE_KINEMATIC_STATE_MODE => {
-                let mut vehicle_kinematic_state_data_message = inputs
+                let mut data_msg = inputs
                     .remove(IN_VEHICLE_KINEMATIC_STATE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let vehicle_kinematic_state = vehicle_kinematic_state_data_message
+                let msg = data_msg
                     .data
                     .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
-                set_kinematic_state(ptr, &vehicle_kinematic_state);
+                set_kinematic_state(ptr, &msg);
 
                 let trajectory = get_trajectory(ptr);
-                let vehicle_state_command = get_state_cmd(ptr);
+                let state_command = get_state_cmd(ptr);
                 results.insert(OUT_TRAJECTORY.into(), Data::from(trajectory));
-                results.insert(
-                    OUT_VEHICLE_STATE_COMMAND.into(),
-                    Data::from(vehicle_state_command),
-                );
+                results.insert(OUT_VEHICLE_STATE_COMMAND.into(), Data::from(state_command));
             }
 
             HADMAP_ROUTE_MODE => {
-                let mut hadmap_route_data_message = inputs
+                let mut data_msg = inputs
                     .remove(IN_HADMAP_ROUTE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let hadmap_route = hadmap_route_data_message
-                    .data
-                    .try_get::<AutowareAutoMsgsHadmapRoute>()?;
-                set_route(ptr, &hadmap_route);
+                let msg = data_msg.data.try_get::<AutowareAutoMsgsHadmapRoute>()?;
+                set_route(ptr, &msg);
             }
 
             VEHICLE_STATE_REPORT_MODE => {
-                let mut vehicle_state_report_data_message = inputs
+                let mut data_msg = inputs
                     .remove(IN_VEHICLE_STATE_REPORT)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let vehicle_state_report = vehicle_state_report_data_message
+                let msg = data_msg
                     .data
                     .try_get::<AutowareAutoMsgsVehicleStateReport>()?;
-                set_state_report(ptr, &vehicle_state_report);
+                set_state_report(ptr, &msg);
             }
 
             _ => {

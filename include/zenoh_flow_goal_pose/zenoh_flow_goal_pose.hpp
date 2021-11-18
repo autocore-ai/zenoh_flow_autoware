@@ -20,9 +20,8 @@ namespace zenoh_flow
                 std::shared_ptr<zenoh_flow::autoware_auto::goal_pose_receiver::GoalPoseReceiver> ptr;
             };
             GeometryMsgsPoseStamped get_goal_pose(std::unique_ptr<NativeNode_goal_pose> &);
-            bool is_new(std::unique_ptr<NativeNode_goal_pose> &);
+            bool is_new_goal_pose(std::unique_ptr<NativeNode_goal_pose> &);
             std::unique_ptr<NativeNode_goal_pose> init_goal_pose(const NativeConfig &);
-            std::unique_ptr<NativeNode_goal_pose> init_null_config();
             void shutdown(int sig);
         }
     }

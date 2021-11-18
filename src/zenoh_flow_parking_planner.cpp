@@ -21,7 +21,6 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode_parking_planner::NativeNode_parking_planner() {}
             NativeNode_parking_planner::NativeNode_parking_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -67,6 +66,7 @@ namespace zenoh_flow
             {
                 while (rclcpp::ok())
                 {
+                    rclcpp::sleep_for(std::chrono::milliseconds(10));
                     rclcpp::spin_some(ptr);
                 }
             }
@@ -80,11 +80,6 @@ namespace zenoh_flow
             std::unique_ptr<NativeNode_parking_planner> init_parking_planner(const NativeConfig &cfg)
             {
                 return std::make_unique<NativeNode_parking_planner>(cfg);
-            }
-
-            std::unique_ptr<NativeNode_parking_planner> init_null_config()
-            {
-                return std::make_unique<NativeNode_parking_planner>();
             }
         }
     }

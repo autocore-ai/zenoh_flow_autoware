@@ -1,7 +1,7 @@
 mod ffi;
 use async_trait::async_trait;
+use ffi::ffi::{get_init_pose, init_init_pose, is_new_init_pose, NativeConfig};
 use ffi::NativeNodeInstance;
-use ffi::ffi::{get_init_pose, init_init_pose, is_new, NativeConfig};
 use std::{sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
@@ -45,8 +45,7 @@ impl Source for CustomNode {
         let node = &mut dyn_state.try_get::<NativeNodeInstance>()?.ptr;
         let flag = true;
         while flag {
-            log::info!("Waiting init pose message ...");
-            if is_new(node) {
+            if is_new_init_pose(node) {
                 return Ok(Data::from(get_init_pose(node)));
             }
             sleep(Duration::from_secs(1)).await;

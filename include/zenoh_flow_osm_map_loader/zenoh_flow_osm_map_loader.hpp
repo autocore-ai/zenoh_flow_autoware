@@ -14,7 +14,6 @@ namespace zenoh_flow
             class NativeNode_osm_map_loader
             {
             public:
-                NativeNode_osm_map_loader();
                 NativeNode_osm_map_loader(const NativeConfig &);
 
             private:
@@ -23,7 +22,6 @@ namespace zenoh_flow
                 void spin();
             };
             std::unique_ptr<NativeNode_osm_map_loader> init_osm_map_loader(const NativeConfig &);
-            std::unique_ptr<NativeNode_osm_map_loader> init_null_config();
             void shutdown(int sig);
         }
     }

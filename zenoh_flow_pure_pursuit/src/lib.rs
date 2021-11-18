@@ -1,10 +1,10 @@
 mod ffi;
 
-use autoware_auto::{
-    msgs::ffi::{AutowareAutoMsgsTrajectory, AutowareAutoMsgsVehicleKinematicState},
+use autoware_auto::msgs::ffi::{AutowareAutoMsgsTrajectory, AutowareAutoMsgsVehicleKinematicState};
+use ffi::ffi::{
+    get_control_cmd, init_pure_pursuit, set_kinematic_state, set_trajectory, NativeConfig,
 };
 use ffi::NativeNodeInstance;
-use ffi::ffi::{get_control_cmd, init_pure_pursuit, set_kinematic_state, set_trajectory, NativeConfig};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
@@ -14,7 +14,7 @@ use zenoh_flow::{
 
 const IN_KINEMATIC_STATE: &str = "kinematic_state";
 const IN_TRAJECTORY: &str = "trajectory";
-const OUT_CONTROL_COMMAND: &str = "control_command";
+const OUT_CONTROL_COMMAND: &str = "control_cmd";
 
 const KINEMATIC_STATE_MODE: usize = 1;
 const TRAJECTORY_MODE: usize = 2;

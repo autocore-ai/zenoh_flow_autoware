@@ -7,7 +7,6 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode_global_planner::NativeNode_global_planner() {}
             NativeNode_global_planner::NativeNode_global_planner(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -33,7 +32,6 @@ namespace zenoh_flow
             {
                 return std::make_unique<NativeNode_global_planner>(cfg);
             }
-            std::unique_ptr<NativeNode_global_planner> init_null_config() { return std::make_unique<NativeNode_global_planner>(); }
             void set_current_pose(std::unique_ptr<NativeNode_global_planner> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetCurrentPose(msg);

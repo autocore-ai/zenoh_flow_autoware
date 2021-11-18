@@ -12,7 +12,6 @@ namespace zenoh_flow
             class NativeNode_pcd_map_loader
             {
             public:
-                NativeNode_pcd_map_loader();
                 NativeNode_pcd_map_loader(const NativeConfig &);
 
             private:
@@ -20,7 +19,6 @@ namespace zenoh_flow
                 void spin();
             };
             std::unique_ptr<NativeNode_pcd_map_loader> init_pcd_map_loader(const NativeConfig &);
-            std::unique_ptr<NativeNode_pcd_map_loader> init_null_config();
             void shutdown(int sig);
         }
     }

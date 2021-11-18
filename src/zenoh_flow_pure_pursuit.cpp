@@ -22,7 +22,6 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode_pure_pursuit::NativeNode_pure_pursuit(){}
             NativeNode_pure_pursuit::NativeNode_pure_pursuit(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -61,7 +60,6 @@ namespace zenoh_flow
                 return node->GetControlCmd();
             }
             std::unique_ptr<NativeNode_pure_pursuit> init_pure_pursuit(const NativeConfig &cfg) { return std::make_unique<NativeNode_pure_pursuit>(cfg); }
-            std::unique_ptr<NativeNode_pure_pursuit> init_null_config() { return std::make_unique<NativeNode_pure_pursuit>(); }
             void set_kinematic_state(std::unique_ptr<NativeNode_pure_pursuit> &node, const AutowareAutoMsgsVehicleKinematicState &msg)
             {
                 node->SetKinematicState(msg);

@@ -12,7 +12,6 @@ namespace zenoh_flow
             class NativeNode_lane_planner
             {
             public:
-                NativeNode_lane_planner();
                 NativeNode_lane_planner(const NativeConfig &);
 
             private:
@@ -20,7 +19,6 @@ namespace zenoh_flow
                 void spin();
             };
             std::unique_ptr<NativeNode_lane_planner> init_lane_planner(const NativeConfig &);
-            std::unique_ptr<NativeNode_lane_planner> init_null_config();
             void shutdown(int sig);
         }
     }

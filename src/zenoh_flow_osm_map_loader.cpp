@@ -7,7 +7,6 @@ namespace zenoh_flow
     {
         namespace ffi
         {
-            NativeNode_osm_map_loader::NativeNode_osm_map_loader() {}
             NativeNode_osm_map_loader::NativeNode_osm_map_loader(const NativeConfig &cfg)
             {
                 if (!rclcpp::ok())
@@ -35,7 +34,9 @@ namespace zenoh_flow
             {
                 while (rclcpp::ok())
                 {
+                    rclcpp::sleep_for(std::chrono::milliseconds(10));
                     rclcpp::spin_some(ptr);
+                    rclcpp::spin_some(ptr_viz);
                 }
             }
 
@@ -49,7 +50,6 @@ namespace zenoh_flow
             {
                 return std::make_unique<NativeNode_osm_map_loader>(cfg);
             }
-            std::unique_ptr<NativeNode_osm_map_loader> init_null_config() { return std::make_unique<NativeNode_osm_map_loader>(); }
         }
     }
 }
