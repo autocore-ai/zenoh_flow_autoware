@@ -57,7 +57,7 @@ sources:
       id: tick
       type: u64
     configuration:
-      hz: 10
+      hz: 25
   - id: zenoh_flow_init_pose
     uri: file://./install/lib/libzenoh_flow_init_pose.so
     output:

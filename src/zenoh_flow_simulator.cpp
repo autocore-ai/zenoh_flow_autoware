@@ -65,8 +65,6 @@ namespace zenoh_flow
       {
         return Convert(ptr->GetStateReport());
       }
-      GeometryMsgsPoseStamped NativeNode_simulator::GetCurrentPose() { return Convert(ptr->GetCurrentPose()); }
-
       void NativeNode_simulator::SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &msg)
       {
         ptr->SetInitPose(Convert(msg));
@@ -96,10 +94,6 @@ namespace zenoh_flow
       AutowareAutoMsgsVehicleStateReport get_state_report(std::unique_ptr<NativeNode_simulator> &node)
       {
         return node->GetStateReport();
-      }
-      GeometryMsgsPoseStamped get_current_pose(std::unique_ptr<NativeNode_simulator> &node)
-      {
-        return node->GetCurrentPose();
       }
       void set_init_pose(
           std::unique_ptr<NativeNode_simulator> &node, const GeometryMsgsPoseWithCovarianceStamped &msg)

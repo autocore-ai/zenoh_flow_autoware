@@ -34,7 +34,9 @@ namespace zenoh_flow
             {
                 while (rclcpp::ok())
                 {
+                    rclcpp::sleep_for(std::chrono::milliseconds(10));
                     rclcpp::spin_some(ptr);
+                    rclcpp::spin_some(ptr_viz);
                 }
             }
 

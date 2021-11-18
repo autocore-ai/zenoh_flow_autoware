@@ -15,7 +15,6 @@ namespace zenoh_flow
                 NativeNode_simulator(const NativeConfig &);
                 AutowareAutoMsgsVehicleKinematicState GetKinematicState();
                 AutowareAutoMsgsVehicleStateReport GetStateReport();
-                GeometryMsgsPoseStamped GetCurrentPose();
                 void SetInitPose(const GeometryMsgsPoseWithCovarianceStamped &);
                 void SetStateCmd(const AutowareAutoMsgsVehicleStateCommand &);
                 void SetVehicleCmd(const AutowareAutoMsgsVehicleControlCommand &);
