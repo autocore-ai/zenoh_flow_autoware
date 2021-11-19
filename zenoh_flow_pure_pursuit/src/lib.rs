@@ -15,6 +15,7 @@
 mod ffi;
 
 use autoware_auto::msgs::ffi::{AutowareAutoMsgsTrajectory, AutowareAutoMsgsVehicleKinematicState};
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
     get_control_cmd, init_pure_pursuit, set_kinematic_state, set_trajectory, NativeConfig,
 };
@@ -33,22 +34,9 @@ const OUT_CONTROL_COMMAND: &str = "control_cmd";
 const KINEMATIC_STATE_MODE: usize = 1;
 const TRAJECTORY_MODE: usize = 2;
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn = "init_pure_pursuit")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_pure_pursuit(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {

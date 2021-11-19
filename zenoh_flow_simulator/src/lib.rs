@@ -18,6 +18,7 @@ use autoware_auto::msgs::ffi::{
     AutowareAutoMsgsVehicleControlCommand, AutowareAutoMsgsVehicleStateCommand,
     GeometryMsgsPoseWithCovarianceStamped,
 };
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
     get_kinematic_state, get_state_report, init_simulator, is_initialized, set_control_cmd,
     set_init_pose, set_state_cmd, update, NativeConfig,
@@ -42,22 +43,9 @@ const INIT_POSE_MODE: usize = 2;
 const CONTROL_CMD_MODE: usize = 3;
 const STATE_CMD_MODE: usize = 4;
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn = "init_simulator")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_simulator(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {

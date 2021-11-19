@@ -42,7 +42,8 @@ unsafe impl Sync for ffi::NativeNode_osm_map_loader {}
 
 impl Debug for ffi::NativeNode_osm_map_loader {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_osm_map_loader>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_osm_map_loader>())
+            .finish()
     }
 }
 

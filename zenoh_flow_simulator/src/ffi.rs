@@ -67,10 +67,11 @@ pub mod ffi {
         fn get_kinematic_state(
             node: &mut UniquePtr<NativeNode_simulator>,
         ) -> AutowareAutoMsgsVehicleKinematicState;
-        fn get_state_report(node: &mut UniquePtr<NativeNode_simulator>)
-            -> AutowareAutoMsgsVehicleStateReport;
+        fn get_state_report(
+            node: &mut UniquePtr<NativeNode_simulator>,
+        ) -> AutowareAutoMsgsVehicleStateReport;
         fn update(node: &mut UniquePtr<NativeNode_simulator>);
-        fn is_initialized(node: &mut UniquePtr<NativeNode_simulator>)->bool;
+        fn is_initialized(node: &mut UniquePtr<NativeNode_simulator>) -> bool;
     }
 }
 
@@ -79,7 +80,8 @@ unsafe impl Sync for ffi::NativeNode_simulator {}
 
 impl Debug for ffi::NativeNode_simulator {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_simulator>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_simulator>())
+            .finish()
     }
 }
 

@@ -53,14 +53,13 @@ pub mod ffi {
     }
 }
 
-
-
 unsafe impl Send for ffi::NativeNode_lane_planner {}
 unsafe impl Sync for ffi::NativeNode_lane_planner {}
 
 impl Debug for ffi::NativeNode_lane_planner {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_lane_planner>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_lane_planner>())
+            .finish()
     }
 }
 
