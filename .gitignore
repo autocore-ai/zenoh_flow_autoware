@@ -1,7 +1,6 @@
 .vscode
 build
 debug
-doc
 install
 log
 target
