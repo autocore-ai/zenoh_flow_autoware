@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// ROS msgs used in Autoware.Auto avp demo
+/// 
+/// Native ROS msg can be found on [GitHub](https://github.com/ros2)
+/// 
+/// Autoware.Auto msg can be found on [GitLab](https://gitlab.com/autowarefoundation/autoware.auto/autoware_auto_msgs/-/tree/34d98a6173ae02572fef10ebc47a2916c2b0d395)
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize, ZFData, ZFFakeSerialize)]
