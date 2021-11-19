@@ -12,5 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/// Default value not supported with derive Default
 pub mod default_msg;
+/// ROS and Autoware.Auto msgs
 pub mod msgs;
