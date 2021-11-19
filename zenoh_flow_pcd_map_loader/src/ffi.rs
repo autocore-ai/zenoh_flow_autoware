@@ -19,6 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
+/// CXX binding functions for pcd map loader
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(Debug)]
@@ -54,7 +55,8 @@ unsafe impl Sync for ffi::NativeNode_pcd_map_loader {}
 
 impl Debug for ffi::NativeNode_pcd_map_loader {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_pcd_map_loader>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_pcd_map_loader>())
+            .finish()
     }
 }
 

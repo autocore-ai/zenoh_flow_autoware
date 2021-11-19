@@ -19,6 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
+/// CXX binding functions for init pose
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(DefaultConfig)]

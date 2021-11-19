@@ -19,6 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
+/// CXX binding functions for global planner
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     #[derive(DefaultConfig)]
@@ -38,8 +39,13 @@ pub mod ffi {
             node: &mut UniquePtr<NativeNode_global_planner>,
             msg: &AutowareAutoMsgsVehicleKinematicState,
         );
-        fn set_goal_pose(node: &mut UniquePtr<NativeNode_global_planner>, msg: &GeometryMsgsPoseStamped);
-        fn get_route(node: &mut UniquePtr<NativeNode_global_planner>) -> AutowareAutoMsgsHadmapRoute;
+        fn set_goal_pose(
+            node: &mut UniquePtr<NativeNode_global_planner>,
+            msg: &GeometryMsgsPoseStamped,
+        );
+        fn get_route(
+            node: &mut UniquePtr<NativeNode_global_planner>,
+        ) -> AutowareAutoMsgsHadmapRoute;
     }
 }
 
@@ -48,7 +54,8 @@ unsafe impl Sync for ffi::NativeNode_global_planner {}
 
 impl Debug for ffi::NativeNode_global_planner {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_global_planner>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_global_planner>())
+            .finish()
     }
 }
 

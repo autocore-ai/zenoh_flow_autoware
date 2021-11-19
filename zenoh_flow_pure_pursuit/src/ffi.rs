@@ -19,6 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
+/// CXX binding functions for pure pursuit
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     struct NativeConfig {
@@ -41,7 +42,10 @@ pub mod ffi {
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleControlCommand;
 
         fn init_pure_pursuit(cfg: &NativeConfig) -> UniquePtr<NativeNode_pure_pursuit>;
-        fn set_trajectory(node: &mut UniquePtr<NativeNode_pure_pursuit>, msg: &AutowareAutoMsgsTrajectory);
+        fn set_trajectory(
+            node: &mut UniquePtr<NativeNode_pure_pursuit>,
+            msg: &AutowareAutoMsgsTrajectory,
+        );
         fn set_kinematic_state(
             node: &mut UniquePtr<NativeNode_pure_pursuit>,
             msg: &AutowareAutoMsgsVehicleKinematicState,
@@ -57,7 +61,8 @@ unsafe impl Sync for ffi::NativeNode_pure_pursuit {}
 
 impl Debug for ffi::NativeNode_pure_pursuit {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_pure_pursuit>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_pure_pursuit>())
+            .finish()
     }
 }
 

@@ -19,7 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
-
+/// CXX binding functions for local planner
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     pub struct Vehicle {
@@ -55,7 +55,10 @@ pub mod ffi {
             autoware_auto::msgs::ffi::AutowareAutoMsgsVehicleStateCommand;
 
         fn init_local_planner(cfg: &NativeConfig) -> UniquePtr<NativeNode_local_planner>;
-        fn set_route(node: &mut UniquePtr<NativeNode_local_planner>, msg: &AutowareAutoMsgsHadmapRoute);
+        fn set_route(
+            node: &mut UniquePtr<NativeNode_local_planner>,
+            msg: &AutowareAutoMsgsHadmapRoute,
+        );
         fn set_kinematic_state(
             node: &mut UniquePtr<NativeNode_local_planner>,
             msg: &AutowareAutoMsgsVehicleKinematicState,
@@ -64,8 +67,12 @@ pub mod ffi {
             node: &mut UniquePtr<NativeNode_local_planner>,
             msg: &AutowareAutoMsgsVehicleStateReport,
         );
-        fn get_trajectory(node: &mut UniquePtr<NativeNode_local_planner>) -> AutowareAutoMsgsTrajectory;
-        fn get_state_cmd(node: &mut UniquePtr<NativeNode_local_planner>) -> AutowareAutoMsgsVehicleStateCommand;
+        fn get_trajectory(
+            node: &mut UniquePtr<NativeNode_local_planner>,
+        ) -> AutowareAutoMsgsTrajectory;
+        fn get_state_cmd(
+            node: &mut UniquePtr<NativeNode_local_planner>,
+        ) -> AutowareAutoMsgsVehicleStateCommand;
     }
 }
 
@@ -74,7 +81,8 @@ unsafe impl Sync for ffi::NativeNode_local_planner {}
 
 impl Debug for ffi::NativeNode_local_planner {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_local_planner>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_local_planner>())
+            .finish()
     }
 }
 

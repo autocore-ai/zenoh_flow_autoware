@@ -19,6 +19,7 @@ use std::{
 };
 use zenoh_flow::zenoh_flow_derive::ZFState;
 
+/// CXX binding functions for parking planner
 #[cxx::bridge(namespace = "zenoh_flow::autoware_auto::ffi")]
 pub mod ffi {
     pub struct Vehicle {
@@ -75,7 +76,8 @@ unsafe impl Sync for ffi::NativeNode_parking_planner {}
 
 impl Debug for ffi::NativeNode_parking_planner {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct(type_name::<ffi::NativeNode_parking_planner>()).finish()
+        f.debug_struct(type_name::<ffi::NativeNode_parking_planner>())
+            .finish()
     }
 }
 
