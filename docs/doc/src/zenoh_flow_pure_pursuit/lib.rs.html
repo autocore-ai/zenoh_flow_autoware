@@ -183,18 +183,6 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 The AutoCore.AI.</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
@@ -212,6 +200,7 @@
 <span class="kw">mod</span> <span class="ident">ffi</span>;
 
 <span class="kw">use</span> <span class="ident">autoware_auto::msgs::ffi</span>::{<span class="ident">AutowareAutoMsgsTrajectory</span>, <span class="ident">AutowareAutoMsgsVehicleKinematicState</span>};
+<span class="kw">use</span> <span class="ident">derive</span>::{<span class="ident">zf_default_node</span>, <span class="ident">DefaultSendAndSync</span>};
 <span class="kw">use</span> <span class="ident">ffi::ffi</span>::{
     <span class="ident">get_control_cmd</span>, <span class="ident">init_pure_pursuit</span>, <span class="ident">set_kinematic_state</span>, <span class="ident">set_trajectory</span>, <span class="ident">NativeConfig</span>,
 };
@@ -230,22 +219,9 @@
 <span class="kw">const</span> <span class="ident">KINEMATIC_STATE_MODE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
 <span class="kw">const</span> <span class="ident">TRAJECTORY_MODE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>)]</span>
+<span class="attribute">#[<span class="ident">zf_default_node</span>(<span class="ident">init_fn</span> <span class="op">=</span> <span class="string">&quot;init_pure_pursuit&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>, <span class="ident">DefaultSendAndSync</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
-
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {}
-
-<span class="kw">impl</span> <span class="ident">Node</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {
-    <span class="kw">fn</span> <span class="ident">initialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">State::from</span>(<span class="ident">NativeNodeInstance</span> {
-            <span class="ident">ptr</span>: <span class="ident">init_pure_pursuit</span>(<span class="kw-2">&amp;</span><span class="ident">get_config</span>(<span class="ident">cfg</span>)),
-        }))
-    }
-    <span class="kw">fn</span> <span class="ident">finalize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-}
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">NativeConfig</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {

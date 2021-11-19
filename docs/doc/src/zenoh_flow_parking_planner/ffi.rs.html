@@ -83,6 +83,7 @@
 <span id="83">83</span>
 <span id="84">84</span>
 <span id="85">85</span>
+<span id="86">86</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 The AutoCore.AI.</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
@@ -160,7 +161,8 @@
 
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ffi::NativeNode_parking_planner</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="ident">type_name</span>::<span class="op">&lt;</span><span class="ident">ffi::NativeNode_parking_planner</span><span class="op">&gt;</span>()).<span class="ident">finish</span>()
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="ident">type_name</span>::<span class="op">&lt;</span><span class="ident">ffi::NativeNode_parking_planner</span><span class="op">&gt;</span>())
+            .<span class="ident">finish</span>()
     }
 }
 
