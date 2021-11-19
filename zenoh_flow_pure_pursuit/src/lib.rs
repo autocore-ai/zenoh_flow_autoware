@@ -11,6 +11,7 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, PortId, State, Token, ZFError, ZFResult,
 };
+use derive::{DefaultSendAndSync, zf_default_node};
 
 const IN_KINEMATIC_STATE: &str = "kinematic_state";
 const IN_TRAJECTORY: &str = "trajectory";
@@ -19,22 +20,9 @@ const OUT_CONTROL_COMMAND: &str = "control_cmd";
 const KINEMATIC_STATE_MODE: usize = 1;
 const TRAJECTORY_MODE: usize = 2;
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn="init_pure_pursuit")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_pure_pursuit(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {

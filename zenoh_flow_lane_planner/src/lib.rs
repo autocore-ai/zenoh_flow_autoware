@@ -9,8 +9,10 @@ use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
+use derive::{DefaultSendAndSync, zf_default_node};
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn="init_lane_planner")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 
 impl Default for NativeConfig {
@@ -38,21 +40,6 @@ impl Default for NativeConfig {
         }
     }
 }
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_lane_planner(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
-
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {

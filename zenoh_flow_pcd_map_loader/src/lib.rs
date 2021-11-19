@@ -23,24 +23,11 @@ use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
+use derive::{DefaultSendAndSync, zf_default_node};
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn="init_pcd_map_loader")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_pcd_map_loader(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
-
 
 impl Default for NativeConfig {
     fn default() -> Self {

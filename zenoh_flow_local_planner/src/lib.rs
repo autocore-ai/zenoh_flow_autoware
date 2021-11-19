@@ -15,6 +15,7 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
+use derive::{DefaultSendAndSync, zf_default_node};
 
 static IN_VEHICLE_KINEMATIC_STATE: &str = "kinematic_state";
 static IN_HADMAP_ROUTE: &str = "route";
@@ -26,22 +27,10 @@ const VEHICLE_KINEMATIC_STATE_MODE: usize = 1;
 const HADMAP_ROUTE_MODE: usize = 2;
 const VEHICLE_STATE_REPORT_MODE: usize = 3;
 
-#[derive(Debug, ZFState)]
+
+#[zf_default_node(init_fn="init_local_planner")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_local_planner(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {

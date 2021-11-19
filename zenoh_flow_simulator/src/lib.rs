@@ -15,6 +15,7 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, PortId, State, Token, ZFError, ZFResult,
 };
+use derive::{DefaultSendAndSync, zf_default_node};
 
 const IN_TICK: &str = "tick";
 const IN_INIT_POSE: &str = "init_pose";
@@ -28,22 +29,9 @@ const INIT_POSE_MODE: usize = 2;
 const CONTROL_CMD_MODE: usize = 3;
 const STATE_CMD_MODE: usize = 4;
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn="init_simulator")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_simulator(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {
