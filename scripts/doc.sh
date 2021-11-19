@@ -12,21 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "autoware_auto",
-  "common",
-  "derive",
-  "zenoh_flow_global_planner",
-  "zenoh_flow_goal_pose",
-  "zenoh_flow_init_pose",
-  "zenoh_flow_lane_planner",
-  "zenoh_flow_local_planner",
-  "zenoh_flow_osm_map_loader",
-  "zenoh_flow_parking_planner",
-  "zenoh_flow_pcd_map_loader",
-  "zenoh_flow_pure_pursuit",
-  "zenoh_flow_simulator",
-  "zenoh_flow_system_monitor",
-  "zenoh_flow_tick_source",
-]
+#!/bin/sh
+
+set -e
+
+rustdoc(){
+    cargo rustdoc -p $1 --target-dir docs
+}
+
+rustdoc "autoware_auto"
+rustdoc "common"
+rustdoc "derive"
+rustdoc "zenoh_flow_global_planner"
+rustdoc "zenoh_flow_goal_pose"
+rustdoc "zenoh_flow_init_pose"
+rustdoc "zenoh_flow_lane_planner"
+rustdoc "zenoh_flow_local_planner"
+rustdoc "zenoh_flow_osm_map_loader"
+rustdoc "zenoh_flow_parking_planner"
+rustdoc "zenoh_flow_pcd_map_loader"
+rustdoc "zenoh_flow_pure_pursuit"
+rustdoc "zenoh_flow_simulator"
+rustdoc "zenoh_flow_system_monitor"
+rustdoc "zenoh_flow_tick_source"

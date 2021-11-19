@@ -151,9 +151,14 @@ pub mod ffi {
         pub y: f64,
         pub z: f64,
     }
+    /// Standard metadata for higher-level stamped data types.
+    /// This is generally used to communicate timestamped data
+    /// in a particular coordinate frame.
     #[derive(Clone, Debug, Default, Serialize, Deserialize, ZFData, ZFFakeSerialize)]
     pub struct StdMsgsHeader {
+        /// Two-integer timestamp that is expressed as seconds and nanoseconds.
         pub stamp: BuiltinInterfacesTime,
+        /// Transform frame with which this data is associated.
         pub frame_id: String,
     }
 }

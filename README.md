@@ -1,9 +1,8 @@
 # Autoware for Zenoh-Flow
 
-## How to build
+[Autoware.Auto][Autoware.Auto] on [Zenoh-Flow][Zenoh-Flow] stack.
 
-```bash
-$ source /opt/AutowareAuto/setup.bash
-$ cargo install cxxbridge-cmd --git "https://github.com/autocore-ai/cxx.git" --branch "autocore-dev"
-$ colcon build --merge-install
-```
+## [Documents](https://autocore-ai.github.io/zenoh_flow_autoware/)
+
+[Zenoh-Flow]: https://github.com/eclipse-zenoh/zenoh-flow
+[Autoware.Auto]: https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto
