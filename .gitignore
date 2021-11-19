@@ -1,7 +1,10 @@
 .vscode
 build
+debug
 install
 log
 target
+.rustc_info.json
+.rustdoc_fingerprint.json
 Cargo.lock
 computed-record.yaml
