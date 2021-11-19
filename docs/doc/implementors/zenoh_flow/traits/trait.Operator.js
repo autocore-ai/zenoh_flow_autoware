@@ -1,0 +1,6 @@
+(function() {var implementors = {};
+implementors["zenoh_flow_global_planner"] = [{"text":"impl Operator for <a class=\"struct\" href=\"zenoh_flow_global_planner/struct.CustomNode.html\" title=\"struct zenoh_flow_global_planner::CustomNode\">CustomNode</a>","synthetic":false,"types":["zenoh_flow_global_planner::CustomNode"]}];
+implementors["zenoh_flow_local_planner"] = [{"text":"impl Operator for <a class=\"struct\" href=\"zenoh_flow_local_planner/struct.CustomNode.html\" title=\"struct zenoh_flow_local_planner::CustomNode\">CustomNode</a>","synthetic":false,"types":["zenoh_flow_local_planner::CustomNode"]}];
+implementors["zenoh_flow_pure_pursuit"] = [{"text":"impl Operator for <a class=\"struct\" href=\"zenoh_flow_pure_pursuit/struct.CustomNode.html\" title=\"struct zenoh_flow_pure_pursuit::CustomNode\">CustomNode</a>","synthetic":false,"types":["zenoh_flow_pure_pursuit::CustomNode"]}];
+implementors["zenoh_flow_simulator"] = [{"text":"impl Operator for <a class=\"struct\" href=\"zenoh_flow_simulator/struct.CustomNode.html\" title=\"struct zenoh_flow_simulator::CustomNode\">CustomNode</a>","synthetic":false,"types":["zenoh_flow_simulator::CustomNode"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
