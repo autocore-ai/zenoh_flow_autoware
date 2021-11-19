@@ -186,16 +186,6 @@ Local planner update trajectory and vehicle state command every tick.
 
 All nodes are packaged as ROS nodes, and installed into system paths. And Zenoh-Flow runtime are installed into user home path. Runtime load graph files in system paths can launch the demo.
 
-## API Description
-
-### Type Definitions
-
-#### Configuration Types
-
-#### Message Types
-
-### Module API
-
 [Zenoh-Flow]: https://github.com/eclipse-zenoh/zenoh-flow
 [Rust]: https://www.rust-lang.org/
 [Autoware]: https://www.autoware.org/

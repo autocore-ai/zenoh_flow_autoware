@@ -2,4 +2,4 @@
 
 ## [Autoware.Auto Common](./doc/autoware_auto)
 
-### [Autoware.Auto message types](./doc/autoware_auto/msgs/)
+### [Autoware.Auto message types](./doc/autoware_auto/msgs/ffi/index.html)

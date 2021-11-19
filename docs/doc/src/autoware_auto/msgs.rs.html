@@ -157,6 +157,11 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 The AutoCore.AI.</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
@@ -310,9 +315,14 @@
         <span class="kw">pub</span> <span class="ident">y</span>: <span class="ident">f64</span>,
         <span class="kw">pub</span> <span class="ident">z</span>: <span class="ident">f64</span>,
     }
+    <span class="doccomment">/// Standard metadata for higher-level stamped data types.</span>
+    <span class="doccomment">/// This is generally used to communicate timestamped data</span>
+    <span class="doccomment">/// in a particular coordinate frame.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">ZFData</span>, <span class="ident">ZFFakeSerialize</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StdMsgsHeader</span> {
+        <span class="doccomment">/// Two-integer timestamp that is expressed as seconds and nanoseconds.</span>
         <span class="kw">pub</span> <span class="ident">stamp</span>: <span class="ident">BuiltinInterfacesTime</span>,
+        <span class="doccomment">/// Transform frame with which this data is associated.</span>
         <span class="kw">pub</span> <span class="ident">frame_id</span>: <span class="ident">String</span>,
     }
 }
