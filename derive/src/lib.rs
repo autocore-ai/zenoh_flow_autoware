@@ -1,7 +1,21 @@
-use std::collections::HashMap;
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{AttributeArgs, DeriveInput, ItemStruct, LitStr, Meta, NestedMeta, parse_macro_input};
+use std::collections::HashMap;
+use syn::{parse_macro_input, AttributeArgs, DeriveInput, ItemStruct, LitStr, Meta, NestedMeta};
 
 #[proc_macro_derive(ZFFakeSerialize)]
 pub fn zf_fake_serialize_derive(input: TokenStream) -> TokenStream {
@@ -59,7 +73,6 @@ pub fn default_config_derive(_input: TokenStream) -> TokenStream {
     .into()
 }
 
-
 #[proc_macro_derive(DefaultSendAndSync)]
 pub fn zf_send_sync_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
@@ -70,7 +83,6 @@ pub fn zf_send_sync_derive(input: TokenStream) -> TokenStream {
     };
     gen.into()
 }
-
 
 #[proc_macro_attribute]
 pub fn zf_default_node(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -85,7 +97,7 @@ pub fn zf_default_node(attr: TokenStream, item: TokenStream) -> TokenStream {
     let ident = &in_struct.ident;
     let gen = quote! {
         #in_struct
-        
+
         impl Node for #ident {
             fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
                 Ok(State::from(NativeNodeInstance { ptr: #init_fn_ident(&get_config(cfg)) }))

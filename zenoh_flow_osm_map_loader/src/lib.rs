@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,17 +15,17 @@
 mod ffi;
 
 use async_trait::async_trait;
-use ffi::NativeNodeInstance;
 use common::built_in_types::ZFString;
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{init_osm_map_loader, NativeConfig};
+use ffi::NativeNodeInstance;
 use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
-#[zf_default_node(init_fn="init_osm_map_loader")]
+#[zf_default_node(init_fn = "init_osm_map_loader")]
 #[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 

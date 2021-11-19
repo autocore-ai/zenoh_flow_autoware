@@ -1,9 +1,24 @@
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 mod ffi;
 
 use autoware_auto::msgs::ffi::{
     AutowareAutoMsgsVehicleControlCommand, AutowareAutoMsgsVehicleStateCommand,
     GeometryMsgsPoseWithCovarianceStamped,
 };
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
     get_kinematic_state, get_state_report, init_simulator, is_initialized, set_control_cmd,
     set_init_pose, set_state_cmd, update, NativeConfig,
@@ -15,7 +30,6 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, PortId, State, Token, ZFError, ZFResult,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
 const IN_TICK: &str = "tick";
 const IN_INIT_POSE: &str = "init_pose";
@@ -29,7 +43,7 @@ const INIT_POSE_MODE: usize = 2;
 const CONTROL_CMD_MODE: usize = 3;
 const STATE_CMD_MODE: usize = 4;
 
-#[zf_default_node(init_fn="init_simulator")]
+#[zf_default_node(init_fn = "init_simulator")]
 #[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 

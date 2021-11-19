@@ -1,20 +1,34 @@
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 mod ffi;
 
 use async_trait::async_trait;
-use ffi::NativeNodeInstance;
 use common::built_in_types::ZFUsize;
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
-    init_parking_planner, CommandBound, CommandBounds, NativeConfig, OptimizationWeights, StateBound, StateBounds,
-    Vehicle,
+    init_parking_planner, CommandBound, CommandBounds, NativeConfig, OptimizationWeights,
+    StateBound, StateBounds, Vehicle,
 };
+use ffi::NativeNodeInstance;
 use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
-#[zf_default_node(init_fn="init_parking_planner")]
+#[zf_default_node(init_fn = "init_parking_planner")]
 #[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 

@@ -1,9 +1,24 @@
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 mod ffi;
 
 use autoware_auto::msgs::ffi::{
     AutowareAutoMsgsHadmapRoute, AutowareAutoMsgsVehicleKinematicState,
     AutowareAutoMsgsVehicleStateReport,
 };
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
     get_state_cmd, get_trajectory, init_local_planner, set_kinematic_state, set_route,
     set_state_report, NativeConfig, Vehicle,
@@ -15,7 +30,6 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
 static IN_VEHICLE_KINEMATIC_STATE: &str = "kinematic_state";
 static IN_HADMAP_ROUTE: &str = "route";
@@ -27,8 +41,7 @@ const VEHICLE_KINEMATIC_STATE_MODE: usize = 1;
 const HADMAP_ROUTE_MODE: usize = 2;
 const VEHICLE_STATE_REPORT_MODE: usize = 3;
 
-
-#[zf_default_node(init_fn="init_local_planner")]
+#[zf_default_node(init_fn = "init_local_planner")]
 #[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 

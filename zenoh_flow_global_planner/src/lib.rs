@@ -1,6 +1,21 @@
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 mod ffi;
 
 use autoware_auto::msgs::ffi::{AutowareAutoMsgsVehicleKinematicState, GeometryMsgsPoseStamped};
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{get_route, init_global_planner, set_current_pose, set_goal_pose, NativeConfig};
 use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
@@ -9,7 +24,6 @@ use zenoh_flow::{
     zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
 static IN_GOAL_POSE: &str = "goal_pose";
 static IN_CURRENT_POSE: &str = "current_pose";
@@ -18,7 +32,7 @@ static OUT_ROUTE: &str = "route";
 const GOAL_POSE_MODE: usize = 1;
 const CURRENT_POSE_MODE: usize = 2;
 
-#[zf_default_node(init_fn="init_global_planner")]
+#[zf_default_node(init_fn = "init_global_planner")]
 #[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
 

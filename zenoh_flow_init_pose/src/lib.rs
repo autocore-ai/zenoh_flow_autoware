@@ -1,3 +1,17 @@
+// Copyright 2021 The AutoCore.AI.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 mod ffi;
 use async_trait::async_trait;
 use ffi::ffi::{get_init_pose, init_init_pose, is_new_init_pose, NativeConfig};
@@ -7,11 +21,23 @@ use zenoh_flow::{
     async_std::task::sleep, export_source, zenoh_flow_derive::ZFState, Configuration, Context,
     Data, Node, Source, State, ZFError, ZFResult,
 };
-use derive::{DefaultSendAndSync, zf_default_node};
 
-#[zf_default_node(init_fn="init_init_pose")]
-#[derive(Debug, ZFState, DefaultSendAndSync)]
+#[derive(Debug, ZFState)]
 pub struct CustomNode;
+
+unsafe impl Send for CustomNode {}
+unsafe impl Sync for CustomNode {}
+
+impl Node for CustomNode {
+    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
+        Ok(State::from(NativeNodeInstance {
+            ptr: init_init_pose(&get_config(cfg)),
+        }))
+    }
+    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
+        Ok(())
+    }
+}
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {
