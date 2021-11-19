@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["ffi",""]]});
+initSidebarItems({"mod":[["ffi","ROS msgs used in Autoware.Auto avp demo"]]});

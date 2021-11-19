@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["default_msg",""],["msgs",""]]});
+initSidebarItems({"mod":[["default_msg","Default value not supported with derive Default"],["msgs","ROS and Autoware.Auto msgs"]]});
