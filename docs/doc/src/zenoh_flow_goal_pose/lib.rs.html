@@ -61,17 +61,6 @@
 <span id="61">61</span>
 <span id="62">62</span>
 <span id="63">63</span>
-<span id="64">64</span>
-<span id="65">65</span>
-<span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
-<span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 The AutoCore.AI.</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
@@ -88,6 +77,7 @@
 
 <span class="kw">mod</span> <span class="ident">ffi</span>;
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
+<span class="kw">use</span> <span class="ident">derive</span>::{<span class="ident">zf_default_node</span>, <span class="ident">DefaultSendAndSync</span>};
 <span class="kw">use</span> <span class="ident">ffi::ffi</span>::{<span class="ident">get_goal_pose</span>, <span class="ident">init_goal_pose</span>, <span class="ident">is_new_goal_pose</span>, <span class="ident">NativeConfig</span>};
 <span class="kw">use</span> <span class="ident">ffi::NativeNodeInstance</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">sync::Arc</span>, <span class="ident">time::Duration</span>};
@@ -95,22 +85,10 @@
     <span class="ident">async_std::task::sleep</span>, <span class="ident">export_source</span>, <span class="ident">zenoh_flow_derive::ZFState</span>, <span class="ident">Configuration</span>, <span class="ident">Context</span>,
     <span class="ident">Data</span>, <span class="ident">Node</span>, <span class="ident">Source</span>, <span class="ident">State</span>, <span class="ident">ZFError</span>, <span class="ident">ZFResult</span>,
 };
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>)]</span>
+
+<span class="attribute">#[<span class="ident">zf_default_node</span>(<span class="ident">init_fn</span> <span class="op">=</span> <span class="string">&quot;init_goal_pose&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>, <span class="ident">DefaultSendAndSync</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
-
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {}
-<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {}
-
-<span class="kw">impl</span> <span class="ident">Node</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {
-    <span class="kw">fn</span> <span class="ident">initialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">cfg</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">State::from</span>(<span class="ident">NativeNodeInstance</span> {
-            <span class="ident">ptr</span>: <span class="ident">init_goal_pose</span>(<span class="kw-2">&amp;</span><span class="ident">get_config</span>(<span class="ident">cfg</span>)),
-        }))
-    }
-    <span class="kw">fn</span> <span class="ident">finalize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(())
-    }
-}
 
 <span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {

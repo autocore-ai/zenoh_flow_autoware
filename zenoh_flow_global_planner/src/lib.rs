@@ -15,6 +15,7 @@
 mod ffi;
 
 use autoware_auto::msgs::ffi::{AutowareAutoMsgsVehicleKinematicState, GeometryMsgsPoseStamped};
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{get_route, init_global_planner, set_current_pose, set_goal_pose, NativeConfig};
 use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
@@ -31,22 +32,9 @@ static OUT_ROUTE: &str = "route";
 const GOAL_POSE_MODE: usize = 1;
 const CURRENT_POSE_MODE: usize = 2;
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn = "init_global_planner")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_global_planner(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 fn get_config(configuration: &Option<Configuration>) -> NativeConfig {
     match configuration {

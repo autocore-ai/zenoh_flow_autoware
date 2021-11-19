@@ -1,1 +1,1 @@
-initSidebarItems({"derive":[["DefaultConfig",""],["ZFFakeSerialize",""],["ZenohFlowNode",""]]});
+initSidebarItems({"attr":[["zf_default_node",""]],"derive":[["DefaultConfig",""],["DefaultSendAndSync",""],["ZFFakeSerialize",""],["ZenohFlowNode",""]]});

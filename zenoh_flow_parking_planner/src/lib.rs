@@ -15,34 +15,22 @@
 mod ffi;
 
 use async_trait::async_trait;
-use ffi::NativeNodeInstance;
 use common::built_in_types::ZFUsize;
+use derive::{zf_default_node, DefaultSendAndSync};
 use ffi::ffi::{
-    init_parking_planner, CommandBound, CommandBounds, NativeConfig, OptimizationWeights, StateBound, StateBounds,
-    Vehicle,
+    init_parking_planner, CommandBound, CommandBounds, NativeConfig, OptimizationWeights,
+    StateBound, StateBounds, Vehicle,
 };
+use ffi::NativeNodeInstance;
 use std::{fmt::Debug, sync::Arc, time::Duration};
 use zenoh_flow::{
     async_std::task::sleep, export_source, types::ZFResult, zenoh_flow_derive::ZFState,
     Configuration, Context, Data, Node, Source, State,
 };
 
-#[derive(Debug, ZFState)]
+#[zf_default_node(init_fn = "init_parking_planner")]
+#[derive(Debug, ZFState, DefaultSendAndSync)]
 pub struct CustomNode;
-
-unsafe impl Send for CustomNode {}
-unsafe impl Sync for CustomNode {}
-
-impl Node for CustomNode {
-    fn initialize(&self, cfg: &Option<Configuration>) -> ZFResult<State> {
-        Ok(State::from(NativeNodeInstance {
-            ptr: init_parking_planner(&get_config(cfg)),
-        }))
-    }
-    fn finalize(&self, _state: &mut State) -> ZFResult<()> {
-        Ok(())
-    }
-}
 
 impl Default for NativeConfig {
     fn default() -> Self {
