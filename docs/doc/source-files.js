@@ -1,6 +1,7 @@
 var N = null;var sourcesIndex = {};
 sourcesIndex["autoware_auto"] = {"name":"","files":["default_msg.rs","lib.rs","msgs.rs"]};
 sourcesIndex["common"] = {"name":"","files":["built_in_types.rs","lib.rs"]};
+sourcesIndex["derive"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["zenoh_flow_global_planner"] = {"name":"","files":["ffi.rs","lib.rs"]};
 sourcesIndex["zenoh_flow_goal_pose"] = {"name":"","files":["ffi.rs","lib.rs"]};
 sourcesIndex["zenoh_flow_init_pose"] = {"name":"","files":["ffi.rs","lib.rs"]};

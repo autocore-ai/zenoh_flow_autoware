@@ -1,1 +1,0 @@
-window.ALL_CRATES = ["autoware_auto","common","zenoh_flow_global_planner","zenoh_flow_goal_pose","zenoh_flow_init_pose","zenoh_flow_lane_planner","zenoh_flow_local_planner","zenoh_flow_osm_map_loader","zenoh_flow_parking_planner","zenoh_flow_pcd_map_loader","zenoh_flow_pure_pursuit","zenoh_flow_simulator","zenoh_flow_system_monitor","zenoh_flow_tick_source"];
