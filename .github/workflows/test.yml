@@ -34,6 +34,11 @@ jobs:
         rosdep update
         rosdep install -y --from . --ignore-src --rosdistro foxy
         colcon build --merge-install --install-base /opt/AutowareAuto
+    - name: Build Zenoh-Flow Autoware
+      run: |
+        cd zenoh_flow_autoware
+        source /opt/AutowareAuto/setup.bash
+        colcon build --merge-install
     - name: List path
       run: |
         ls -alh
