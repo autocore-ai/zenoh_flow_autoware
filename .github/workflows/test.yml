@@ -12,7 +12,9 @@ jobs:
       with:
         path: zenoh_flow_autoware
     - name: Test Rust codes
-      run: cargo test
+      run: |
+        cd zenoh_flow_autoware
+        cargo test
     - name: Setup ROS
       uses: ros-tooling/setup-ros@v0.2
       with:
