@@ -35,3 +35,5 @@ rustdoc "zenoh_flow_pure_pursuit"
 rustdoc "zenoh_flow_simulator"
 rustdoc "zenoh_flow_system_monitor"
 rustdoc "zenoh_flow_tick_source"
+
+rm docs/doc/.lock

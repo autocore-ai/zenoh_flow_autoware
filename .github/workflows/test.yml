@@ -1,0 +1,29 @@
+name: Test
+on:
+  pull_request
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  doc:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Test target
+      uses: actions/checkout@v2
+      with:
+        path: zenoh_flow_autoware
+    - name: Test Rust codes
+      run: cargo test
+    - name: Setup ROS
+      uses: ros-tooling/setup-ros@v0.2
+      with:
+        required-ros-distributions: foxy
+    - name: Checkout Autoware.Auto
+      uses: actions/checkout@v2
+      with:
+        repository: autocore-ai/AutowareAuto
+        ref: refs/heads/zenoh-flow
+        path: AutowareAuto
+    - name: List path
+      run: |
+        ls -alh
+        echo $PWD
