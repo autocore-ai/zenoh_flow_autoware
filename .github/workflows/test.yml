@@ -25,6 +25,15 @@ jobs:
         repository: autocore-ai/AutowareAuto
         ref: refs/heads/zenoh-flow
         path: AutowareAuto
+    - name: Build Autoware.Auto
+      run: |
+        sudo mkdir /opt/AutowareAuto
+        sudo chown runner:docker /opt/AutowareAuto
+        cd AutowareAuto
+        vcs import < autoware.auto.foxy.repos
+        rosdep update
+        rosdep install -y --from . --ignore-src --rosdistro foxy
+        colcon build --merge-install --install-base /opt/AutowareAuto
     - name: List path
       run: |
         ls -alh
