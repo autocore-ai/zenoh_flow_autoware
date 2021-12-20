@@ -13,10 +13,7 @@ jobs:
         path: zenoh_flow_autoware
     - name: Test Rust codes
       run: |
-        dpkg -l|grep python3-dev
-        python3 --version
-        # cd zenoh_flow_autoware
-        # cargo test
+        cat /usr/include/python3.8/modsupport.h
     # - name: Setup ROS
     #   uses: ros-tooling/setup-ros@v0.2
     #   with:
