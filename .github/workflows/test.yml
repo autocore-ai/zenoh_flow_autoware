@@ -35,7 +35,7 @@ jobs:
         rosdep install -y --from . --ignore-src --rosdistro foxy
         curl https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto/-/raw/master/src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd -o src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd
         source /opt/ros/foxy/setup.bash
-        colcon build --merge-install --install-base /opt/AutowareAuto
+        colcon build --merge-install --install-base /opt/AutowareAuto --packages-skip-up-to benchmark_tool
     - name: Build Zenoh-Flow Autoware
       run: |
         cd zenoh_flow_autoware
