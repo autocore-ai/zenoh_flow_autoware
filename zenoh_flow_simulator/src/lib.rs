@@ -27,7 +27,7 @@ use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
-    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, LocalDeadlineMiss, Node, NodeOutput,
     Operator, PortId, State, Token, ZFError, ZFResult,
 };
 
@@ -202,7 +202,7 @@ impl Operator for CustomNode {
                     .remove(IN_INIT_POSE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msgs
-                    .data
+                    .get_inner_data()
                     .try_get::<GeometryMsgsPoseWithCovarianceStamped>()?;
                 set_init_pose(node, msg);
             }
@@ -211,7 +211,7 @@ impl Operator for CustomNode {
                     .remove(IN_CONTROL_CMD)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msgs
-                    .data
+                    .get_inner_data()
                     .try_get::<AutowareAutoMsgsVehicleControlCommand>()?;
                 set_control_cmd(node, msg);
             }
@@ -220,7 +220,7 @@ impl Operator for CustomNode {
                     .remove(IN_STATE_CMD)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msgs
-                    .data
+                    .get_inner_data()
                     .try_get::<AutowareAutoMsgsVehicleStateCommand>()?;
                 set_state_cmd(node, msg);
             }
@@ -236,7 +236,7 @@ impl Operator for CustomNode {
         _context: &mut Context,
         state: &mut State,
         outputs: HashMap<PortId, Data>,
-        _deadline_miss: Option<DeadlineMiss>,
+        _deadline_miss: Option<LocalDeadlineMiss>,
     ) -> ZFResult<HashMap<PortId, NodeOutput>> {
         default_output_rule(state, outputs)
     }
