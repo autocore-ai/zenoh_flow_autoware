@@ -13,6 +13,7 @@ jobs:
         path: zenoh_flow_autoware
     - name: Test Rust codes
       run: |
+        python3 --version
         cd zenoh_flow_autoware
         cargo test
     - name: Setup ROS
