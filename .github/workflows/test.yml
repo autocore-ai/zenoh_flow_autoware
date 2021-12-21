@@ -4,7 +4,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
 jobs:
-  doc:
+  test:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Test target
@@ -13,34 +13,35 @@ jobs:
         path: zenoh_flow_autoware
     - name: Test Rust codes
       run: |
-        cat /usr/include/python3.8/modsupport.h
-    # - name: Setup ROS
-    #   uses: ros-tooling/setup-ros@v0.2
-    #   with:
-    #     required-ros-distributions: foxy
-    # - name: Checkout Autoware.Auto
-    #   uses: actions/checkout@v2
-    #   with:
-    #     repository: autocore-ai/AutowareAuto
-    #     ref: refs/heads/zenoh-flow
-    #     path: AutowareAuto
-    # - name: Build Autoware.Auto
-    #   run: |
-    #     sudo mkdir /opt/AutowareAuto
-    #     sudo chown runner:docker /opt/AutowareAuto
-    #     cd AutowareAuto
-    #     vcs import < autoware.auto.foxy.repos
-    #     rosdep update
-    #     rosdep install -y --from . --ignore-src --rosdistro foxy
-    #     curl https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto/-/raw/master/src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd -o src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd
-    #     source /opt/ros/foxy/setup.bash
-    #     colcon build --merge-install --install-base /opt/AutowareAuto --packages-skip-up-to benchmark_tool
-    # - name: Build Zenoh-Flow Autoware
-    #   run: |
-    #     cd zenoh_flow_autoware
-    #     source /opt/AutowareAuto/setup.bash
-    #     colcon build --merge-install
-    # - name: List path
-    #   run: |
-    #     ls -alh
-    #     echo $PWD
+        cd zenoh_flow_autoware
+        cargo test
+    - name: Setup ROS
+      uses: ros-tooling/setup-ros@v0.2
+      with:
+        required-ros-distributions: foxy
+    - name: Checkout Autoware.Auto
+      uses: actions/checkout@v2
+      with:
+        repository: autocore-ai/AutowareAuto
+        ref: refs/heads/zenoh-flow
+        path: AutowareAuto
+    - name: Build Autoware.Auto
+      run: |
+        sudo mkdir /opt/AutowareAuto
+        sudo chown runner:docker /opt/AutowareAuto
+        cd AutowareAuto
+        vcs import < autoware.auto.foxy.repos
+        rosdep update
+        rosdep install -y --from . --ignore-src --rosdistro foxy
+        curl https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto/-/raw/master/src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd -o src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd
+        source /opt/ros/foxy/setup.bash
+        colcon build --merge-install --install-base /opt/AutowareAuto
+    - name: Build Zenoh-Flow Autoware
+      run: |
+        cd zenoh_flow_autoware
+        source /opt/AutowareAuto/setup.bash
+        colcon build --merge-install
+    - name: List path
+      run: |
+        ls -alh
+        echo $PWD
