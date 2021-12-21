@@ -48,6 +48,7 @@ jobs:
       run: |
         cd zenoh_flow_autoware
         source install/setup.bash
+        source ~/.cargo/env
         runtime --graph-file ./demo.yaml --runtime local & sleep 30s
     - name: List path
       run: |
