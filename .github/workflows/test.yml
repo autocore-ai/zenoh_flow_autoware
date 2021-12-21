@@ -38,6 +38,7 @@ jobs:
         colcon build --merge-install --install-base /opt/AutowareAuto
     - name: Build Zenoh-Flow Autoware
       run: |
+        cargo install cxxbridge-cmd
         cd zenoh_flow_autoware
         source /opt/AutowareAuto/setup.bash
         colcon build --merge-install
