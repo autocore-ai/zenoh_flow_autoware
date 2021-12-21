@@ -30,10 +30,11 @@ jobs:
         sudo mkdir /opt/AutowareAuto
         sudo chown runner:docker /opt/AutowareAuto
         cd AutowareAuto
+        git lfs install
+        git lfs pull --include="*" --exclude=""
         vcs import < autoware.auto.foxy.repos
         rosdep update
         rosdep install -y --from . --ignore-src --rosdistro foxy
-        curl https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto/-/raw/master/src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd -o src/launch/autoware_demos/data/autonomoustuff_parking_lot_lgsvl.pcd
         source /opt/ros/foxy/setup.bash
         colcon build --merge-install --install-base /opt/AutowareAuto
     - name: Build Zenoh-Flow Autoware
@@ -42,8 +43,8 @@ jobs:
         cd zenoh_flow_autoware
         source /opt/AutowareAuto/setup.bash
         colcon build --merge-install
-    - name: Install zenoh-flow
-      run: cargo install cargo-zenoh-flow --git https://github.com/autocore-ai/zenoh-flow.git --branch autocore-dev
+    - name: Install zenoh-flow runtime
+      run: cargo install runtime --git https://github.com/autocore-ai/zenoh-flow-examples.git --branch autocore-dev
     - name: Run demo
       run: |
         cd zenoh_flow_autoware
