@@ -1,0 +1,55 @@
+name: Test
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Test target
+      uses: actions/checkout@v2
+      with:
+        path: zenoh_flow_autoware
+    - name: Test Rust codes
+      run: |
+        cd zenoh_flow_autoware
+        cargo test
+    - name: Setup ROS
+      uses: ros-tooling/setup-ros@v0.2
+      with:
+        required-ros-distributions: foxy
+    - name: Checkout Autoware.Auto
+      uses: actions/checkout@v2
+      with:
+        repository: autocore-ai/AutowareAuto
+        ref: refs/heads/zenoh-flow
+        path: AutowareAuto
+    - name: Build Autoware.Auto
+      run: |
+        sudo mkdir /opt/AutowareAuto
+        sudo chown runner:docker /opt/AutowareAuto
+        cd AutowareAuto
+        git lfs install
+        git lfs pull --include="*" --exclude=""
+        vcs import < autoware.auto.foxy.repos
+        rosdep update
+        rosdep install -y --from . --ignore-src --rosdistro foxy
+        source /opt/ros/foxy/setup.bash
+        colcon build --merge-install --install-base /opt/AutowareAuto
+    - name: Build Zenoh-Flow Autoware
+      run: |
+        cargo install cxxbridge-cmd --git https://github.com/autocore-ai/cxx.git --branch autocore-dev
+        cd zenoh_flow_autoware
+        source /opt/AutowareAuto/setup.bash
+        colcon build --merge-install
+    - name: Install zenoh-flow runtime
+      run: cargo install runtime --git https://github.com/autocore-ai/zenoh-flow-examples.git --branch autocore-dev
+    - name: Run demo
+      run: |
+        cd zenoh_flow_autoware
+        source install/setup.bash
+        source ~/.cargo/env
+        runtime --graph-file ./demo.yaml --runtime local & sleep 5s

@@ -23,7 +23,7 @@ use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
-    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, LocalDeadlineMiss, Node, NodeOutput,
     Operator, PortId, State, Token, ZFError, ZFResult,
 };
 
@@ -145,7 +145,7 @@ impl Operator for CustomNode {
                     .remove(IN_KINEMATIC_STATE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msg
-                    .data
+                    .get_inner_data()
                     .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
                 set_kinematic_state(node, &msg);
                 results.insert(
@@ -157,7 +157,9 @@ impl Operator for CustomNode {
                 let mut data_msgs = inputs
                     .remove(IN_TRAJECTORY)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let msg = data_msgs.data.try_get::<AutowareAutoMsgsTrajectory>()?;
+                let msg = data_msgs
+                    .get_inner_data()
+                    .try_get::<AutowareAutoMsgsTrajectory>()?;
                 set_trajectory(node, &msg);
             }
             _ => {
@@ -172,7 +174,7 @@ impl Operator for CustomNode {
         _context: &mut Context,
         state: &mut State,
         outputs: HashMap<PortId, Data>,
-        _deadline_miss: Option<DeadlineMiss>,
+        _deadline_miss: Option<LocalDeadlineMiss>,
     ) -> ZFResult<HashMap<PortId, NodeOutput>> {
         default_output_rule(state, outputs)
     }

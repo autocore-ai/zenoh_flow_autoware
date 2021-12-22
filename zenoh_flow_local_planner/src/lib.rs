@@ -27,7 +27,7 @@ use ffi::NativeNodeInstance;
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use zenoh_flow::{
     default_output_rule, export_operator, runtime::message::DataMessage,
-    zenoh_flow_derive::ZFState, Configuration, Context, Data, DeadlineMiss, Node, NodeOutput,
+    zenoh_flow_derive::ZFState, Configuration, Context, Data, LocalDeadlineMiss, Node, NodeOutput,
     Operator, State, Token, ZFError, ZFResult,
 };
 
@@ -204,7 +204,7 @@ impl Operator for CustomNode {
                     .remove(IN_VEHICLE_KINEMATIC_STATE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msg
-                    .data
+                    .get_inner_data()
                     .try_get::<AutowareAutoMsgsVehicleKinematicState>()?;
                 set_kinematic_state(ptr, &msg);
 
@@ -218,7 +218,9 @@ impl Operator for CustomNode {
                 let mut data_msg = inputs
                     .remove(IN_HADMAP_ROUTE)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
-                let msg = data_msg.data.try_get::<AutowareAutoMsgsHadmapRoute>()?;
+                let msg = data_msg
+                    .get_inner_data()
+                    .try_get::<AutowareAutoMsgsHadmapRoute>()?;
                 set_route(ptr, &msg);
             }
 
@@ -227,7 +229,7 @@ impl Operator for CustomNode {
                     .remove(IN_VEHICLE_STATE_REPORT)
                     .ok_or_else(|| ZFError::InvalidData("No data".to_string()))?;
                 let msg = data_msg
-                    .data
+                    .get_inner_data()
                     .try_get::<AutowareAutoMsgsVehicleStateReport>()?;
                 set_state_report(ptr, &msg);
             }
@@ -245,7 +247,7 @@ impl Operator for CustomNode {
         _context: &mut Context,
         state: &mut State,
         outputs: HashMap<zenoh_flow::PortId, Data>,
-        _deadline_miss: Option<DeadlineMiss>,
+        _deadline_miss: Option<LocalDeadlineMiss>,
     ) -> ZFResult<HashMap<zenoh_flow::PortId, NodeOutput>> {
         default_output_rule(state, outputs)
     }
