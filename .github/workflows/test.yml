@@ -1,5 +1,7 @@
 name: Test
 on:
+  push:
+    branches: [ main ]
   pull_request
 env:
   CARGO_TERM_COLOR: always
@@ -50,8 +52,4 @@ jobs:
         cd zenoh_flow_autoware
         source install/setup.bash
         source ~/.cargo/env
-        runtime --graph-file ./demo.yaml --runtime local & sleep 30s
-    - name: List path
-      run: |
-        ls -alh
-        echo $PWD
+        runtime --graph-file ./demo.yaml --runtime local & sleep 5s
