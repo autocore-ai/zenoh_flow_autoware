@@ -129,7 +129,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">NativeConfig</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">NativeConfig</span> {
             <span class="ident">map_osm_file</span>: <span class="ident">String::from</span>(
                 <span class="string">&quot;/opt/AutowareAuto/share/autoware_demos/data/autonomoustuff_parking_lot.osm&quot;</span>,
@@ -143,32 +143,32 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
+<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) -&gt; <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">config</span>) =&gt; {
             <span class="kw">let</span> <span class="ident">map_osm_file</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;map_osm_file&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">map_osm_file</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">map_osm_file</span>,
             };
             <span class="kw">let</span> <span class="ident">origin_offset_lat</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;origin_offset_lat&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">origin_offset_lat</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">origin_offset_lat</span>,
             };
             <span class="kw">let</span> <span class="ident">origin_offset_lon</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;origin_offset_lon&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">origin_offset_lon</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">origin_offset_lon</span>,
             };
             <span class="kw">let</span> <span class="ident">latitude</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;latitude&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">latitude</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">latitude</span>,
             };
             <span class="kw">let</span> <span class="ident">longitude</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;longitude&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">longitude</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">longitude</span>,
             };
             <span class="kw">let</span> <span class="ident">elevation</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;elevation&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">elevation</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">elevation</span>,
             };
             <span class="ident">NativeConfig</span> {
                 <span class="ident">map_osm_file</span>,
@@ -179,13 +179,13 @@
                 <span class="ident">elevation</span>,
             }
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>(),
+        <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>(),
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">Source</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">_dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">_dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
         <span class="ident">sleep</span>(<span class="ident">Duration::from_secs</span>(<span class="number">1</span>)).<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Data::from</span>::<span class="op">&lt;</span><span class="ident">ZFString</span><span class="op">&gt;</span>(<span class="ident">ZFString</span>(<span class="ident">String::from</span>(<span class="string">&quot;running&quot;</span>))))
     }
@@ -193,7 +193,7 @@
 
 <span class="macro">export_source!</span>(<span class="ident">register</span>);
 
-<span class="kw">fn</span> <span class="ident">register</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">register</span>() -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">CustomNode</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span>)
 }
 </code></pre></div>

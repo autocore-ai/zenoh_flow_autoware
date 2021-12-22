@@ -299,7 +299,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">NativeConfig</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">NativeConfig</span> {
             <span class="ident">vehicle</span>: <span class="ident">Vehicle</span> {
                 <span class="ident">cg_to_front_m</span>: <span class="number">1.228</span>,
@@ -347,44 +347,44 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
+<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) -&gt; <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">config</span>) =&gt; {
             <span class="kw">let</span> <span class="ident">cg_to_front_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.cg_to_front_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">cg_to_front_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">cg_to_front_m</span>,
             };
             <span class="kw">let</span> <span class="ident">cg_to_rear_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.cg_to_rear_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">cg_to_rear_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">cg_to_rear_m</span>,
             };
             <span class="kw">let</span> <span class="ident">front_corner_stiffness</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.front_corner_stiffness&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">front_corner_stiffness</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">front_corner_stiffness</span>,
             };
             <span class="kw">let</span> <span class="ident">rear_corner_stiffness</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.rear_corner_stiffness&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">rear_corner_stiffness</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">rear_corner_stiffness</span>,
             };
             <span class="kw">let</span> <span class="ident">mass_kg</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.mass_kg&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">mass_kg</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">mass_kg</span>,
             };
             <span class="kw">let</span> <span class="ident">yaw_inertia_kgm2</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.yaw_inertia_kgm2&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">yaw_inertia_kgm2</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">yaw_inertia_kgm2</span>,
             };
             <span class="kw">let</span> <span class="ident">width_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.width_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">width_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">width_m</span>,
             };
             <span class="kw">let</span> <span class="ident">front_overhang_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.front_overhang_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">front_overhang_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">front_overhang_m</span>,
             };
             <span class="kw">let</span> <span class="ident">rear_overhang_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle.rear_overhang_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">rear_overhang_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle</span>.<span class="ident">rear_overhang_m</span>,
             };
             <span class="kw">let</span> <span class="ident">vehicle</span> <span class="op">=</span> <span class="ident">Vehicle</span> {
                 <span class="ident">cg_to_front_m</span>,
@@ -398,16 +398,16 @@
                 <span class="ident">rear_overhang_m</span>,
             };
             <span class="kw">let</span> <span class="ident">steering</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;optimization_weights.steering&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">steering</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">steering</span>,
             };
             <span class="kw">let</span> <span class="ident">throttle</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;optimization_weights.throttle&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">throttle</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">throttle</span>,
             };
             <span class="kw">let</span> <span class="ident">goal</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;optimization_weights.goal&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">goal</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">optimization_weights</span>.<span class="ident">goal</span>,
             };
             <span class="kw">let</span> <span class="ident">optimization_weights</span> <span class="op">=</span> <span class="ident">OptimizationWeights</span> {
                 <span class="ident">steering</span>,
@@ -415,24 +415,24 @@
                 <span class="ident">goal</span>,
             };
             <span class="kw">let</span> <span class="ident">x_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.lower.x_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">x_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">x_m</span>,
             };
             <span class="kw">let</span> <span class="ident">y_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.lower.x_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">y_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">y_m</span>,
             };
             <span class="kw">let</span> <span class="ident">velocity_mps</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.lower.velocity_mps&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">velocity_mps</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">velocity_mps</span>,
             };
             <span class="kw">let</span> <span class="ident">heading_rad</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.lower.heading_rad&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">heading_rad</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">heading_rad</span>,
             };
             <span class="kw">let</span> <span class="ident">steering_rad</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.lower.steering_rad&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">steering_rad</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">lower</span>.<span class="ident">steering_rad</span>,
             };
             <span class="kw">let</span> <span class="ident">lower</span> <span class="op">=</span> <span class="ident">StateBound</span> {
                 <span class="ident">x_m</span>,
@@ -442,24 +442,24 @@
                 <span class="ident">steering_rad</span>,
             };
             <span class="kw">let</span> <span class="ident">x_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.upper.x_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">x_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">x_m</span>,
             };
             <span class="kw">let</span> <span class="ident">y_m</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.upper.x_m&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">y_m</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">y_m</span>,
             };
             <span class="kw">let</span> <span class="ident">velocity_mps</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.upper.velocity_mps&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">velocity_mps</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">velocity_mps</span>,
             };
             <span class="kw">let</span> <span class="ident">heading_rad</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.upper.heading_rad&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">heading_rad</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">heading_rad</span>,
             };
             <span class="kw">let</span> <span class="ident">steering_rad</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;state_bounds.upper.steering_rad&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">steering_rad</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">state_bounds</span>.<span class="ident">upper</span>.<span class="ident">steering_rad</span>,
             };
             <span class="kw">let</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">StateBound</span> {
                 <span class="ident">x_m</span>,
@@ -471,8 +471,8 @@
             <span class="kw">let</span> <span class="ident">state_bounds</span> <span class="op">=</span> <span class="ident">StateBounds</span> { <span class="ident">lower</span>, <span class="ident">upper</span> };
             <span class="kw">let</span> <span class="ident">steering_rate_rps</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;command_bounds.lower.steering_rate_rps&quot;</span>].<span class="ident">as_f64</span>()
             {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; {
                     <span class="ident">NativeConfig::default</span>()
                         .<span class="ident">command_bounds</span>
                         .<span class="ident">lower</span>
@@ -480,8 +480,8 @@
                 }
             };
             <span class="kw">let</span> <span class="ident">throttle_mps2</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;command_bounds.lower.throttle_mps2&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">command_bounds</span>.<span class="ident">lower</span>.<span class="ident">throttle_mps2</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">command_bounds</span>.<span class="ident">lower</span>.<span class="ident">throttle_mps2</span>,
             };
             <span class="kw">let</span> <span class="ident">lower</span> <span class="op">=</span> <span class="ident">CommandBound</span> {
                 <span class="ident">steering_rate_rps</span>,
@@ -489,8 +489,8 @@
             };
             <span class="kw">let</span> <span class="ident">steering_rate_rps</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;command_bounds.upper.steering_rate_rps&quot;</span>].<span class="ident">as_f64</span>()
             {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; {
                     <span class="ident">NativeConfig::default</span>()
                         .<span class="ident">command_bounds</span>
                         .<span class="ident">upper</span>
@@ -498,8 +498,8 @@
                 }
             };
             <span class="kw">let</span> <span class="ident">throttle_mps2</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;command_bounds.upper.throttle_mps2&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">command_bounds</span>.<span class="ident">upper</span>.<span class="ident">throttle_mps2</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">command_bounds</span>.<span class="ident">upper</span>.<span class="ident">throttle_mps2</span>,
             };
             <span class="kw">let</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">CommandBound</span> {
                 <span class="ident">steering_rate_rps</span>,
@@ -513,13 +513,13 @@
                 <span class="ident">command_bounds</span>,
             }
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>(),
+        <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>(),
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">Source</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">_dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">_dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
         <span class="ident">sleep</span>(<span class="ident">Duration::from_secs</span>(<span class="number">1</span>)).<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Data::from</span>::<span class="op">&lt;</span><span class="ident">ZFUsize</span><span class="op">&gt;</span>(<span class="ident">ZFUsize</span>(<span class="number">1</span>)))
     }
@@ -527,7 +527,7 @@
 
 <span class="macro">export_source!</span>(<span class="ident">register</span>);
 
-<span class="kw">fn</span> <span class="ident">register</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">register</span>() -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">CustomNode</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span>)
 }
 </code></pre></div>

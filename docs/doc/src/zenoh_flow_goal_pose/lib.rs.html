@@ -90,22 +90,22 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>, <span class="ident">DefaultSendAndSync</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
 
-<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
+<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) -&gt; <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">config</span>) =&gt; {
             <span class="kw">let</span> <span class="ident">node_name</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;node_name&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">node_name</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">node_name</span>,
             };
             <span class="ident">NativeConfig</span> { <span class="ident">node_name</span> }
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>(),
+        <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>(),
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">Source</span> <span class="kw">for</span> <span class="ident">CustomNode</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>, <span class="ident">dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span> {
         <span class="macro">log::info!</span>(<span class="string">&quot;zenoh flow goal pose running ...&quot;</span>);
         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn_state</span>.<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">NativeNodeInstance</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">ptr</span>;
         <span class="kw">let</span> <span class="ident">flag</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -121,7 +121,7 @@
 
 <span class="macro">export_source!</span>(<span class="ident">register</span>);
 
-<span class="kw">fn</span> <span class="ident">register</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">register</span>() -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">CustomNode</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Source</span><span class="op">&gt;</span>)
 }
 </code></pre></div>

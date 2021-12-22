@@ -276,7 +276,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">fmt::Debug</span>, <span class="ident">sync::Arc</span>};
 <span class="kw">use</span> <span class="ident">zenoh_flow</span>::{
     <span class="ident">default_output_rule</span>, <span class="ident">export_operator</span>, <span class="ident">runtime::message::DataMessage</span>,
-    <span class="ident">zenoh_flow_derive::ZFState</span>, <span class="ident">Configuration</span>, <span class="ident">Context</span>, <span class="ident">Data</span>, <span class="ident">DeadlineMiss</span>, <span class="ident">Node</span>, <span class="ident">NodeOutput</span>,
+    <span class="ident">zenoh_flow_derive::ZFState</span>, <span class="ident">Configuration</span>, <span class="ident">Context</span>, <span class="ident">Data</span>, <span class="ident">LocalDeadlineMiss</span>, <span class="ident">Node</span>, <span class="ident">NodeOutput</span>,
     <span class="ident">Operator</span>, <span class="ident">PortId</span>, <span class="ident">State</span>, <span class="ident">Token</span>, <span class="ident">ZFError</span>, <span class="ident">ZFResult</span>,
 };
 
@@ -297,7 +297,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">NativeConfig</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">NativeConfig</span> {
             <span class="ident">simulated_frame_id</span>: <span class="ident">String::from</span>(<span class="string">&quot;base_link&quot;</span>),
             <span class="ident">origin_frame_id</span>: <span class="ident">String::from</span>(<span class="string">&quot;map&quot;</span>),
@@ -317,64 +317,64 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
+<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) -&gt; <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">config</span>) =&gt; {
             <span class="kw">let</span> <span class="ident">simulated_frame_id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;simulated_frame_id&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">simulated_frame_id</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">simulated_frame_id</span>,
             };
             <span class="kw">let</span> <span class="ident">origin_frame_id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;origin_frame_id&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">origin_frame_id</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">origin_frame_id</span>,
             };
             <span class="kw">let</span> <span class="ident">vehicle_model_type</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vehicle_model_type&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle_model_type</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vehicle_model_type</span>,
             };
             <span class="kw">let</span> <span class="ident">initialize_source</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;initialize_source&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">initialize_source</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">initialize_source</span>,
             };
             <span class="kw">let</span> <span class="ident">timer_sampling_time_ms</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;timer_sampling_time_ms&quot;</span>].<span class="ident">as_i64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">timer_sampling_time_ms</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">timer_sampling_time_ms</span>,
             };
             <span class="kw">let</span> <span class="ident">add_measurement_noise</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;add_measurement_noise&quot;</span>].<span class="ident">as_bool</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">add_measurement_noise</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">add_measurement_noise</span>,
             };
             <span class="kw">let</span> <span class="ident">vel_lim</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vel_lim&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vel_lim</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vel_lim</span>,
             };
             <span class="kw">let</span> <span class="ident">vel_rate_lim</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;vel_rate_lim&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">vel_rate_lim</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">vel_rate_lim</span>,
             };
             <span class="kw">let</span> <span class="ident">steer_lim</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;steer_lim&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">steer_lim</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">steer_lim</span>,
             };
             <span class="kw">let</span> <span class="ident">steer_rate_lim</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;steer_rate_lim&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">steer_rate_lim</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">steer_rate_lim</span>,
             };
             <span class="kw">let</span> <span class="ident">acc_time_delay</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;acc_time_delay&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">acc_time_delay</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">acc_time_delay</span>,
             };
             <span class="kw">let</span> <span class="ident">acc_time_constant</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;acc_time_constant&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">acc_time_constant</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">acc_time_constant</span>,
             };
             <span class="kw">let</span> <span class="ident">steer_time_delay</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;steer_time_delay&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">steer_time_delay</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">steer_time_delay</span>,
             };
             <span class="kw">let</span> <span class="ident">steer_time_constant</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;steer_time_constant&quot;</span>].<span class="ident">as_f64</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">steer_time_constant</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">steer_time_constant</span>,
             };
             <span class="ident">NativeConfig</span> {
                 <span class="ident">simulated_frame_id</span>,
@@ -393,7 +393,7 @@
                 <span class="ident">steer_time_constant</span>,
             }
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>(),
+        <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>(),
     }
 }
 
@@ -403,20 +403,20 @@
         <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">tokens</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Token</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">for</span> (<span class="ident">port_id</span>, <span class="ident">token</span>) <span class="kw">in</span> <span class="ident">tokens</span>.<span class="ident">into_iter</span>() {
             <span class="kw">match</span> <span class="ident">token</span> {
-                <span class="ident">Token::Ready</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Token::Ready</span>(<span class="kw">_</span>) =&gt; {
                     <span class="kw">match</span> <span class="ident">port_id</span>.<span class="ident">as_ref</span>() {
-                        <span class="ident">IN_TICK</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">TICK_MODE</span>,
-                        <span class="ident">IN_INIT_POSE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">INIT_POSE_MODE</span>,
-                        <span class="ident">IN_CONTROL_CMD</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">CONTROL_CMD_MODE</span>,
-                        <span class="ident">IN_STATE_CMD</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">STATE_CMD_MODE</span>,
-                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="number">0</span>,
+                        <span class="ident">IN_TICK</span> =&gt; <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">TICK_MODE</span>,
+                        <span class="ident">IN_INIT_POSE</span> =&gt; <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">INIT_POSE_MODE</span>,
+                        <span class="ident">IN_CONTROL_CMD</span> =&gt; <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">CONTROL_CMD_MODE</span>,
+                        <span class="ident">IN_STATE_CMD</span> =&gt; <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">STATE_CMD_MODE</span>,
+                        <span class="kw">_</span> =&gt; <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="number">0</span>,
                     }
                     <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
                 }
-                <span class="ident">Token::Pending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">continue</span>,
+                <span class="ident">Token::Pending</span> =&gt; <span class="kw">continue</span>,
             }
         }
 
@@ -428,13 +428,13 @@
         <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">inputs</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">DataMessage</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">HashMap::with_capacity</span>(<span class="number">2</span>);
 
         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn_state</span>.<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">NativeNodeInstance</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">ptr</span>;
 
         <span class="kw">match</span> <span class="ident">context</span>.<span class="ident">mode</span> {
-            <span class="ident">TICK_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">TICK_MODE</span> =&gt; {
                 <span class="kw">if</span> <span class="ident">is_initialized</span>(<span class="ident">node</span>) {
                     <span class="ident">update</span>(<span class="ident">node</span>);
                     <span class="ident">results</span>.<span class="ident">insert</span>(
@@ -446,34 +446,34 @@
                     <span class="macro">println!</span>(<span class="string">&quot;Simulator waiting initialization...&quot;</span>)
                 }
             }
-            <span class="ident">INIT_POSE_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">INIT_POSE_MODE</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_msgs</span> <span class="op">=</span> <span class="ident">inputs</span>
                     .<span class="ident">remove</span>(<span class="ident">IN_INIT_POSE</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ZFError::InvalidData</span>(<span class="string">&quot;No data&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">data_msgs</span>
-                    .<span class="ident">data</span>
+                    .<span class="ident">get_inner_data</span>()
                     .<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">GeometryMsgsPoseWithCovarianceStamped</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                 <span class="ident">set_init_pose</span>(<span class="ident">node</span>, <span class="ident">msg</span>);
             }
-            <span class="ident">CONTROL_CMD_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CONTROL_CMD_MODE</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_msgs</span> <span class="op">=</span> <span class="ident">inputs</span>
                     .<span class="ident">remove</span>(<span class="ident">IN_CONTROL_CMD</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ZFError::InvalidData</span>(<span class="string">&quot;No data&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">data_msgs</span>
-                    .<span class="ident">data</span>
+                    .<span class="ident">get_inner_data</span>()
                     .<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">AutowareAutoMsgsVehicleControlCommand</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                 <span class="ident">set_control_cmd</span>(<span class="ident">node</span>, <span class="ident">msg</span>);
             }
-            <span class="ident">STATE_CMD_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">STATE_CMD_MODE</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_msgs</span> <span class="op">=</span> <span class="ident">inputs</span>
                     .<span class="ident">remove</span>(<span class="ident">IN_STATE_CMD</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ZFError::InvalidData</span>(<span class="string">&quot;No data&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">data_msgs</span>
-                    .<span class="ident">data</span>
+                    .<span class="ident">get_inner_data</span>()
                     .<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">AutowareAutoMsgsVehicleStateCommand</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                 <span class="ident">set_state_cmd</span>(<span class="ident">node</span>, <span class="ident">msg</span>);
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="kw">_</span> =&gt; {
                 <span class="macro">log::error!</span>(<span class="string">&quot;Simulator, unknown context mode: {}&quot;</span>, <span class="ident">context</span>.<span class="ident">mode</span>);
             }
         };
@@ -485,15 +485,15 @@
         <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">outputs</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span>,
-        <span class="ident">_deadline_miss</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeadlineMiss</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">PortId</span>, <span class="ident">NodeOutput</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">_deadline_miss</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LocalDeadlineMiss</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">PortId</span>, <span class="ident">NodeOutput</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">default_output_rule</span>(<span class="ident">state</span>, <span class="ident">outputs</span>)
     }
 }
 
 <span class="macro">export_operator!</span>(<span class="ident">register</span>);
 
-<span class="kw">fn</span> <span class="ident">register</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">register</span>() -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">CustomNode</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span>)
 }
 </code></pre></div>

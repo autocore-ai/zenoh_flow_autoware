@@ -39,7 +39,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::msgs::ffi</span>::<span class="kw-2">*</span>;
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">GeometryMsgsPoseWithCovariance</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">GeometryMsgsPoseWithCovariance</span> {
             <span class="ident">pose</span>: <span class="ident">GeometryMsgsPose::default</span>(),
             <span class="ident">covariance</span>: [<span class="number">0.0</span>; <span class="number">36</span>],

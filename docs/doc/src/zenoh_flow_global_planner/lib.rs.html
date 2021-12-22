@@ -131,6 +131,8 @@
 <span id="131">131</span>
 <span id="132">132</span>
 <span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 The AutoCore.AI.</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
@@ -154,7 +156,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">fmt::Debug</span>, <span class="ident">sync::Arc</span>};
 <span class="kw">use</span> <span class="ident">zenoh_flow</span>::{
     <span class="ident">default_output_rule</span>, <span class="ident">export_operator</span>, <span class="ident">runtime::message::DataMessage</span>,
-    <span class="ident">zenoh_flow_derive::ZFState</span>, <span class="ident">Configuration</span>, <span class="ident">Context</span>, <span class="ident">Data</span>, <span class="ident">DeadlineMiss</span>, <span class="ident">Node</span>, <span class="ident">NodeOutput</span>,
+    <span class="ident">zenoh_flow_derive::ZFState</span>, <span class="ident">Configuration</span>, <span class="ident">Context</span>, <span class="ident">Data</span>, <span class="ident">LocalDeadlineMiss</span>, <span class="ident">Node</span>, <span class="ident">NodeOutput</span>,
     <span class="ident">Operator</span>, <span class="ident">State</span>, <span class="ident">Token</span>, <span class="ident">ZFError</span>, <span class="ident">ZFResult</span>,
 };
 
@@ -169,16 +171,16 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">ZFState</span>, <span class="ident">DefaultSendAndSync</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomNode</span>;
 
-<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">NativeConfig</span> {
+<span class="kw">fn</span> <span class="ident">get_config</span>(<span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Configuration</span><span class="op">&gt;</span>) -&gt; <span class="ident">NativeConfig</span> {
     <span class="kw">match</span> <span class="ident">configuration</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">config</span>) =&gt; {
             <span class="kw">let</span> <span class="ident">node_name</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>[<span class="string">&quot;node_name&quot;</span>].<span class="ident">as_str</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">String::from</span>(<span class="ident">v</span>),
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>().<span class="ident">node_name</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">String::from</span>(<span class="ident">v</span>),
+                <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>().<span class="ident">node_name</span>,
             };
             <span class="ident">NativeConfig</span> { <span class="ident">node_name</span> }
         }
-        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">NativeConfig::default</span>(),
+        <span class="prelude-val">None</span> =&gt; <span class="ident">NativeConfig::default</span>(),
     }
 }
 
@@ -188,11 +190,11 @@
         <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">tokens</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Token</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="kw">for</span> (<span class="ident">port_id</span>, <span class="ident">token</span>) <span class="kw">in</span> <span class="ident">tokens</span>.<span class="ident">into_iter</span>() {
             <span class="kw">match</span> <span class="ident">token</span> {
-                <span class="ident">Token::Ready</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">if</span> <span class="ident">port_id</span>.<span class="ident">as_ref</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">IN_GOAL_POSE</span> {
+                <span class="ident">Token::Ready</span>(<span class="kw">_</span>) =&gt; {
+                    <span class="kw">if</span> <span class="ident">port_id</span>.<span class="ident">as_ref</span>() <span class="op">==</span> <span class="ident">IN_GOAL_POSE</span> {
                         <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">GOAL_POSE_MODE</span>;
                     } <span class="kw">else</span> {
                         <span class="ident">context</span>.<span class="ident">mode</span> <span class="op">=</span> <span class="ident">CURRENT_POSE_MODE</span>;
@@ -200,7 +202,7 @@
 
                     <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
                 }
-                <span class="ident">Token::Pending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">continue</span>,
+                <span class="ident">Token::Pending</span> =&gt; <span class="kw">continue</span>,
             }
         }
 
@@ -212,32 +214,34 @@
         <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">dyn_state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">inputs</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">DataMessage</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">node</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn_state</span>.<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">NativeNodeInstance</span><span class="op">&gt;</span>()<span class="question-mark">?</span>.<span class="ident">ptr</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap::with_capacity</span>(<span class="number">1</span>);
 
         <span class="kw">match</span> <span class="ident">context</span>.<span class="ident">mode</span> {
-            <span class="ident">GOAL_POSE_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">GOAL_POSE_MODE</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data_msg</span> <span class="op">=</span> <span class="ident">inputs</span>
                     .<span class="ident">remove</span>(<span class="ident">IN_GOAL_POSE</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ZFError::InvalidData</span>(<span class="string">&quot;No data&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">data_msg</span>.<span class="ident">data</span>.<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">GeometryMsgsPoseStamped</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">data_msg</span>
+                    .<span class="ident">get_inner_data</span>()
+                    .<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">GeometryMsgsPoseStamped</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
                 <span class="ident">set_goal_pose</span>(<span class="ident">node</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>);
 
                 <span class="kw">let</span> <span class="ident">hadmap_route</span> <span class="op">=</span> <span class="ident">get_route</span>(<span class="ident">node</span>);
                 <span class="ident">result</span>.<span class="ident">insert</span>(<span class="ident">OUT_ROUTE</span>.<span class="ident">into</span>(), <span class="ident">Data::from</span>(<span class="ident">hadmap_route</span>));
             }
-            <span class="ident">CURRENT_POSE_MODE</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CURRENT_POSE_MODE</span> =&gt; {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vehicle_kinematic_state_data_message</span> <span class="op">=</span> <span class="ident">inputs</span>
                     .<span class="ident">remove</span>(<span class="ident">IN_CURRENT_POSE</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ZFError::InvalidData</span>(<span class="string">&quot;No data&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">vehicle_kinematic_state</span> <span class="op">=</span> <span class="ident">vehicle_kinematic_state_data_message</span>
-                    .<span class="ident">data</span>
+                    .<span class="ident">get_inner_data</span>()
                     .<span class="ident">try_get</span>::<span class="op">&lt;</span><span class="ident">AutowareAutoMsgsVehicleKinematicState</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                 <span class="ident">set_current_pose</span>(<span class="ident">node</span>, <span class="kw-2">&amp;</span><span class="ident">vehicle_kinematic_state</span>);
             }
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="kw">_</span> =&gt; {
                 <span class="macro">log::error!</span>(
                     <span class="string">&quot;Global planner nodes, unknown context mode: {:?}&quot;</span>,
                     <span class="ident">context</span>.<span class="ident">mode</span>
@@ -253,15 +257,15 @@
         <span class="ident">_context</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span>,
         <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>,
         <span class="ident">outputs</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">Data</span><span class="op">&gt;</span>,
-        <span class="ident">_deadline_miss</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DeadlineMiss</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">NodeOutput</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">_deadline_miss</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LocalDeadlineMiss</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">zenoh_flow::PortId</span>, <span class="ident">NodeOutput</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">default_output_rule</span>(<span class="ident">state</span>, <span class="ident">outputs</span>)
     }
 }
 
 <span class="macro">export_operator!</span>(<span class="ident">register</span>);
 
-<span class="kw">fn</span> <span class="ident">register</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">register</span>() -&gt; <span class="ident">ZFResult</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(<span class="ident">Arc::new</span>(<span class="ident">CustomNode</span>) <span class="kw">as</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Operator</span><span class="op">&gt;</span>)
 }
 </code></pre></div>
